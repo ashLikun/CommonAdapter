@@ -1,10 +1,10 @@
 package com.ashlikun.adapter.recyclerview;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.ashlikun.adapter.ViewHolder;
-import com.ashlikun.baseadapter.IStickyHeadersAdapter;
 
 import java.util.List;
 
@@ -16,8 +16,7 @@ import java.util.List;
  * 功能介绍：带头部的RecyclerView的adapter
  */
 
-public abstract class CommonHeaderAdapter<T>
-        implements IStickyHeadersAdapter<ViewHolder> {
+public abstract class CommonHeaderAdapter<T> extends RecyclerView.Adapter<ViewHolder> {
     protected Context mContext;
     protected int mLayoutId;
     protected List<T> mDatas;
@@ -28,11 +27,13 @@ public abstract class CommonHeaderAdapter<T>
         mDatas = datas;
     }
 
+    //viewType无效
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder = ViewHolder.get(mContext, null, parent, mLayoutId, -1);
         return viewHolder;
     }
+
 
     @Override
     public void onBindViewHolder(ViewHolder headerViewHolder, int position) {
@@ -42,9 +43,10 @@ public abstract class CommonHeaderAdapter<T>
 
     public abstract void convert(ViewHolder holder, T t);
 
+
+    //获取头部id
     @Override
-    public long getHeaderId(int position) {
+    public long getItemId(int position) {
         return mDatas.get(position).hashCode();
     }
-
 }

@@ -2,10 +2,10 @@ package com.ashlikun.adapter.recyclerview;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
+import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.ashlikun.adapter.ViewHolder;
-import com.ashlikun.baseadapter.IStickyHeadersAdapter;
 
 import java.util.List;
 
@@ -18,8 +18,8 @@ import java.util.List;
  * 利用getHeaderId区分是否是头部
  */
 
-public abstract class CommonHeaderAdapter<T, DB extends ViewDataBinding>
-        implements IStickyHeadersAdapter<ViewHolder<DB>> {
+public abstract class CommonHeaderAdapter<T, DB extends ViewDataBinding> extends RecyclerView.Adapter<ViewHolder<DB>> {
+
     protected Context mContext;
     protected int mLayoutId;
     protected List<T> mDatas;
@@ -30,22 +30,26 @@ public abstract class CommonHeaderAdapter<T, DB extends ViewDataBinding>
         mDatas = datas;
     }
 
+    //viewType无效
     @Override
-    public ViewHolder<DB> onCreateViewHolder(ViewGroup parent) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder viewHolder = ViewHolder.get(mContext, null, parent, mLayoutId, -1);
         return viewHolder;
     }
 
+
     @Override
-    public void onBindViewHolder(ViewHolder<DB> headerViewHolder, int position) {
+    public void onBindViewHolder(ViewHolder headerViewHolder, int position) {
         headerViewHolder.updatePosition(position);
         convert(headerViewHolder, mDatas.get(position));
     }
 
-    public abstract void convert(ViewHolder<DB> holder, T t);
+    public abstract void convert(ViewHolder holder, T t);
 
+
+    //获取头部id
     @Override
-    public long getHeaderId(int position) {
+    public long getItemId(int position) {
         return mDatas.get(position).hashCode();
     }
 

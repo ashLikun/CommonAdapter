@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.recyclerview.click.OnItemClickListener;
 import com.ashlikun.adapter.recyclerview.click.OnItemLongClickListener;
-import com.ashlikun.baseadapter.IHeaderAndFooter;
 
 import java.util.List;
 

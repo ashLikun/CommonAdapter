@@ -1,4 +1,4 @@
-package com.ashlikun.baseadapter;
+package com.ashlikun.adapter.recyclerview;
 
 /**
  * 作者　　: 李坤
