@@ -38,7 +38,7 @@ public abstract class CommonHeaderAdapter<T> extends RecyclerView.Adapter<ViewHo
     @Override
     public void onBindViewHolder(ViewHolder headerViewHolder, int position) {
         headerViewHolder.updatePosition(position);
-        convert(headerViewHolder, mDatas.get(position));
+        convert(headerViewHolder, getItemData(position));
     }
 
     public abstract void convert(ViewHolder holder, T t);
@@ -48,9 +48,20 @@ public abstract class CommonHeaderAdapter<T> extends RecyclerView.Adapter<ViewHo
         return 0;
     }
 
+    /**
+     * 作者　　: 李坤
+     * 创建时间: 2017/8/6 0006 1:54
+     * <p>
+     * 方法功能：保证数组不会溢出
+     */
+
+    private T getItemData(int pos) {
+        return pos >= mDatas.size() ? mDatas.get(mDatas.size() - 1) : mDatas.get(pos);
+    }
+
     //获取头部id
     @Override
     public long getItemId(int position) {
-        return mDatas.get(position).hashCode();
+        return getItemData(position).hashCode();
     }
 }
