@@ -43,6 +43,10 @@ public abstract class CommonHeaderAdapter<T> extends RecyclerView.Adapter<ViewHo
 
     public abstract void convert(ViewHolder holder, T t);
 
+    @Override
+    public int getItemCount() {
+        return 0;
+    }
 
     //获取头部id
     @Override

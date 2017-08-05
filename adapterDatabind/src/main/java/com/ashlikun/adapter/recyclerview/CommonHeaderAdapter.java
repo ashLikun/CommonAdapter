@@ -44,8 +44,13 @@ public abstract class CommonHeaderAdapter<T, DB extends ViewDataBinding> extends
         convert(headerViewHolder, mDatas.get(position));
     }
 
-    public abstract void convert(ViewHolder holder, T t);
+    public abstract void convert(ViewHolder<DB> holder, T t);
 
+
+    @Override
+    public int getItemCount() {
+        return 0;
+    }
 
     //获取头部id
     @Override
