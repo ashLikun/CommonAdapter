@@ -1,10 +1,12 @@
 package com.ashlikun.adapter.recyclerview.support;
 
 import android.content.Context;
+import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
+import android.view.ViewGroup;
 
 import com.ashlikun.adapter.ViewHolder;
-import com.ashlikun.adapter.recyclerview.MultiItemCommonAdapter;
+import com.ashlikun.adapter.recyclerview.CommonAdapter;
 import com.ashlikun.adapter.recyclerview.MultiItemTypeSupport;
 
 import java.util.LinkedHashMap;
@@ -20,17 +22,10 @@ import java.util.Set;
  * 功能介绍：有头部的adapter
  */
 
-public abstract class SectionAdapter<T> extends MultiItemCommonAdapter<T> {
-    private SectionSupport mSectionSupport;
+public abstract class SectionAdapter<T> extends CommonAdapter<T, ViewDataBinding> implements MultiItemTypeSupport<T>, SectionSupport<T> {
     private static final int TYPE_SECTION = 0;
     private LinkedHashMap<String, Integer> mSections;
 
-    private MultiItemTypeSupport<T> headerItemTypeSupport;
-
-    @Override
-    public int getItemViewType(int position) {
-        return mMultiItemTypeSupport.getItemViewType(position, null);
-    }
 
     final RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
         @Override
@@ -40,66 +35,48 @@ public abstract class SectionAdapter<T> extends MultiItemCommonAdapter<T> {
         }
     };
 
-    public SectionAdapter(Context context, int layoutId, List<T> datas, SectionSupport sectionSupport) {
-        this(context, layoutId, null, datas, sectionSupport);
+    @Override
+    public int getLayoutId(int itemType) {
+        return mLayoutId;
     }
 
-    public SectionAdapter(Context context, MultiItemTypeSupport multiItemTypeSupport, List<T> datas, SectionSupport sectionSupport) {
-        this(context, -1, multiItemTypeSupport, datas, sectionSupport);
+    @Override
+    public int getItemViewType(int position, T t) {
+        return -1;
     }
 
-    public SectionAdapter(Context context, int layoutId, MultiItemTypeSupport multiItemTypeSupport, List<T> datas, SectionSupport sectionSupport) {
-        super(context, datas, null);
-        mLayoutId = layoutId;
-        initMulitiItemTypeSupport(layoutId, multiItemTypeSupport);
-        mMultiItemTypeSupport = headerItemTypeSupport;
-        mSectionSupport = sectionSupport;
+    @Override
+    public int getItemViewType(int position) {
+        return mSections.values().contains(position) ?
+                TYPE_SECTION :
+                getItemViewType(position, getItemData(position));
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        int layoutId;
+        if (viewType == TYPE_SECTION)
+            layoutId = sectionHeaderLayoutId();
+        else {
+            layoutId = getLayoutId(viewType);
+        }
+        if (layoutId <= 0) {
+            throw new RuntimeException("layoutId 没有找到");
+        }
+        ViewHolder holder = ViewHolder.get(mContext, null, parent, layoutId, -1);
+        return holder;
+    }
+
+
+    public SectionAdapter(Context context, List<T> datas) {
+        this(context, -1, datas);
+    }
+
+    public SectionAdapter(Context context, int layoutId, List<T> datas) {
+        super(context, layoutId, datas);
         mSections = new LinkedHashMap<>();
         findSections();
         registerAdapterDataObserver(observer);
-    }
-
-    private void initMulitiItemTypeSupport(int layoutId, final MultiItemTypeSupport multiItemTypeSupport) {
-        if (layoutId != -1) {
-            headerItemTypeSupport = new MultiItemTypeSupport<T>() {
-                @Override
-                public int getLayoutId(int itemType) {
-                    if (itemType == TYPE_SECTION)
-                        return mSectionSupport.sectionHeaderLayoutId();
-                    else
-                        return mLayoutId;
-                }
-
-                @Override
-                public int getItemViewType(int position, T o) {
-                    int positionVal = getIndexForPosition(position);
-                    return mSections.values().contains(position) ?
-                            TYPE_SECTION :
-                            1;
-                }
-            };
-        } else if (multiItemTypeSupport != null) {
-            headerItemTypeSupport = new MultiItemTypeSupport<T>() {
-                @Override
-                public int getLayoutId(int itemType) {
-                    if (itemType == TYPE_SECTION)
-                        return mSectionSupport.sectionHeaderLayoutId();
-                    else
-                        return multiItemTypeSupport.getLayoutId(itemType);
-                }
-
-                @Override
-                public int getItemViewType(int position, T o) {
-                    int positionVal = getIndexForPosition(position);
-                    return mSections.values().contains(position) ?
-                            TYPE_SECTION :
-                            multiItemTypeSupport.getItemViewType(positionVal, o);
-                }
-            };
-        } else {
-            throw new RuntimeException("layoutId or MultiItemTypeSupport must set one.");
-        }
-
     }
 
     @Override
@@ -121,7 +98,7 @@ public abstract class SectionAdapter<T> extends MultiItemCommonAdapter<T> {
         mSections.clear();
 
         for (int i = 0; i < n; i++) {
-            String sectionName = mSectionSupport.getTitle(mDatas.get(i));
+            String sectionName = getTitle(i, mDatas.get(i));
 
             if (!mSections.containsKey(sectionName)) {
                 mSections.put(sectionName, i + nSections);
@@ -158,7 +135,7 @@ public abstract class SectionAdapter<T> extends MultiItemCommonAdapter<T> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         position = getIndexForPosition(position);
         if (holder.getItemViewType() == TYPE_SECTION) {
-            mSectionSupport.setTitle(holder, mDatas.get(position));
+            setTitle(holder, mDatas.get(position));
             return;
         }
         super.onBindViewHolder(holder, position);

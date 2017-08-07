@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by zhy on 16/4/9.
  */
-public abstract class CommonAdapter<T, DB extends ViewDataBinding> extends RecyclerView.Adapter<ViewHolder<DB>>
+public abstract class CommonAdapter<T, DB extends ViewDataBinding> extends RecyclerView.Adapter<ViewHolder>
         implements IHeaderAndFooter {
     protected Context mContext;
     protected int mLayoutId;
@@ -42,7 +42,11 @@ public abstract class CommonAdapter<T, DB extends ViewDataBinding> extends Recyc
 
     @Override
     public long getItemId(int position) {
-        return mDatas.get(position).hashCode();
+        if(position < mDatas.size()) {
+            return mDatas.get(position).hashCode();
+        }else{
+            return 0;
+        }
     }
 
     @Override
@@ -138,4 +142,5 @@ public abstract class CommonAdapter<T, DB extends ViewDataBinding> extends Recyc
     public void setHeaderSize(int headerSize) {
         this.headerSize = headerSize;
     }
+
 }

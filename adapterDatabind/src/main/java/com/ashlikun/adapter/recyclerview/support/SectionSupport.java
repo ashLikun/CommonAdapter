@@ -8,7 +8,7 @@ import com.ashlikun.adapter.ViewHolder;
 public interface SectionSupport<T> {
     public int sectionHeaderLayoutId();
 
-    public String getTitle(T t);
+    public String getTitle(int position, T t);
 
     public void setTitle(ViewHolder holder, T t);
 }
