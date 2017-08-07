@@ -25,11 +25,8 @@ public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T, ViewDat
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (mMultiItemTypeSupport == null)
-            return super.getView(position, convertView, parent);
 
-        int layoutId = mMultiItemTypeSupport.getLayoutId(position,
-                getItem(position));
+        int layoutId = getLayoutId(position,getItem(position));
         ViewHolder viewHolder = ViewHolder.get(mContext, convertView, parent,
                 layoutId, position);
         convert(viewHolder, getItem(position));
