@@ -10,5 +10,5 @@ public interface SectionSupport<T> {
 
     public String getTitle(int position, T t);
 
-    public void setTitle(ViewHolder holder, T t);
+    public void setTitle(ViewHolder holder,String title, T t);
 }

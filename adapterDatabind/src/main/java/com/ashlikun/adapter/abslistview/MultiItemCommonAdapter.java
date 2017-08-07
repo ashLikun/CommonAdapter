@@ -9,32 +9,18 @@ import com.ashlikun.adapter.ViewHolder;
 
 import java.util.List;
 
-public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T, ViewDataBinding> {
+public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T, ViewDataBinding> implements MultiItemTypeSupport<T> {
 
-    protected MultiItemTypeSupport<T> mMultiItemTypeSupport;
 
-    public MultiItemCommonAdapter(Context context, List<T> datas,
-                                  MultiItemTypeSupport<T> multiItemTypeSupport) {
+    public MultiItemCommonAdapter(Context context, List<T> datas) {
         super(context, -1, datas);
-        mMultiItemTypeSupport = multiItemTypeSupport;
-        if (mMultiItemTypeSupport == null)
-            throw new IllegalArgumentException("the mMultiItemTypeSupport can not be null.");
     }
 
-    @Override
-    public int getViewTypeCount() {
-        if (mMultiItemTypeSupport != null)
-            return mMultiItemTypeSupport.getViewTypeCount();
-        return super.getViewTypeCount();
-    }
 
     @Override
     public int getItemViewType(int position) {
-        if (mMultiItemTypeSupport != null)
-            return mMultiItemTypeSupport.getItemViewType(position,
-                    mDatas.get(position));
-        return super.getItemViewType(position);
-
+        return getItemViewType(position,
+                mDatas.get(position));
     }
 
     @Override

@@ -72,15 +72,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public String getTitle(int position,String o) {
                 if(position == 5){
-                    return "aaaaa";
+                    return "7888888888888888888";
                 }else{
                     return "77777777777";
                 }
             }
 
             @Override
-            public void setTitle(ViewHolder holder, String o) {
-                ((ItemViewBinding) holder.dataBind).setItemData("ssssssssssss");
+            public void setTitle(ViewHolder holder,String title, String o) {
+                ((ItemViewBinding) holder.dataBind).setItemData(title);
             }
 
             @Override

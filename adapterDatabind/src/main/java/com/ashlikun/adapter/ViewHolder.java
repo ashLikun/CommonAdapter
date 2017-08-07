@@ -145,7 +145,7 @@ public class ViewHolder<DB extends ViewDataBinding> extends RecyclerView.ViewHol
         mPosition = position;
     }
 
-    public int getmPosition() {
+    public int getPositionInside() {
         return mPosition;
     }
 

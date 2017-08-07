@@ -135,7 +135,7 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T, ViewDataBinding
     public void onBindViewHolder(ViewHolder holder, int position) {
         position = getIndexForPosition(position);
         if (holder.getItemViewType() == TYPE_SECTION) {
-            setTitle(holder, mDatas.get(position));
+            setTitle(holder, getTitle(position, mDatas.get(position)), mDatas.get(position));
             return;
         }
         super.onBindViewHolder(holder, position);
