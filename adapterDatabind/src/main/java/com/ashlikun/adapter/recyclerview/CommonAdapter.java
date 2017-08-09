@@ -1,7 +1,6 @@
 package com.ashlikun.adapter.recyclerview;
 
 import android.content.Context;
-import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import java.util.List;
 /**
  * Created by zhy on 16/4/9.
  */
-public abstract class CommonAdapter<T, DB extends ViewDataBinding> extends RecyclerView.Adapter<ViewHolder>
+public abstract class CommonAdapter<T> extends RecyclerView.Adapter<ViewHolder>
         implements IHeaderAndFooter {
     protected Context mContext;
     protected int mLayoutId;
@@ -70,7 +69,9 @@ public abstract class CommonAdapter<T, DB extends ViewDataBinding> extends Recyc
         convert(holder, mDatas.get(position));
     }
 
-    public abstract void convert(ViewHolder<DB> holder, T t);
+    public void convert(ViewHolder holder, T t){
+        holder.dataBind.setVariable(1,t);
+    }
 
     @Override
     public int getItemCount() {
