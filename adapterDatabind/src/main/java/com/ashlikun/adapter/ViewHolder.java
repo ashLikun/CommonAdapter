@@ -24,11 +24,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-public class ViewHolder extends RecyclerView.ViewHolder {
+public class ViewHolder<DB extends ViewDataBinding> extends RecyclerView.ViewHolder {
 
     private int mPosition;
     private Context mContext;
-    public ViewDataBinding dataBind;
+    public DB dataBind;
 
     public <DB extends ViewDataBinding> DB getDataBind(Class<DB> dbClass) {
         return (DB) dataBind;
