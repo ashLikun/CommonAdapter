@@ -22,6 +22,7 @@ public class CommonEasyAdapter extends CommonAdapter<Object, ViewDataBinding> {
 
     public CommonEasyAdapter(Context context, int layoutId, List datas, int variableId) {
         super(context, layoutId, datas);
+        this.variableId = variableId;
     }
 
     @Override
