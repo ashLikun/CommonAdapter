@@ -2,9 +2,9 @@
 万能适配器
 
 ### 1.用法
-使用前，对于Android Studio的用户，可以选择添加:
-     compile 'com.github.ashLikun.CommonAdapter:adapter:1.0.2'//没有databind
-     compile 'com.github.ashLikun.CommonAdapter:adapterDatabind:1.0.2'//使用databind
+    使用前，对于Android Studio的用户，可以选择添加:
+    compile 'com.github.ashLikun.CommonAdapter:adapter:1.1.1'//没有databind
+    compile 'com.github.ashLikun.CommonAdapter:databindadapter:1.1.1'//使用databind
 
             //普通padater
              recyclerView.setAdapter(new CommonAdapter<String>(this, R.layout.item_view, listDatas) {
