@@ -2,6 +2,8 @@ package com.ashlikun.adapter.abslistview;
 
 import android.content.Context;
 
+import com.ashlikun.adapter.ViewHolder;
+
 import java.util.List;
 
 /**
@@ -11,11 +13,12 @@ import java.util.List;
  * <p>
  * 功能介绍：基础的RecycleView的adapter
  */
-public abstract class BaseAdapter<T> extends android.widget.BaseAdapter {
+public abstract class BaseAdapter<T, V extends ViewHolder> extends android.widget.BaseAdapter {
     protected Context mContext;
     protected List<T> mDatas;
     protected int layoutId;
 
+    public abstract void convert(V holder, T t);
 
     public BaseAdapter(Context context, int layoutId, List<T> datas) {
         this.mContext = context;

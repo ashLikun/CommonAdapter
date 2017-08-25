@@ -45,6 +45,8 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         setHasStableIds(true);
     }
 
+    public abstract void convert(V holder, T t);
+
     public int getLayoutId() {
         return mLayoutId;
     }

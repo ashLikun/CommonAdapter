@@ -5,6 +5,7 @@ import android.databinding.ViewDataBinding;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ashlikun.adapter.abslistview.BaseAdapter;
 import com.ashlikun.adapter.databind.DataBindHolder;
 
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  * <p>
  * 功能介绍：公共的 ListView Adapter;
  */
-public abstract class CommonBindAdapter<T, DB extends ViewDataBinding> extends com.ashlikun.adapter.abslistview.BaseAdapter<T> {
+public abstract class CommonBindAdapter<T, DB extends ViewDataBinding> extends BaseAdapter<T, DataBindHolder<DB>> {
     public CommonBindAdapter(Context context, int layoutId, List<T> datas) {
         super(context, layoutId, datas);
     }
