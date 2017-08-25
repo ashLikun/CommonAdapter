@@ -4,8 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CommonAdapter.iml" filepath="$PROJECT_DIR$/CommonAdapter.iml" />
       <module fileurl="file://$PROJECT_DIR$/adapter/adapter.iml" filepath="$PROJECT_DIR$/adapter/adapter.iml" />
-      <module fileurl="file://$PROJECT_DIR$/adapterDatabind/adapterDatabind.iml" filepath="$PROJECT_DIR$/adapterDatabind/adapterDatabind.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/databindadapter/databindadapter.iml" filepath="$PROJECT_DIR$/databindadapter/databindadapter.iml" />
     </modules>
   </component>
 </project>

@@ -1,12 +1,13 @@
-package com.ashlikun.adapter.recyclerview.support;
+package com.ashlikun.adapter.databind.recycleview.support;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.ViewGroup;
 
-import com.ashlikun.adapter.ViewHolder;
-import com.ashlikun.adapter.recyclerview.CommonAdapter;
+import com.ashlikun.adapter.databind.DataBindHolder;
+import com.ashlikun.adapter.databind.recycleview.CommonBindAdapter;
 import com.ashlikun.adapter.recyclerview.MultiItemTypeSupport;
 
 import java.util.LinkedHashMap;
@@ -19,10 +20,10 @@ import java.util.Set;
  * 创建时间: 9:57 Administrator
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：有头部的adapter
+ * 功能介绍：分组adapter
  */
 
-public abstract class SectionAdapter<T> extends CommonAdapter<T, ViewDataBinding> implements MultiItemTypeSupport<T>, SectionSupport<T> {
+public abstract class SectionAdapter<T, DB extends ViewDataBinding> extends CommonBindAdapter<T, DB> implements MultiItemTypeSupport<T>, SectionSupport<T> {
     private static final int TYPE_SECTION = 0;
     private LinkedHashMap<String, Integer> mSections;
 
@@ -53,7 +54,7 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T, ViewDataBinding
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DataBindHolder<DB> onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutId;
         if (viewType == TYPE_SECTION)
             layoutId = sectionHeaderLayoutId();
@@ -63,7 +64,7 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T, ViewDataBinding
         if (layoutId <= 0) {
             throw new RuntimeException("layoutId 没有找到");
         }
-        ViewHolder holder = ViewHolder.get(mContext, null, parent, layoutId, -1);
+        DataBindHolder<DB> holder = DataBindHolder.get(mContext, null, parent, layoutId, -1);
         return holder;
     }
 
@@ -99,10 +100,11 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T, ViewDataBinding
 
         for (int i = 0; i < n; i++) {
             String sectionName = getTitle(i, mDatas.get(i));
-
-            if (!mSections.containsKey(sectionName)) {
-                mSections.put(sectionName, i + nSections);
-                nSections++;
+            if (!TextUtils.isEmpty(sectionName)) {
+                if (!mSections.containsKey(sectionName)) {
+                    mSections.put(sectionName, i + nSections);
+                    nSections++;
+                }
             }
         }
 
@@ -132,7 +134,7 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T, ViewDataBinding
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(DataBindHolder holder, int position) {
         position = getIndexForPosition(position);
         if (holder.getItemViewType() == TYPE_SECTION) {
             setTitle(holder, getTitle(position, mDatas.get(position)), mDatas.get(position));

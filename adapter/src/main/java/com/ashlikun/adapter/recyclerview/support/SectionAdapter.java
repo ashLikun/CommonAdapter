@@ -2,6 +2,7 @@ package com.ashlikun.adapter.recyclerview.support;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.ViewGroup;
 
 import com.ashlikun.adapter.ViewHolder;
@@ -18,13 +19,23 @@ import java.util.Set;
  * 创建时间: 9:57 Administrator
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：有头部的adapter
+ * 功能介绍：分组adapter
  */
 
 public abstract class SectionAdapter<T> extends CommonAdapter<T> implements MultiItemTypeSupport<T>, SectionSupport<T> {
     private static final int TYPE_SECTION = 0;
     private LinkedHashMap<String, Integer> mSections;
 
+    public SectionAdapter(Context context, List<T> datas) {
+        this(context, -1, datas);
+    }
+
+    public SectionAdapter(Context context, int layoutId, List<T> datas) {
+        super(context, layoutId, datas);
+        mSections = new LinkedHashMap<>();
+        findSections();
+        registerAdapterDataObserver(observer);
+    }
 
     final RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
         @Override
@@ -63,20 +74,10 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T> implements Mult
             throw new RuntimeException("layoutId 没有找到");
         }
         ViewHolder holder = ViewHolder.get(mContext, null, parent, layoutId, -1);
+        setListener(parent, holder, viewType);
         return holder;
     }
 
-
-    public SectionAdapter(Context context, List<T> datas) {
-        this(context, -1, datas);
-    }
-
-    public SectionAdapter(Context context, int layoutId, List<T> datas) {
-        super(context, layoutId, datas);
-        mSections = new LinkedHashMap<>();
-        findSections();
-        registerAdapterDataObserver(observer);
-    }
 
     @Override
     protected boolean isEnabled(int viewType) {
@@ -91,6 +92,7 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T> implements Mult
         unregisterAdapterDataObserver(observer);
     }
 
+    //设置分组数据
     public void findSections() {
         int n = mDatas.size();
         int nSections = 0;
@@ -98,15 +100,14 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T> implements Mult
 
         for (int i = 0; i < n; i++) {
             String sectionName = getTitle(i, mDatas.get(i));
-
-            if (!mSections.containsKey(sectionName)) {
-                mSections.put(sectionName, i + nSections);
-                nSections++;
+            if (!TextUtils.isEmpty(sectionName)) {
+                if (!mSections.containsKey(sectionName)) {
+                    mSections.put(sectionName, i + nSections);
+                    nSections++;
+                }
             }
         }
-
     }
-
 
     @Override
     public int getItemCount() {
@@ -128,6 +129,11 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T> implements Mult
     @Override
     protected int getPosition(RecyclerView.ViewHolder viewHolder) {
         return getIndexForPosition(viewHolder.getAdapterPosition());
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return super.getItemId(getIndexForPosition(position));
     }
 
     @Override

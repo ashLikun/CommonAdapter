@@ -1,7 +1,6 @@
 package com.ashlikun.adapter.recyclerview;
 
 import android.content.Context;
-import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,30 +12,30 @@ import com.ashlikun.adapter.recyclerview.click.OnItemLongClickListener;
 import java.util.List;
 
 /**
- * Created by zhy on 16/4/9.
+ * 作者　　: 李坤
+ * 创建时间: 2017/8/25 9:56
+ * 邮箱　　：496546144@qq.com
+ * <p>
+ * 功能介绍：基础的RecycleView的adapter
  */
-public abstract class CommonAdapter<T, DB extends ViewDataBinding> extends RecyclerView.Adapter<ViewHolder>
+public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<V>
         implements IHeaderAndFooter {
-    protected Context mContext;
     protected int mLayoutId;
+    protected Context mContext;
     protected List<T> mDatas;
-    OnItemClickListener onItemClickListener;
-    OnItemLongClickListener onItemLongClickListener;
     private int headerSize;
     private int footerSize;
+    OnItemClickListener onItemClickListener;
+    OnItemLongClickListener onItemLongClickListener;
 
-    public CommonAdapter(Context context, int layoutId, List<T> datas) {
+    public BaseAdapter(Context context, int layoutId, List<T> datas) {
         mContext = context;
-        mLayoutId = layoutId;
         mDatas = datas;
+        mLayoutId = layoutId;
         setHasStableIds(true);
     }
 
-    public void setmDatas(List<T> mDatas) {
-        this.mDatas = mDatas;
-    }
-
-    public int getmLayoutId() {
+    public int getLayoutId() {
         return mLayoutId;
     }
 
@@ -44,16 +43,13 @@ public abstract class CommonAdapter<T, DB extends ViewDataBinding> extends Recyc
     public long getItemId(int position) {
         if (position < mDatas.size()) {
             return mDatas.get(position).hashCode();
-        } else {
-            return 0;
         }
+        return 0;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-        ViewHolder viewHolder = ViewHolder.get(mContext, null, parent, mLayoutId, -1);
-        setListener(parent, viewHolder, viewType);
-        return viewHolder;
+    public int getItemCount() {
+        return mDatas == null ? 0 : mDatas.size();
     }
 
     protected int getPosition(RecyclerView.ViewHolder viewHolder) {
@@ -64,17 +60,20 @@ public abstract class CommonAdapter<T, DB extends ViewDataBinding> extends Recyc
         return true;
     }
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.updatePosition(position);
-        convert(holder, mDatas.get(position));
+    public void setDatas(List<T> mDatas) {
+        this.mDatas = mDatas;
     }
 
-    public abstract void convert(ViewHolder<DB> holder, T t);
 
-    @Override
-    public int getItemCount() {
-        return mDatas == null ? 0 : mDatas.size();
+    public List<T> getDatas() {
+        return mDatas;
+    }
+
+    public T getItemData(int position) {
+        if (mDatas != null && mDatas.size() <= position) {
+            return null;
+        }
+        return mDatas.get(position);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -84,7 +83,6 @@ public abstract class CommonAdapter<T, DB extends ViewDataBinding> extends Recyc
     public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
         this.onItemLongClickListener = onItemLongClickListener;
     }
-
 
     protected void setListener(final ViewGroup parent, final ViewHolder viewHolder, int viewType) {
         if (!isEnabled(viewType)) return;
@@ -113,18 +111,6 @@ public abstract class CommonAdapter<T, DB extends ViewDataBinding> extends Recyc
                     }
             );
         }
-    }
-
-
-    public T getItemData(int position) {
-        if (mDatas != null && mDatas.size() <= position) {
-            return null;
-        }
-        return mDatas.get(position);
-    }
-
-    public List<T> getDatas() {
-        return mDatas;
     }
 
     public int getFooterSize() {

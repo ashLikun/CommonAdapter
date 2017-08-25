@@ -1,1 +1,1 @@
-include ':app', ':adapter',':adapterDatabind'
+include ':app', ':adapter',  ':databindadapter'

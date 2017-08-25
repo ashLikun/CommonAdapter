@@ -1,4 +1,4 @@
-package com.ashlikun.adapter;
+package com.ashlikun.adapter.databind;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -14,7 +14,6 @@ import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.support.annotation.ColorRes;
-import android.support.v7.widget.RecyclerView;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,33 +22,31 @@ import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ashlikun.adapter.ViewHolder;
 
-public class ViewHolder<DB extends ViewDataBinding> extends RecyclerView.ViewHolder {
 
-    private int mPosition;
-    private Context mContext;
+public class DataBindHolder<DB extends ViewDataBinding> extends ViewHolder {
+
     public DB dataBind;
 
     public <DB extends ViewDataBinding> DB getDataBind(Class<DB> dbClass) {
         return (DB) dataBind;
     }
 
-    private ViewHolder(Context context, DB dataBind, int position) {
-        super(dataBind.getRoot());
-        mContext = context;
-        mPosition = position;
+    private DataBindHolder(Context context, DB dataBind, int position) {
+        super(context, dataBind.getRoot(), position);
         this.dataBind = dataBind;
         dataBind.getRoot().setTag(dataBind.getRoot().getId(), this);
     }
 
-    public static ViewHolder get(final Context context, View convertView,
-                                 ViewGroup parent, int layoutId, int position) {
+    public static DataBindHolder get(final Context context, View convertView,
+                                     ViewGroup parent, int layoutId, int position) {
         if (convertView == null) {
-            return new ViewHolder(context,
+            return new DataBindHolder(context,
                     DataBindingUtil.inflate(LayoutInflater.from(context), layoutId, parent, false)
                     , position);
         } else {
-            ViewHolder holder = (ViewHolder) convertView.getTag(convertView.getId());
+            DataBindHolder holder = (DataBindHolder) convertView.getTag(convertView.getId());
             holder.mPosition = position;
             return holder;
         }
@@ -86,24 +83,24 @@ public class ViewHolder<DB extends ViewDataBinding> extends RecyclerView.ViewHol
     }
 
 
-    public ViewHolder setText(TextView textView, Number text) {
+    public DataBindHolder setText(TextView textView, Number text) {
         textView.setText(String.valueOf(text));
         return this;
     }
 
-    public ViewHolder setImageResource(ImageView view, int resId) {
+    public DataBindHolder setImageResource(ImageView view, int resId) {
         view.setImageResource(resId);
         return this;
     }
 
 
-    public ViewHolder setTextColorRes(TextView view, @ColorRes int textColorRes) {
+    public DataBindHolder setTextColorRes(TextView view, @ColorRes int textColorRes) {
         view.setTextColor(mContext.getResources().getColor(textColorRes));
         return this;
     }
 
     @SuppressLint("NewApi")
-    public ViewHolder setAlpha(View view, float value) {
+    public DataBindHolder setAlpha(View view, float value) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             view.setAlpha(value);
         } else {
@@ -116,7 +113,7 @@ public class ViewHolder<DB extends ViewDataBinding> extends RecyclerView.ViewHol
         return this;
     }
 
-    public ViewHolder setVisible(View view, boolean visible) {
+    public DataBindHolder setVisible(View view, boolean visible) {
         view.setVisibility(visible ? View.VISIBLE : View.GONE);
         return this;
     }
@@ -127,12 +124,12 @@ public class ViewHolder<DB extends ViewDataBinding> extends RecyclerView.ViewHol
      * <p>
      * 方法功能：支持链接
      */
-    public ViewHolder linkify(TextView view) {
+    public DataBindHolder linkify(TextView view) {
         Linkify.addLinks(view, Linkify.ALL);
         return this;
     }
 
-    public ViewHolder setTypeface(Typeface typeface, TextView... views) {
+    public DataBindHolder setTypeface(Typeface typeface, TextView... views) {
         for (TextView view : views) {
             view.setTypeface(typeface);
             view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
@@ -145,23 +142,6 @@ public class ViewHolder<DB extends ViewDataBinding> extends RecyclerView.ViewHol
         mPosition = position;
     }
 
-    public int getPositionInside() {
-        return mPosition;
-    }
-
-
-    private void setBackgroundCompat(View view, Drawable drawable) {
-        int pL = view.getPaddingLeft();
-        int pT = view.getPaddingTop();
-        int pR = view.getPaddingRight();
-        int pB = view.getPaddingBottom();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            view.setBackground(drawable);
-        } else {
-            view.setBackgroundDrawable(drawable);
-        }
-        view.setPadding(pL, pT, pR, pB);
-    }
 
 
 }

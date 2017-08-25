@@ -24,6 +24,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile rootProject.ext.designVersion
+    compile project(':adapter')
 }
 
 apply from: '../maven.gradle'

@@ -34,11 +34,11 @@ import android.widget.TextView;
 
 
 public class ViewHolder extends RecyclerView.ViewHolder {
-    private SparseArray<View> mViews;
-    private int mPosition;
-    private View mConvertView;
-    private Context mContext;
-    private int mLayoutId;
+    protected SparseArray<View> mViews;
+    protected int mPosition;
+    protected View mConvertView;
+    protected Context mContext;
+    protected int mLayoutId;
 
     public ViewHolder(Context context, View itemView, int position) {
         super(itemView);
@@ -307,16 +307,16 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         mPosition = position;
     }
 
-    public int getmPosition() {
-        return mPosition;
-    }
 
     public int getLayoutId() {
         return mLayoutId;
     }
 
+    public int getPositionInside() {
+        return mPosition;
+    }
 
-    private void setBackgroundCompat(View view, Drawable drawable) {
+    public void setBackgroundCompat(View view, Drawable drawable) {
         int pL = view.getPaddingLeft();
         int pT = view.getPaddingTop();
         int pR = view.getPaddingRight();
