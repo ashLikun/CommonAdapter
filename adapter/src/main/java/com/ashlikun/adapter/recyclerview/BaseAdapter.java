@@ -97,7 +97,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     }
 
     protected void setListener(final ViewGroup parent, final ViewHolder viewHolder, int viewType) {
-        if (!isEnabled(viewType) || !viewHolder.getConvertView().isClickable()
+        if (!isEnabled(viewType)
                 || !viewHolder.getConvertView().isEnabled()) return;
         if (onItemLongClickListener != null || onItemClickListener != null) {
             viewHolder.setItemBackgound();
