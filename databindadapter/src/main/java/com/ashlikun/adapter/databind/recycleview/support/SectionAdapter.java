@@ -65,6 +65,7 @@ public abstract class SectionAdapter<T, DB extends ViewDataBinding> extends Comm
             throw new RuntimeException("layoutId 没有找到");
         }
         DataBindHolder<DB> holder = DataBindHolder.get(mContext, null, parent, layoutId, -1);
+        setListener(parent, holder, viewType);
         return holder;
     }
 
