@@ -34,6 +34,5 @@ public abstract class CommonAdapter<T> extends BaseAdapter<T, ViewHolder> {
         convert(holder, mDatas.get(position));
     }
 
-    public abstract void convert(ViewHolder holder, T t);
 
 }

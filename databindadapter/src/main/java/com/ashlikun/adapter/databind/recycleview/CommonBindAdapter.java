@@ -21,8 +21,6 @@ public abstract class CommonBindAdapter<T, DB extends ViewDataBinding> extends B
         super(context, layoutId, datas);
     }
 
-    public abstract void convert(DataBindHolder<DB> holder, T t);
-
     @Override
     public DataBindHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         DataBindHolder viewHolder = DataBindHolder.get(mContext, null, parent, mLayoutId, -1);

@@ -45,12 +45,12 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         mLayoutId = layoutId;
         setHasStableIds(true);
     }
-
     public BaseAdapter(Context context, List<T> datas) {
         mContext = context;
         mDatas = datas;
         setHasStableIds(true);
     }
+    public abstract void convert(V holder, T t);
 
     public int getLayoutId() {
         return mLayoutId;
@@ -107,7 +107,8 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     }
 
     protected void setListener(final ViewGroup parent, final ViewHolder viewHolder, int viewType) {
-        if (!isEnabled(viewType)) return;
+        if (!isEnabled(viewType)
+                || !viewHolder.itemView.isEnabled()) return;
         if (onItemLongClickListener != null || onItemClickListener != null) {
             viewHolder.setItemBackgound();
         }

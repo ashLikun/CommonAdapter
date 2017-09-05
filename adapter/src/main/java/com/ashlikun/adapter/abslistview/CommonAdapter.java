@@ -8,7 +8,7 @@ import com.ashlikun.adapter.ViewHolder;
 
 import java.util.List;
 
-public abstract class CommonAdapter<T> extends com.ashlikun.adapter.abslistview.BaseAdapter<T> {
+public abstract class CommonAdapter<T> extends com.ashlikun.adapter.abslistview.BaseAdapter<T, ViewHolder> {
 
 
     public CommonAdapter(Context context, int layoutId, List<T> datas) {
@@ -28,7 +28,5 @@ public abstract class CommonAdapter<T> extends com.ashlikun.adapter.abslistview.
         convert(holder, getItem(position));
         return holder.itemView;
     }
-
-    public abstract void convert(ViewHolder holder, T t);
 
 }
