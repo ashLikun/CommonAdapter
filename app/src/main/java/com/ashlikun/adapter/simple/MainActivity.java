@@ -6,8 +6,10 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.ashlikun.adapter.animation.SlideInBottomAnimation;
 import com.ashlikun.adapter.databind.DataBindHolder;
 import com.ashlikun.adapter.databind.recycleview.support.SectionAdapter;
+import com.ashlikun.adapter.recyclerview.BaseAdapter;
 import com.ashlikun.adapter.simple.databinding.ItemViewBinding;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private ArrayList<String> listDatas = new ArrayList<>();
+    BaseAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         //DataBinding   adater
-        recyclerView.setAdapter(new SectionAdapter<String, ItemViewBinding>(this, R.layout.item_view, listDatas) {
+        recyclerView.setAdapter(adapter = new SectionAdapter<String, ItemViewBinding>(this, R.layout.item_view, listDatas) {
             @Override
             public void convert(DataBindHolder<ItemViewBinding> holder, String s) {
                 holder.dataBind.setItemData(s);
@@ -53,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 holder.setText(R.id.textView, title);
             }
         });
-
+        adapter.setCustomAnimation(new SlideInBottomAnimation());
 
 //        //DataBindAdapter
 //        recyclerView.setAdapter(new DataBindAdapter<String, ItemViewBinding>(this, R.layout.item_view, listDatas) {

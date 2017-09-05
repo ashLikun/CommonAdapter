@@ -3,6 +3,7 @@ package com.ashlikun.adapter.recyclerview;
 import android.animation.Animator;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
@@ -45,8 +46,19 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         setHasStableIds(true);
     }
 
+    public BaseAdapter(Context context, List<T> datas) {
+        mContext = context;
+        mDatas = datas;
+        setHasStableIds(true);
+    }
+
     public int getLayoutId() {
         return mLayoutId;
+    }
+
+    //可以重写这个方法，用java代码写布局,构造方法就不用传layoutID了
+    public View getItemLayout(ViewGroup parent, int layoutId) {
+        return LayoutInflater.from(mContext).inflate(layoutId, parent, false);
     }
 
     @Override
@@ -100,7 +112,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
             viewHolder.setItemBackgound();
         }
         if (onItemClickListener != null) {
-            viewHolder.getConvertView().setOnClickListener(new View.OnClickListener() {
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -111,7 +123,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         }
 
         if (onItemLongClickListener != null) {
-            viewHolder.getConvertView().setOnLongClickListener(
+            viewHolder.itemView.setOnLongClickListener(
                     new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
@@ -155,13 +167,19 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         if (mOpenAnimationEnable) {
             if (!mFirstOnlyEnable || holder.getLayoutPosition() > mLastPosition) {
                 if (mCustomAnimation != null) {
-                    for (Animator anim : mCustomAnimation.getAnimators(holder.itemView)) {
+                    Animator[] animators = mCustomAnimation.getAnimators(holder.itemView);
+                    for (Animator anim : animators) {
                         startAnim(anim, holder.getLayoutPosition());
                     }
                 }
                 mLastPosition = holder.getLayoutPosition();
             }
         }
+    }
+
+    public void setCustomAnimation(BaseAnimation mCustomAnimation) {
+        this.mCustomAnimation = mCustomAnimation;
+        mOpenAnimationEnable = true;
     }
 
     /**

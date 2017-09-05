@@ -15,7 +15,6 @@ import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.util.Linkify;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -36,19 +35,20 @@ import android.widget.TextView;
 public class ViewHolder extends RecyclerView.ViewHolder {
     protected SparseArray<View> mViews;
     protected int mPosition;
-    protected View mConvertView;
     protected Context mContext;
     protected int mLayoutId;
 
     public ViewHolder(Context context, View itemView, int position) {
         super(itemView);
         mContext = context;
-        mConvertView = itemView;
         mPosition = position;
         mViews = new SparseArray();
-        mConvertView.setTag(itemView.getId(), this);
+
     }
 
+    public void setPosition(int mPosition) {
+        this.mPosition = mPosition;
+    }
 
     /**
      * 作者　　: 李坤
@@ -76,20 +76,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public static ViewHolder get(final Context context, View convertView,
-                                 ViewGroup parent, int layoutId, int position) {
-        if (convertView == null) {
-            View itemView = LayoutInflater.from(context).inflate(layoutId, parent, false);
-            ViewHolder holder = new ViewHolder(context, itemView, position);
-            holder.mLayoutId = layoutId;
-            return holder;
-        } else {
-            ViewHolder holder = (ViewHolder) convertView.getTag(convertView.getId());
-            holder.mPosition = position;
-            return holder;
-        }
-    }
-
     /**
      * 通过viewId获取控件
      *
@@ -99,7 +85,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     public <T extends View> T getView(int viewId) {
         View view = mViews.get(viewId);
         if (view == null) {
-            view = mConvertView.findViewById(viewId);
+            view = itemView.findViewById(viewId);
             mViews.put(viewId, view);
         }
         return (T) view;
@@ -109,9 +95,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return getView(viewId);
     }
 
-    public View getConvertView() {
-        return mConvertView;
-    }
 
     /**
      * 设置TextView的值

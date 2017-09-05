@@ -21,7 +21,8 @@ public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T> impleme
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutId = getLayoutId(viewType);
-        ViewHolder holder = ViewHolder.get(mContext, null, parent, layoutId, -1);
+        ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, layoutId), -1);
+        setListener(parent, holder, viewType);
         return holder;
     }
 }

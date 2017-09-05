@@ -17,10 +17,16 @@ public abstract class CommonAdapter<T> extends com.ashlikun.adapter.abslistview.
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = ViewHolder.get(mContext, convertView, parent,
-                layoutId, position);
+        ViewHolder holder;
+        if (convertView == null) {
+            holder = new ViewHolder(mContext, getItemLayout(parent, getLayoutId()), position);
+            holder.itemView.setTag(10086, this);
+        } else {
+            holder = (ViewHolder) convertView.getTag(10086);
+            holder.setPosition(position);
+        }
         convert(holder, getItem(position));
-        return holder.getConvertView();
+        return holder.itemView;
     }
 
     public abstract void convert(ViewHolder holder, T t);

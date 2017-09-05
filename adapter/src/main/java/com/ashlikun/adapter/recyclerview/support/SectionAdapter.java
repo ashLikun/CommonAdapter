@@ -73,7 +73,7 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T> implements Mult
         if (layoutId <= 0) {
             throw new RuntimeException("layoutId 没有找到");
         }
-        ViewHolder holder = ViewHolder.get(mContext, null, parent, layoutId, -1);
+        ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, layoutId), -1);
         setListener(parent, holder, viewType);
         return holder;
     }

@@ -20,11 +20,12 @@ public abstract class CommonAdapter<T> extends BaseAdapter<T, ViewHolder> {
     public CommonAdapter(Context context, int layoutId, List<T> datas) {
         super(context, layoutId, datas);
     }
+
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-        ViewHolder viewHolder = ViewHolder.get(mContext, null, parent, mLayoutId, -1);
-        setListener(parent, viewHolder, viewType);
-        return viewHolder;
+        ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, getLayoutId()), -1);
+        setListener(parent, holder, viewType);
+        return holder;
     }
 
     @Override
