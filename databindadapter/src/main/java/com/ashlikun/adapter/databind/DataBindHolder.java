@@ -59,6 +59,7 @@ public class DataBindHolder<DB extends ViewDataBinding> extends ViewHolder {
      * 方法功能：设置view的背景点击效果
      */
 
+    @Override
     public void setItemBackgound() {
         int pressed = Color.GRAY;
         Drawable content = itemView.getBackground();
@@ -141,7 +142,6 @@ public class DataBindHolder<DB extends ViewDataBinding> extends ViewHolder {
     public void updatePosition(int position) {
         mPosition = position;
     }
-
 
 
 }
