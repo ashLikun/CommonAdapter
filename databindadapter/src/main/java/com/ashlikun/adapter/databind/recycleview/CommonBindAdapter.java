@@ -24,13 +24,15 @@ public abstract class CommonBindAdapter<T, DB extends ViewDataBinding> extends B
     @Override
     public DataBindHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         DataBindHolder viewHolder = DataBindHolder.get(mContext, null, parent, mLayoutId, -1);
+        viewHolder.setHeaderSize(getHeaderSize());
         setListener(parent, viewHolder, viewType);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(DataBindHolder holder, int position) {
-        holder.updatePosition(position);
+        holder.setPosition(position);
+        holder.setHeaderSize(getHeaderSize());
         convert(holder, mDatas.get(position));
     }
 }

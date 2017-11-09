@@ -37,17 +37,21 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     protected int mPosition;
     protected Context mContext;
     protected int mLayoutId;
+    protected int headerSize;
 
     public ViewHolder(Context context, View itemView, int position) {
         super(itemView);
         mContext = context;
         mPosition = position;
         mViews = new SparseArray();
-
     }
 
     public void setPosition(int mPosition) {
         this.mPosition = mPosition;
+    }
+
+    public void setHeaderSize(int headerSize) {
+        this.headerSize = headerSize;
     }
 
     /**
@@ -286,17 +290,17 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void updatePosition(int position) {
-        mPosition = position;
-    }
-
-
     public int getLayoutId() {
         return mLayoutId;
     }
 
     public int getPositionInside() {
-        return mPosition;
+        int lposition = getLayoutPosition();
+        if (lposition < 0) {
+            return mPosition;
+        } else {
+            return lposition - headerSize;
+        }
     }
 
     public void setBackgroundCompat(View view, Drawable drawable) {

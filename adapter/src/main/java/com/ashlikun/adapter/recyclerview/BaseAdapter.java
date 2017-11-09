@@ -136,18 +136,22 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         }
     }
 
+    @Override
     public int getFooterSize() {
         return footerSize;
     }
 
+    @Override
     public void setFooterSize(int footerSize) {
         this.footerSize = footerSize;
     }
 
+    @Override
     public int getHeaderSize() {
         return headerSize;
     }
 
+    @Override
     public void setHeaderSize(int headerSize) {
         this.headerSize = headerSize;
     }
@@ -193,4 +197,5 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         anim.setDuration(mDuration).start();
         anim.setInterpolator(mInterpolator);
     }
+
 }

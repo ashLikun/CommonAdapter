@@ -24,13 +24,15 @@ public abstract class CommonAdapter<T> extends BaseAdapter<T, ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, getLayoutId()), -1);
+        holder.setHeaderSize(getHeaderSize());
         setListener(parent, holder, viewType);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.updatePosition(position);
+        holder.setPosition(position);
+        holder.setHeaderSize(getHeaderSize());
         convert(holder, mDatas.get(position));
     }
 
