@@ -33,8 +33,8 @@ public class DataBindHolder<DB extends ViewDataBinding> extends ViewHolder {
         return (DB) dataBind;
     }
 
-    private DataBindHolder(Context context, DB dataBind) {
-        super(context, dataBind.getRoot());
+    private DataBindHolder(Context context, DB dataBind, int position) {
+        super(context, dataBind.getRoot(), position);
         this.dataBind = dataBind;
         dataBind.getRoot().setTag(dataBind.getRoot().getId(), this);
     }
@@ -43,9 +43,11 @@ public class DataBindHolder<DB extends ViewDataBinding> extends ViewHolder {
                                      ViewGroup parent, int layoutId, int position) {
         if (convertView == null) {
             return new DataBindHolder(context,
-                    DataBindingUtil.inflate(LayoutInflater.from(context), layoutId, parent, false));
+                    DataBindingUtil.inflate(LayoutInflater.from(context), layoutId, parent, false)
+                    , position);
         } else {
             DataBindHolder holder = (DataBindHolder) convertView.getTag(convertView.getId());
+            holder.mPosition = position;
             return holder;
         }
     }
@@ -57,7 +59,6 @@ public class DataBindHolder<DB extends ViewDataBinding> extends ViewHolder {
      * 方法功能：设置view的背景点击效果
      */
 
-    @Override
     public void setItemBackgound() {
         int pressed = Color.GRAY;
         Drawable content = itemView.getBackground();
@@ -135,4 +136,12 @@ public class DataBindHolder<DB extends ViewDataBinding> extends ViewHolder {
         }
         return this;
     }
+
+
+    public void updatePosition(int position) {
+        mPosition = position;
+    }
+
+
+
 }
