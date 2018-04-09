@@ -3,9 +3,13 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CommonAdapter.iml" filepath="$PROJECT_DIR$/CommonAdapter.iml" />
+      <module fileurl="file://F:\likun\github\CommonAdapter\CommonAdapter.iml" filepath="F:\likun\github\CommonAdapter\CommonAdapter.iml" />
       <module fileurl="file://$PROJECT_DIR$/adapter/adapter.iml" filepath="$PROJECT_DIR$/adapter/adapter.iml" />
+      <module fileurl="file://F:\likun\github\CommonAdapter\adapter\adapter.iml" filepath="F:\likun\github\CommonAdapter\adapter\adapter.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://F:\likun\github\CommonAdapter\app\app.iml" filepath="F:\likun\github\CommonAdapter\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/databindadapter/databindadapter.iml" filepath="$PROJECT_DIR$/databindadapter/databindadapter.iml" />
+      <module fileurl="file://F:\likun\github\CommonAdapter\databindadapter\databindadapter.iml" filepath="F:\likun\github\CommonAdapter\databindadapter\databindadapter.iml" />
     </modules>
   </component>
 </project>

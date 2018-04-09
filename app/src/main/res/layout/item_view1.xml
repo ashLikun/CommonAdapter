@@ -1,22 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
 
-    <data>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:orientation="vertical">
 
-        <variable
-            name="itemData"
-            type="String"></variable>
-    </data>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{itemData}" />
-    </LinearLayout>
-
-</layout>
+        android:layout_height="wrap_content" />
+</LinearLayout>

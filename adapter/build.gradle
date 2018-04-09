@@ -20,7 +20,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile rootProject.ext.designVersion
+    compileOnly rootProject.ext.designVersion
 }
 
 apply from: '../maven.gradle'

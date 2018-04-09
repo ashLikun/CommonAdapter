@@ -1,6 +1,8 @@
 package com.ashlikun.adapter.recyclerview;
 
 import android.animation.Animator;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,9 +24,14 @@ import java.util.List;
  * 邮箱　　：496546144@qq.com
  * <p>
  * 功能介绍：基础的RecycleView的adapter
+ * <p>
+ * 添加生命周期
+ *
+ * @OnLifecycleEvent(Lifecycle.Event.ON_RESUME) public void onResume() {
+ * }
  */
 public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<V>
-        implements IHeaderAndFooter {
+        implements IHeaderAndFooter, LifecycleObserver {
     protected int mLayoutId;
     protected Context mContext;
     protected List<T> mDatas;
@@ -45,11 +52,13 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         mLayoutId = layoutId;
         setHasStableIds(true);
     }
+
     public BaseAdapter(Context context, List<T> datas) {
         mContext = context;
         mDatas = datas;
         setHasStableIds(true);
     }
+
     public abstract void convert(V holder, T t);
 
     public int getLayoutId() {
@@ -164,7 +173,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     }
 
     /**
-     * add animation when you want to show time
+     * 开始item动画一个动画
      *
      * @param holder
      */
@@ -188,14 +197,17 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     }
 
     /**
-     * set anim to start when loading
-     *
-     * @param anim
-     * @param index
+     * 开始动画
      */
     protected void startAnim(Animator anim, int index) {
         anim.setDuration(mDuration).start();
         anim.setInterpolator(mInterpolator);
     }
 
+    /**
+     * 设置生命周期监听
+     */
+    public void addLifecycle(Lifecycle lifecycle) {
+        lifecycle.addObserver(this);
+    }
 }
