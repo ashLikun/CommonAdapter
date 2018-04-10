@@ -5,6 +5,8 @@
     使用前，对于Android Studio的用户，可以选择添加:
     compile 'com.github.ashLikun.CommonAdapter:adapter:1.1.1'//没有databind
     compile 'com.github.ashLikun.CommonAdapter:databindadapter:1.1.1'//使用databind
+            如果使用MultipleAdapter
+            需要使用阿里巴巴的库com.alibaba.android:vlayout:版本
 
             //普通padater
              recyclerView.setAdapter(new CommonAdapter<String>(this, R.layout.item_view, listDatas) {

@@ -3,11 +3,11 @@ package com.ashlikun.adapter.simple;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
-import com.ashlikun.adapter.animation.SlideInBottomAnimation;
-import com.ashlikun.adapter.recyclerview.BaseAdapter;
+import com.alibaba.android.vlayout.VirtualLayoutManager;
+import com.ashlikun.adapter.recyclerview.multiltem.MultipleAdapter;
 
 import java.util.ArrayList;
 
@@ -15,11 +15,13 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private ArrayList<Data> listDatas = new ArrayList<>();
-    BaseAdapter adapter;
+    MultipleAdapter adapter;
+    ArrayList<NeibuData> neibuData = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 //        for (int i = 0; i < 40; i++) {
 //            listDatas.add("列表数据" + i);
 //        }
@@ -34,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
         listDatas.add(data3);
         setContentView(R.layout.activity_main);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 //        //DataBinding   adater
 //        recyclerView.setAdapter(adapter = new SectionAdapter<String, ItemViewBinding>(this, R.layout.item_view, listDatas) {
@@ -62,9 +64,30 @@ public class MainActivity extends AppCompatActivity {
 //                holder.setText(R.id.textView, title);
 //            }
 //        });
-        adapter = new MyAdapter(this, listDatas);
+        adapter = new MultipleAdapter(layoutManager, false);
+
+        for (int i = 0; i < 10; i++) {
+            neibuData.add(new NeibuData("我是第一种" + i));
+        }
+        adapter.addAdapter(new MyAdapter.AdapterItem1(this, neibuData));
+
+
+        ArrayList<Neibu2Data> neibu2Data = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            neibu2Data.add(new Neibu2Data("我是第二种" + i));
+        }
+        adapter.addAdapter(new MyAdapter.AdapterItem2(this, neibu2Data));
+
+
+        ArrayList<Neibu3Data> neibu3Data = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            neibu3Data.add(new Neibu3Data("我是第三种" + i));
+        }
+        adapter.addAdapter(new MyAdapter.AdapterItem3(this, neibu3Data));
+        adapter.addAdapter(new MyAdapter.AdapterItemSing(this));
+
         recyclerView.setAdapter(adapter);
-        adapter.setCustomAnimation(new SlideInBottomAnimation());
+        //adapter.setCustomAnimation(new SlideInBottomAnimation());
 //        //DataBindAdapter
 //        recyclerView.setAdapter(new DataBindAdapter<String, ItemViewBinding>(this, R.layout.item_view, listDatas) {
 //            @Override
@@ -124,6 +147,12 @@ public class MainActivity extends AppCompatActivity {
 //
 //            }
 //        });
+        recyclerView.setItemAnimator(null);
+    }
+
+    public void onClick(View view) {
+        neibuData.add(new NeibuData("新加的数据" + neibuData.size()));
+        adapter.notifyChanged();
     }
 //    @Override
 //    public String getTitle(int position,String o) {
