@@ -1,10 +1,33 @@
+[![Release](https://jitpack.io/v/ashLikun/CommonAdapter.svg)](https://jitpack.io/#ashLikun/CommonAdapter)
+
+
 # **CommonAdapter**
 万能适配器
+## 使用方法
 
+build.gradle文件中添加:
+```gradle
+allprojects {
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+}
+```
+并且:
+
+```gradle
+dependencies {
+     implementation 'com.github.ashLikun.CommonAdapter:adapter:{latest version}'//没有databind
+     implementation 'com.github.ashLikun.CommonAdapter:databindadapter:{latest version}'//使用databind
+     //是否使用阿里巴巴的VLayou adapter  复杂布局
+     compile ('com.alibaba.android:vlayout:1.2.13@aar') {
+             transitive = true
+         }
+}
+```
 ### 1.用法
     使用前，对于Android Studio的用户，可以选择添加:
-    compile 'com.github.ashLikun.CommonAdapter:adapter:1.1.1'//没有databind
-    compile 'com.github.ashLikun.CommonAdapter:databindadapter:1.1.1'//使用databind
+
             如果使用MultipleAdapter
             需要使用阿里巴巴的库com.alibaba.android:vlayout:版本
 

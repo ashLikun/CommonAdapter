@@ -27,11 +27,23 @@ public abstract class SimpleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
     }
 
     public SimpleSingAdapter(Context context, int layoutId, LayoutHelper layoutHelper) {
-        this(context, layoutId, null, null);
+        this(context, layoutId, layoutHelper, null);
     }
 
+    /**
+     * 要使用这个构造器
+     * 这里就必须重写 @{@link SingAdapter#getLayoutId}方法
+     */
+    public SimpleSingAdapter(Context context, List<T> datas) {
+        this(context, -1, null);
+    }
+
+    /**
+     * 要使用这个构造器
+     * 这里就必须重写 @{@link SingAdapter#getLayoutId}方法
+     */
     public SimpleSingAdapter(Context context) {
-        this(context, -1, null, null);
+        this(context, null);
     }
 
     @Override

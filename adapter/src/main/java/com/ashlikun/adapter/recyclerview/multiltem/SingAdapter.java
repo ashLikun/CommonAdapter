@@ -39,12 +39,16 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
         super(context, layoutId, datas);
     }
 
+    public SingAdapter(Context context, int layoutId) {
+        this(context, layoutId, null);
+    }
+
     /**
      * 要使用这个构造器
      * 这里就必须重写 @{@link SingAdapter#getLayoutId}方法
      */
     public SingAdapter(Context context) {
-        super(context, -1, null);
+        this(context, -1, null);
     }
 
     @Override

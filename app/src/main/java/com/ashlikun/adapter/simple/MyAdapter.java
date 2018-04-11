@@ -95,7 +95,6 @@ public class MyAdapter {
     public static class AdapterItemSing extends SimpleSingAdapter<String> {
 
         public AdapterItemSing(Context context) {
-
             super(context, null);
             ArrayList a = new ArrayList();
             a.add("我啊");
