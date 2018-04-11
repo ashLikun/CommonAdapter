@@ -16,6 +16,7 @@ import java.util.List;
  * 邮箱　　：496546144@qq.com
  * <p>
  * 功能介绍：多表单的内部adapter,得自己穿件ViewHolder
+ *
  * @OnLifecycleEvent(Lifecycle.Event.ON_RESUME) public void onResume() {
  * }
  */
@@ -42,8 +43,8 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
      * 要使用这个构造器
      * 这里就必须重写 @{@link SingAdapter#getLayoutId}方法
      */
-    public SingAdapter(Context context, List<T> datas) {
-        super(context, -1, datas);
+    public SingAdapter(Context context) {
+        super(context, -1, null);
     }
 
     @Override

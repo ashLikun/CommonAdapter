@@ -14,18 +14,24 @@ import java.util.List;
  * 邮箱　　：496546144@qq.com
  * <p>
  * 功能介绍：多表单的内部adapter,默认ViewHolder
+ *
  * @OnLifecycleEvent(Lifecycle.Event.ON_RESUME) public void onResume() {
  * }
  */
 public abstract class SimpleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
     LayoutHelper layoutHelper;
+
     public SimpleSingAdapter(Context context, int layoutId, LayoutHelper layoutHelper, List<T> datas) {
         super(context, layoutId, datas);
         this.layoutHelper = layoutHelper;
     }
 
-    public SimpleSingAdapter(Context context, List<T> datas) {
-        this(context, -1, null, datas);
+    public SimpleSingAdapter(Context context, int layoutId, LayoutHelper layoutHelper) {
+        this(context, layoutId, null, null);
+    }
+
+    public SimpleSingAdapter(Context context) {
+        this(context, -1, null, null);
     }
 
     @Override
