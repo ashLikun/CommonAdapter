@@ -23,6 +23,7 @@ import java.util.List;
 public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<T, VH> {
     //内部的adapter建议只用一个type
     private Object viewType;
+    private long[] cantorReverse = new long[2];
 
     /**
      * 这2个方法是父Adapter onBindViewHolder回掉的
@@ -88,7 +89,10 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
 
     @Override
     public int getItemViewType(int position) {
-        return viewType == null ? super.getItemViewType(position) : Math.abs(viewType.hashCode());
+        if (viewType == null) {
+            return super.getItemViewType(position);
+        }
+        return Math.abs(viewType.hashCode());
     }
 
 
