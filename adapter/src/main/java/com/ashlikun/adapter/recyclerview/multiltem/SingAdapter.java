@@ -88,7 +88,7 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
 
     @Override
     public int getItemViewType(int position) {
-        return viewType == null ? super.getItemViewType(position) : viewType.hashCode();
+        return viewType == null ? super.getItemViewType(position) : Math.abs(viewType.hashCode());
     }
 
 

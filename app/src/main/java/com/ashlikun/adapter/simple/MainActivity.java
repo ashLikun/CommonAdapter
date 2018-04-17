@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
         adapter = new MultipleAdapter(layoutManager, false);
-
+        recyclerView.setAdapter(adapter);
         for (int i = 0; i < 10; i++) {
             neibuData.add(new NeibuData("我是第一种" + i));
         }
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         }
         adapter.addAdapter(new MyAdapter.AdapterItem3(this, neibu3Data).setViewType(3));
         adapter.addAdapter(new MyAdapter.AdapterItemSing(this).setViewType(4));
-        recyclerView.setAdapter(adapter);
+
         recyclerView.setItemAnimator(null);
     }
 
