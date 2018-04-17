@@ -485,7 +485,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
     public SingAdapter findAdapterByIndex(int index) {
         Pair<AdapterDataObserver, SingAdapter> rs = mIndexAry.get(index);
-        return rs.second;
+        return rs == null ? null : rs.second;
     }
 
     /**
