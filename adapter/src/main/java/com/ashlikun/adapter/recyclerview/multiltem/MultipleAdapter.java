@@ -488,6 +488,9 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         return rs.second;
     }
 
+    /**
+     * 获取这种类型的adapter
+     */
     public SingAdapter findAdapterByViewType(int viewType) {
         for (Pair<AdapterDataObserver, SingAdapter> adapter : mAdapters) {
             if (adapter.second != null && adapter.second.getItemViewType(0) == viewType) {
@@ -495,6 +498,18 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             }
         }
         return null;
+    }
+
+    /**
+     * 是否有这种类型的adapter
+     */
+    public boolean haveAdapterByViewType(int viewType) {
+        for (Pair<AdapterDataObserver, SingAdapter> adapter : mAdapters) {
+            if (adapter.second != null && adapter.second.getItemViewType(0) == viewType) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //更新全部数据

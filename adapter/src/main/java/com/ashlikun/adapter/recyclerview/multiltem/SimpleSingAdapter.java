@@ -35,7 +35,7 @@ public abstract class SimpleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
      * 这里就必须重写 @{@link SingAdapter#getLayoutId}方法
      */
     public SimpleSingAdapter(Context context, List<T> datas) {
-        this(context, -1, null);
+        this(context, -1, null,datas);
     }
 
     /**

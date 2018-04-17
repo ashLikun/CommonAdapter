@@ -226,4 +226,8 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     public void addLifecycle(Lifecycle lifecycle) {
         lifecycle.addObserver(this);
     }
+
+    public Context getContext() {
+        return mContext;
+    }
 }

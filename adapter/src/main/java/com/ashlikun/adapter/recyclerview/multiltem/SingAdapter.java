@@ -47,6 +47,10 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
         this(context, layoutId, null);
     }
 
+    public SingAdapter(Context context, List<T> datas) {
+        this(context, -1, datas);
+    }
+
     /**
      * 要使用这个构造器
      * 这里就必须重写 @{@link SingAdapter#getLayoutId}方法
