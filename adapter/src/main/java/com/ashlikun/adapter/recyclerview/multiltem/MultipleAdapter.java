@@ -488,6 +488,15 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         return rs.second;
     }
 
+    public SingAdapter findAdapterByViewType(int viewType) {
+        for (Pair<AdapterDataObserver, SingAdapter> adapter : mAdapters) {
+            if (adapter.second != null && adapter.second.getItemViewType(0) == viewType) {
+                return adapter.second;
+            }
+        }
+        return null;
+    }
+
     //更新全部数据
     public void notifyChanged() {
         if (mAdapters == null) {

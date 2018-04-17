@@ -21,12 +21,16 @@ import java.util.List;
  * }
  */
 public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<T, VH> {
+    //内部的adapter建议只用一个type
+    private Object viewType;
+
     /**
      * 这2个方法是父Adapter onBindViewHolder回掉的
      */
     protected void onBindViewHolderWithOffset(RecyclerView.ViewHolder holder, int position, int offsetTotal) {
 
     }
+
 
     /**
      * 这2个方法是父Adapter onBindViewHolder回掉的
@@ -65,6 +69,24 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
         holder.setHeaderSize(getHeaderSize());
         convert(holder, mDatas.get(position));
     }
+
+    /**
+     * @author　　: 李坤
+     * 创建时间: 2018/4/16 0016 上午 10:47
+     * 邮箱　　：496546144@qq.com
+     * <p>
+     * 方法功能：设置这个adapter的ViewType
+     */
+    public SingAdapter setViewType(Object viewType) {
+        this.viewType = viewType;
+        return this;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return viewType == null ? super.getItemViewType(position) : viewType.hashCode();
+    }
+
 
     public abstract LayoutHelper onCreateLayoutHelper();
 

@@ -69,90 +69,29 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 10; i++) {
             neibuData.add(new NeibuData("我是第一种" + i));
         }
-        adapter.addAdapter(new MyAdapter.AdapterItem1(this, neibuData));
-
+        adapter.addAdapter(new MyAdapter.AdapterItem1(this, neibuData).setViewType(1));
 
         ArrayList<Neibu2Data> neibu2Data = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             neibu2Data.add(new Neibu2Data("我是第二种" + i));
         }
-        adapter.addAdapter(new MyAdapter.AdapterItem2(this, neibu2Data));
+        adapter.addAdapter(new MyAdapter.AdapterItem2(this, neibu2Data).setViewType(2));
 
 
         ArrayList<Neibu3Data> neibu3Data = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             neibu3Data.add(new Neibu3Data("我是第三种" + i));
         }
-        adapter.addAdapter(new MyAdapter.AdapterItem3(this, neibu3Data));
-        adapter.addAdapter(new MyAdapter.AdapterItemSing(this));
-
+        adapter.addAdapter(new MyAdapter.AdapterItem3(this, neibu3Data).setViewType(3));
+        adapter.addAdapter(new MyAdapter.AdapterItemSing(this).setViewType(4));
         recyclerView.setAdapter(adapter);
-        //adapter.setCustomAnimation(new SlideInBottomAnimation());
-//        //DataBindAdapter
-//        recyclerView.setAdapter(new DataBindAdapter<String, ItemViewBinding>(this, R.layout.item_view, listDatas) {
-//            @Override
-//            public void convert(DataBindHolder<ItemViewBinding> holder, String o) {
-//
-//            }
-//        });
-//        recyclerView.setAdapter(new MultiItemCommonAdapter<String>(this, listDatas) {
-//
-//            @Override
-//            public int getLayoutId(int itemType) {
-//                if (itemType == 1) {
-//                    return R.layout.item_view1;
-//                } else {
-//                    return R.layout.item_view2;
-//                }
-//            }
-//
-//            @Override
-//            public int getItemViewType(int position, String o) {
-//                if (position == 2 || position == 8 || position == 15 || position == 25 || position == 31) {
-//                    return 1;
-//                }
-//                return 2;
-//            }
-//
-//            @Override
-//            public void convert(ViewHolder holder, String s) {
-//
-//            }
-//        });
-//        recyclerView.setAdapter(new SectionAdapter(this, R.layout.item_view1, listDatas) {
-//
-//
-//            @Override
-//            public void convert(DataBindHolder<ViewDataBinding> holder, Object o) {
-//
-//            }
-//
-//            @Override
-//            public int sectionHeaderLayoutId() {
-//                return 0;
-//            }
-//
-//            @Override
-//            public String getTitle(int position, Object o) {
-//                return null;
-//            }
-//
-//            @Override
-//            public void setTitle(DataBindHolder holder, String title, Object o) {
-//
-//            }
-//
-//            @Override
-//            public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-//
-//            }
-//        });
         recyclerView.setItemAnimator(null);
     }
 
     public void onClick(View view) {
         neibuData.add(new NeibuData("新加的数据" + neibuData.size()));
-        adapter.notifyChanged();
+        adapter.findAdapterByViewType(1).notifyDataSetChanged();
+        // adapter.notifyChanged();
     }
 //    @Override
 //    public String getTitle(int position,String o) {

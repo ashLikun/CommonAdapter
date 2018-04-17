@@ -16,6 +16,7 @@ import com.ashlikun.adapter.animation.BaseAnimation;
 import com.ashlikun.adapter.recyclerview.click.OnItemClickListener;
 import com.ashlikun.adapter.recyclerview.click.OnItemLongClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -91,10 +92,23 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         return true;
     }
 
+    /**
+     * 设置新的数据源
+     */
     public void setDatas(List<T> mDatas) {
         this.mDatas = mDatas;
     }
 
+    /**
+     * 添加数据
+     */
+    public void addDatas(List<T> mDatas) {
+        this.mDatas = mDatas;
+        if (mDatas == null) {
+            mDatas = new ArrayList<>();
+        }
+        mDatas.addAll(mDatas);
+    }
 
     public List<T> getDatas() {
         return mDatas;
@@ -117,7 +131,9 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
 
     protected void setListener(final ViewGroup parent, final ViewHolder viewHolder, int viewType) {
         if (!isEnabled(viewType)
-                || !viewHolder.itemView.isEnabled()) return;
+                || !viewHolder.itemView.isEnabled()) {
+            return;
+        }
         if (onItemLongClickListener != null || onItemClickListener != null) {
             viewHolder.setItemBackgound();
         }

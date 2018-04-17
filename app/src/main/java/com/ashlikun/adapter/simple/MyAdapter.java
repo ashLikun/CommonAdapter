@@ -29,6 +29,11 @@ public class MyAdapter {
         }
 
         @Override
+        public int getItemViewType(int position) {
+            return super.getItemViewType(position);
+        }
+
+        @Override
         public int getLayoutId() {
             return R.layout.item_view;
         }
@@ -110,6 +115,7 @@ public class MyAdapter {
         @Override
         public LayoutHelper onCreateLayoutHelper() {
             FloatLayoutHelper helper = new FloatLayoutHelper();
+            helper.setDefaultLocation(300, 0);
             return helper;
         }
 
