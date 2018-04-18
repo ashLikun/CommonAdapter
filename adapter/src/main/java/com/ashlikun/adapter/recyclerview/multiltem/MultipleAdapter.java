@@ -74,6 +74,8 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     private int mTotal = 0;
 
     private final SparseArray<Pair<AdapterDataObserver, SingAdapter>> mIndexAry = new SparseArray<>();
+    //防止Cantor(康托)算法溢出int和long最大值
+    private final ArrayList<Long> mCantorTemp = new ArrayList<Long>();
 
     private long[] cantorReverse = new long[2];
 
@@ -172,7 +174,6 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         if (p == null) {
             return RecyclerView.INVALID_TYPE;
         }
-
         int subItemType = p.second.getItemViewType(position - p.first.mStartPosition);
 
         if (subItemType < 0) {
@@ -185,12 +186,28 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             return subItemType;
         }
 
-
         int index = p.first.mIndex;
-
+        //防止Cantor(康托)算法溢出int和long最大值
+        subItemType = getCantorToViewType(subItemType);
         return (int) Cantor.getCantor(subItemType, index);
     }
 
+    /**
+     * 防止Cantor(康托)算法溢出int和long最大值
+     * 这里从新从1开始赋值
+     *
+     * @param cantor
+     * @return
+     */
+    private int getCantorToViewType(long cantor) {
+        if (mCantorTemp.contains(cantor)) {
+            //存在值,取出key
+        } else {
+            //新增一个key
+            mCantorTemp.add(cantor);
+        }
+        return mCantorTemp.indexOf(cantor) + 1;
+    }
 
     @Override
     public long getItemId(int position) {
@@ -491,9 +508,12 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     /**
      * 获取这种类型的adapter
      */
-    public SingAdapter findAdapterByViewType(int viewType) {
+    public SingAdapter findAdapterByViewType(Object viewType) {
+        if (viewType == null) {
+            return null;
+        }
         for (Pair<AdapterDataObserver, SingAdapter> adapter : mAdapters) {
-            if (adapter.second != null && adapter.second.getItemViewType(0) == viewType) {
+            if (adapter.second != null && adapter.second.getItemViewType(0) == viewType.hashCode()) {
                 return adapter.second;
             }
         }
@@ -503,9 +523,12 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     /**
      * 是否有这种类型的adapter
      */
-    public boolean haveAdapterByViewType(int viewType) {
+    public boolean haveAdapterByViewType(Object viewType) {
+        if (viewType == null) {
+            return false;
+        }
         for (Pair<AdapterDataObserver, SingAdapter> adapter : mAdapters) {
-            if (adapter.second != null && adapter.second.getItemViewType(0) == viewType) {
+            if (adapter.second != null && adapter.second.getItemViewType(0) == viewType.hashCode()) {
                 return true;
             }
         }

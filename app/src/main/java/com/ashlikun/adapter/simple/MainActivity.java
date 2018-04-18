@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 10; i++) {
             neibuData.add(new NeibuData("我是第一种" + i));
         }
-        adapter.addAdapter(new MyAdapter.AdapterItem1(this, neibuData).setViewType(1));
+        adapter.addAdapter(new MyAdapter.AdapterItem1(this, neibuData).setViewType(Integer.MAX_VALUE));
 
         ArrayList<Neibu2Data> neibu2Data = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
