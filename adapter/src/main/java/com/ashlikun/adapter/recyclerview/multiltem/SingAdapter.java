@@ -71,7 +71,7 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
     public void onBindViewHolder(VH holder, int position) {
         holder.setPosition(position);
         holder.setHeaderSize(getHeaderSize());
-        convert(holder, mDatas.get(position));
+        convert(holder, mDatas == null ? null : mDatas.get(position));
     }
 
     /**
