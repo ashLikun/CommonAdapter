@@ -95,19 +95,18 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     /**
      * 设置新的数据源
      */
-    public void setDatas(List<T> mDatas) {
-        this.mDatas = mDatas;
+    public void setDatas(List<T> datas) {
+        this.mDatas = datas;
     }
 
     /**
      * 添加数据
      */
-    public void addDatas(List<T> mDatas) {
-        this.mDatas = mDatas;
+    public void addDatas(List<T> datas) {
         if (mDatas == null) {
             mDatas = new ArrayList<>();
         }
-        mDatas.addAll(mDatas);
+        mDatas.addAll(datas);
     }
 
     public List<T> getDatas() {
