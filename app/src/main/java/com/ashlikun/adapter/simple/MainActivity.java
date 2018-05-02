@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.ashlikun.adapter.recyclerview.multiltem.MultipleAdapter;
@@ -17,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Data> listDatas = new ArrayList<>();
     MultipleAdapter adapter;
     ArrayList<NeibuData> neibuData = new ArrayList<>();
-
+    private RelativeLayout rootView ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +38,21 @@ public class MainActivity extends AppCompatActivity {
         data3.data = new NeibuData("第3個");
         listDatas.add(data3);
         setContentView(R.layout.activity_main);
+        rootView = findViewById(R.id.rootView);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.bottomMargin = 60;
+        params.rightMargin = 60;
+        TextView textView = new TextView(this);
+        textView.setText("aaaaaa\naaaaa");
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("aaa", "ssss");
+            }
+        });
+        rootView.addView(textView, params);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -90,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClick(View view) {
         neibuData.add(new NeibuData("新加的数据" + neibuData.size()));
-        adapter.findAdapterByViewType(1).notifyDataSetChanged();
+        adapter.findAdapterByViewType(Integer.MAX_VALUE).notifyDataSetChanged();
         // adapter.notifyChanged();
     }
 //    @Override

@@ -30,12 +30,20 @@ public abstract class SimpleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
         this(context, layoutId, layoutHelper, null);
     }
 
+    public SimpleSingAdapter(Context context, int layoutId, List<T> datas) {
+        this(context, layoutId, null, datas);
+    }
+
+    public SimpleSingAdapter(Context context, int layoutId) {
+        this(context, layoutId, null, null);
+    }
+
     /**
      * 要使用这个构造器
      * 这里就必须重写 @{@link SingAdapter#getLayoutId}方法
      */
     public SimpleSingAdapter(Context context, List<T> datas) {
-        this(context, -1, null,datas);
+        this(context, -1, datas);
     }
 
     /**
