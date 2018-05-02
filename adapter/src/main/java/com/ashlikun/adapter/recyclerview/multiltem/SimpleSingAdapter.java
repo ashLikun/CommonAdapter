@@ -67,4 +67,7 @@ public abstract class SimpleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
         return new ViewHolder(mContext, getItemLayout(parent, getLayoutId()), -1);
     }
 
+    public LayoutHelper getLayoutHelper() {
+        return layoutHelper;
+    }
 }
