@@ -88,6 +88,9 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         return viewHolder.getAdapterPosition();
     }
 
+    /**
+     * 是否可以点击
+     */
     protected boolean isEnabled(int viewType) {
         return true;
     }
@@ -136,28 +139,30 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         if (onItemLongClickListener != null || onItemClickListener != null) {
             viewHolder.setItemBackgound();
         }
-        if (onItemClickListener != null) {
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    int position = getPosition(viewHolder);
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = getPosition(viewHolder);
+                onItemClick(parent, v, mDatas.get(position - getHeaderSize()), position - getHeaderSize());
+                if (onItemClickListener != null) {
                     onItemClickListener.onItemClick(parent, v, mDatas.get(position - getHeaderSize()), position - getHeaderSize());
                 }
-            });
-        }
+            }
+        });
 
-        if (onItemLongClickListener != null) {
-            viewHolder.itemView.setOnLongClickListener(
-                    new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
-                            int position = getPosition(viewHolder);
+        viewHolder.itemView.setOnLongClickListener(
+                new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        int position = getPosition(viewHolder);
+                        onItemLongClick(parent, v, mDatas.get(position - getHeaderSize()), position - getHeaderSize());
+                        if (onItemClickListener != null) {
                             return onItemLongClickListener.onItemLongClick(parent, v, mDatas.get(position - getHeaderSize()), position - getHeaderSize());
                         }
+                        return false;
                     }
-            );
-        }
+                }
+        );
     }
 
     @Override
@@ -230,4 +235,19 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         return mContext;
     }
 
+    /**
+     * 内部封装点击事件
+     */
+    @Override
+    public boolean onItemLongClick(ViewGroup parent, View view, T data, int position) {
+        return false;
+    }
+
+    /**
+     * 内部封装点击事件
+     */
+    @Override
+    public void onItemClick(ViewGroup parent, View view, T data, int position) {
+
+    }
 }
