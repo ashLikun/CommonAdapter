@@ -32,7 +32,7 @@ import java.util.List;
  * }
  */
 public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<V>
-        implements IHeaderAndFooter, LifecycleObserver {
+        implements IHeaderAndFooter, LifecycleObserver, OnItemClickListener<T>, OnItemLongClickListener<T> {
     protected int mLayoutId;
     protected Context mContext;
     protected List<T> mDatas;
@@ -229,4 +229,5 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     public Context getContext() {
         return mContext;
     }
+
 }
