@@ -33,7 +33,7 @@ public class CommentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comment);
         recycleView = findViewById(R.id.recyclerView);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             neibuData.add(new NeibuData("我是第一种" + i));
         }
 
@@ -46,6 +46,16 @@ public class CommentActivity extends AppCompatActivity {
             @Override
             public void convert(ViewHolder holder, NeibuData neibuData) {
                 holder.setText(R.id.textView, neibuData.name);
+            }
+
+            @Override
+            public void onViewAttachedToWindow(ViewHolder holder) {
+                super.onViewAttachedToWindow(holder);
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(ViewHolder holder) {
+                super.onViewDetachedFromWindow(holder);
             }
 
             @Override
@@ -64,7 +74,7 @@ public class CommentActivity extends AppCompatActivity {
 //                startActivity(intent);
             }
         });
-        addHeard();
+       // addHeard();
     }
 
     private void addHeard() {

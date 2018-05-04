@@ -3,7 +3,6 @@ package com.ashlikun.adapter.simple;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+       // recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 //        //DataBinding   adater
 //        recyclerView.setAdapter(adapter = new SectionAdapter<String, ItemViewBinding>(this, R.layout.item_view, listDatas) {
 //            @Override
@@ -120,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.addAdapter(new MyAdapter.AdapterItem3(this, neibu3Data).setViewType(3));
         adapter.addAdapter(new MyAdapter.AdapterItemSing(this).setViewType(4));
 
-        recyclerView.setItemAnimator(null);
+       // recyclerView.setItemAnimator(null);
     }
 
     public void onClick(View view) {
