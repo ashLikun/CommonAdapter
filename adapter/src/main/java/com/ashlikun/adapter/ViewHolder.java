@@ -291,19 +291,14 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     /**
      * 获取内部的位置
+     * 下面这些是相对于整个列表的位置
+     * 也可以使用这些：{@link #getLayoutPosition}
+     * 也可以使用这些：{@link #getAdapterPosition()}
+     *
      * @return
      */
     public int getPositionInside() {
         return mPosition;
-    }
-
-    public int getLayoutPositionInside() {
-        int lposition = getLayoutPosition();
-        if (lposition < 0) {
-            return mPosition;
-        } else {
-            return lposition;
-        }
     }
 
     public void setBackgroundCompat(View view, Drawable drawable) {
