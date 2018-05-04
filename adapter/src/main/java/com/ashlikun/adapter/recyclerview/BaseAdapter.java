@@ -33,6 +33,7 @@ import java.util.List;
  */
 public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<V>
         implements IHeaderAndFooter, LifecycleObserver, OnItemClickListener<T>, OnItemLongClickListener<T> {
+    private int clickDelay = 200;
     protected int mLayoutId;
     protected Context mContext;
     protected List<T> mDatas;
@@ -46,6 +47,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     private BaseAnimation mCustomAnimation;//动画
     private Interpolator mInterpolator = new LinearInterpolator();
     private int mDuration = 300;
+    private long lastClickTime = 0;
 
     public BaseAdapter(Context context, int layoutId, List<T> datas) {
         mContext = context;
@@ -142,10 +144,14 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int position = getPosition(viewHolder);
-                onItemClick(parent, v, mDatas.get(position - getHeaderSize()), position - getHeaderSize());
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(parent, v, mDatas.get(position - getHeaderSize()), position - getHeaderSize());
+                //暴力点击
+                if (System.currentTimeMillis() - lastClickTime > clickDelay) {
+                    lastClickTime = System.currentTimeMillis();
+                    int position = getPosition(viewHolder);
+                    onItemClick(parent, v, mDatas.get(position - getHeaderSize()), position - getHeaderSize());
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onItemClick(parent, v, mDatas.get(position - getHeaderSize()), position - getHeaderSize());
+                    }
                 }
             }
         });
@@ -233,6 +239,13 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
 
     public Context getContext() {
         return mContext;
+    }
+
+    /**
+     * 暴力点击的延时
+     */
+    public void setClickDelay(int clickDelay) {
+        this.clickDelay = clickDelay;
     }
 
     /**
