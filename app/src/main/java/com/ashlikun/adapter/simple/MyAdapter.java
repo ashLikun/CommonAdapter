@@ -1,6 +1,9 @@
 package com.ashlikun.adapter.simple;
 
 import android.content.Context;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
@@ -70,6 +73,12 @@ public class MyAdapter {
         @Override
         public void convert(ViewHolder holder, Neibu2Data neibuData) {
             holder.setText(R.id.textView, neibuData.name);
+        }
+
+        @Override
+        public void onItemClick(ViewGroup parent, View view, Neibu2Data data, int position) {
+            super.onItemClick(parent, view, data, position);
+            Log.e("aaaa", position + "");
         }
     }
 

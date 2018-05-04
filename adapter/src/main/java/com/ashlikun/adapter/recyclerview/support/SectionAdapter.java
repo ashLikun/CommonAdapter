@@ -127,7 +127,7 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T> implements Mult
     }
 
     @Override
-    protected int getPosition(RecyclerView.ViewHolder viewHolder) {
+    protected int getPosition(ViewHolder viewHolder) {
         return getIndexForPosition(viewHolder.getAdapterPosition());
     }
 

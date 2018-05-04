@@ -37,7 +37,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     protected int mPosition;
     protected Context mContext;
     protected int mLayoutId;
-    protected int headerSize;
 
     public ViewHolder(Context context, View itemView, int position) {
         super(itemView);
@@ -48,10 +47,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     public void setPosition(int mPosition) {
         this.mPosition = mPosition;
-    }
-
-    public void setHeaderSize(int headerSize) {
-        this.headerSize = headerSize;
     }
 
     /**
@@ -294,12 +289,20 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return mLayoutId;
     }
 
+    /**
+     * 获取内部的位置
+     * @return
+     */
     public int getPositionInside() {
+        return mPosition;
+    }
+
+    public int getLayoutPositionInside() {
         int lposition = getLayoutPosition();
         if (lposition < 0) {
             return mPosition;
         } else {
-            return lposition - headerSize;
+            return lposition;
         }
     }
 

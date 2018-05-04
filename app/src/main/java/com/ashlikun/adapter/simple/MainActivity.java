@@ -1,11 +1,15 @@
 package com.ashlikun.adapter.simple;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,11 +24,25 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Data> listDatas = new ArrayList<>();
     MultipleAdapter adapter;
     ArrayList<NeibuData> neibuData = new ArrayList<>();
-    private RelativeLayout rootView ;
+    private RelativeLayout rootView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolBar);
+        toolbar.setTitle(R.string.app_name);
+        MenuItem menuItem = toolbar.getMenu().add("一般列表");
+        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(MainActivity.this, CommentActivity.class);
+                startActivity(intent);
+                return false;
+            }
+        });
 //        for (int i = 0; i < 40; i++) {
 //            listDatas.add("列表数据" + i);
 //        }
@@ -37,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         Data data3 = new Data(3);
         data3.data = new NeibuData("第3個");
         listDatas.add(data3);
-        setContentView(R.layout.activity_main);
+
         rootView = findViewById(R.id.rootView);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -94,7 +112,6 @@ public class MainActivity extends AppCompatActivity {
             neibu2Data.add(new Neibu2Data("我是第二种" + i));
         }
         adapter.addAdapter(new MyAdapter.AdapterItem2(this, neibu2Data).setViewType(2));
-
 
         ArrayList<Neibu3Data> neibu3Data = new ArrayList<>();
         for (int i = 0; i < 20; i++) {

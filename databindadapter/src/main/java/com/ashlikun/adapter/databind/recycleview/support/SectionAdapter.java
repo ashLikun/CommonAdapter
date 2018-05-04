@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.ViewGroup;
 
+import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.databind.DataBindHolder;
 import com.ashlikun.adapter.databind.recycleview.CommonBindAdapter;
 import com.ashlikun.adapter.recyclerview.MultiItemTypeSupport;
@@ -130,7 +131,7 @@ public abstract class SectionAdapter<T, DB extends ViewDataBinding> extends Comm
     }
 
     @Override
-    protected int getPosition(RecyclerView.ViewHolder viewHolder) {
+    protected int getPosition(ViewHolder viewHolder) {
         return getIndexForPosition(viewHolder.getAdapterPosition());
     }
 
