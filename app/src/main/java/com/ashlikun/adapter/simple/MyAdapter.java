@@ -89,6 +89,8 @@ public class MyAdapter {
             setCustomAnimation(new SlideInBottomAnimation());
         }
 
+
+
         @Override
         public int getLayoutId() {
             return R.layout.item_view2;
