@@ -118,7 +118,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * 清空全部数据
      */
     public void clearData() {
-        if (mDatas == null) {
+        if (mDatas != null) {
             mDatas.clear();
         }
     }
