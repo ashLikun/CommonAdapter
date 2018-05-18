@@ -52,32 +52,7 @@ public class DataBindHolder<DB extends ViewDataBinding> extends ViewHolder {
         }
     }
 
-    /**
-     * 作者　　: 李坤
-     * 创建时间: 2016/12/14 9:06
-     * <p>
-     * 方法功能：设置view的背景点击效果
-     */
 
-    @Override
-    public void setItemBackgound() {
-        int pressed = Color.GRAY;
-        Drawable content = itemView.getBackground();
-        if (content == null) {
-            content = new ColorDrawable(Color.TRANSPARENT);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ColorStateList colorList = new ColorStateList(new int[][]{{}}, new int[]{pressed});
-            RippleDrawable ripple = new RippleDrawable(colorList, content.getAlpha() == 0 ? null : content, content.getAlpha() == 0 ? new ColorDrawable(Color.WHITE) : null);
-            setBackgroundCompat(itemView, ripple);
-        } else {
-            StateListDrawable bg = new StateListDrawable();
-            // View.PRESSED_ENABLED_STATE_SET
-            bg.addState(new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled}, new ColorDrawable(pressed));
-            // View.EMPTY_STATE_SET
-            bg.addState(new int[]{}, content);
-        }
-    }
 
     public View getConvertView() {
         return dataBind.getRoot();
