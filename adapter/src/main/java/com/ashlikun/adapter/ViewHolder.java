@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.util.Linkify;
 import android.util.SparseArray;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.Checkable;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -37,6 +39,8 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     protected int mPosition;
     protected Context mContext;
     protected int mLayoutId;
+    //item点击颜色
+    private int itemClickColor = Color.GRAY;
 
     public ViewHolder(Context context, View itemView, int position) {
         super(itemView);
@@ -56,23 +60,25 @@ public class ViewHolder extends RecyclerView.ViewHolder {
      * 方法功能：设置view的背景点击效果
      */
 
-    public void setItemBackgound() {
-        int pressed = Color.GRAY;
+    public void setForeground(int color) {
+        color = color <= 0 ? itemClickColor : color;
+        Drawable drawable;
         Drawable content = itemView.getBackground();
         if (content == null) {
             content = new ColorDrawable(Color.TRANSPARENT);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ColorStateList colorList = new ColorStateList(new int[][]{{}}, new int[]{pressed});
-            RippleDrawable ripple = new RippleDrawable(colorList, content.getAlpha() == 0 ? null : content, content.getAlpha() == 0 ? new ColorDrawable(Color.WHITE) : null);
-            setBackgroundCompat(itemView, ripple);
+            ColorStateList colorList = new ColorStateList(new int[][]{{}}, new int[]{color});
+            drawable = new RippleDrawable(colorList, content.getAlpha() == 0 ? null : content, content.getAlpha() == 0 ? new ColorDrawable(Color.WHITE) : null);
         } else {
             StateListDrawable bg = new StateListDrawable();
             // View.PRESSED_ENABLED_STATE_SET
-            bg.addState(new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled}, new ColorDrawable(pressed));
+            bg.addState(new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled}, new ColorDrawable(color));
             // View.EMPTY_STATE_SET
             bg.addState(new int[]{}, content);
+            drawable = bg;
         }
+        setForeground(itemView, drawable);
     }
 
     /**
@@ -147,7 +153,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     public ViewHolder setBackgroundDrawable(int viewId, Drawable drawable) {
         View view = getView(viewId);
-        setBackgroundCompat(view, drawable);
+        ViewCompat.setBackground(view, drawable);
         return this;
     }
 
@@ -301,16 +307,25 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return mPosition;
     }
 
-    public void setBackgroundCompat(View view, Drawable drawable) {
-        int pL = view.getPaddingLeft();
-        int pT = view.getPaddingTop();
-        int pR = view.getPaddingRight();
-        int pB = view.getPaddingBottom();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            view.setBackground(drawable);
+    public void setForeground(View view, Drawable drawable) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            view.setForeground(drawable);
         } else {
-            view.setBackgroundDrawable(drawable);
+            if (view instanceof FrameLayout) {
+                ((FrameLayout) view).setForeground(drawable);
+            } else {
+                //不可设置前景色，就只能设置背景色
+                ViewCompat.setBackground(view, drawable);
+            }
         }
-        view.setPadding(pL, pT, pR, pB);
+    }
+
+    /**
+     * 设置item点击颜色,就当前Holder   item
+     *
+     * @param itemClickColor
+     */
+    public void setItemClickColor(int itemClickColor) {
+        this.itemClickColor = itemClickColor;
     }
 }

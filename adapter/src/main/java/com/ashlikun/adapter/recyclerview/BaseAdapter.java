@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,12 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     private Interpolator mInterpolator = new LinearInterpolator();
     private int mDuration = 300;
     private long lastClickTime = 0;
+    //item点击颜色
+    private int itemClickColor = Color.GRAY;
+    /**
+     * 是否打开点击效果
+     */
+    private boolean isOpenClickEffects = true;
 
     public BaseAdapter(Context context, int layoutId, List<T> datas) {
         mContext = context;
@@ -147,8 +154,8 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
                 || !viewHolder.itemView.isEnabled()) {
             return;
         }
-        if (onItemLongClickListener != null || onItemClickListener != null) {
-            viewHolder.setItemBackgound();
+        if (isOpenClickEffects || onItemLongClickListener != null || onItemClickListener != null) {
+            viewHolder.setForeground(itemClickColor);
         }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -275,5 +282,22 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     @Override
     public void onItemClick(ViewGroup parent, View view, T data, int position) {
 
+    }
+
+    /**
+     * 是否打开点击效果
+     * 如果主动设置了点击事件，那么这个参数无效
+     */
+    public void setOffClickEffects() {
+        isOpenClickEffects = false;
+    }
+
+    /**
+     * 设置item点击颜色,全局的item
+     *
+     * @param itemClickColor
+     */
+    public void setItemClickColor(int itemClickColor) {
+        this.itemClickColor = itemClickColor;
     }
 }
