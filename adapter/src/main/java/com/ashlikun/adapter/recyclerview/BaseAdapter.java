@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
+import com.ashlikun.adapter.ForegroundEffects;
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.animation.BaseAnimation;
 import com.ashlikun.adapter.recyclerview.click.OnItemClickListener;
@@ -50,7 +50,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     private int mDuration = 300;
     private long lastClickTime = 0;
     //item点击颜色
-    private int itemClickColor = Color.GRAY;
+    private int itemClickColor = 0;
     /**
      * 是否打开点击效果
      */
@@ -155,7 +155,8 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
             return;
         }
         if (isOpenClickEffects || onItemLongClickListener != null || onItemClickListener != null) {
-            viewHolder.setForeground(itemClickColor);
+            int color = itemClickColor == 0 ? viewHolder.getItemClickColor() : itemClickColor;
+            ForegroundEffects.setForeground(color, viewHolder.itemView);
         }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

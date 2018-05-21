@@ -44,6 +44,7 @@ public class MyAdapter {
         @Override
         public LayoutHelper onCreateLayoutHelper() {
             GridLayoutHelper helper = new GridLayoutHelper(3);
+            helper.setAutoExpand(false);
             return helper;
         }
 
@@ -88,7 +89,6 @@ public class MyAdapter {
             super(context, datas);
             setCustomAnimation(new SlideInBottomAnimation());
         }
-
 
 
         @Override

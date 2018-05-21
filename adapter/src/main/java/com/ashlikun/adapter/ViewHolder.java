@@ -1,16 +1,11 @@
 package com.ashlikun.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.RippleDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.widget.Checkable;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
@@ -53,33 +47,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         this.mPosition = mPosition;
     }
 
-    /**
-     * 作者　　: 李坤
-     * 创建时间: 2016/12/14 9:06
-     * <p>
-     * 方法功能：设置view的背景点击效果
-     */
-
-    public void setForeground(int color) {
-        color = color <= 0 ? itemClickColor : color;
-        Drawable drawable;
-        Drawable content = itemView.getBackground();
-        if (content == null) {
-            content = new ColorDrawable(Color.TRANSPARENT);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ColorStateList colorList = new ColorStateList(new int[][]{{}}, new int[]{color});
-            drawable = new RippleDrawable(colorList, content.getAlpha() == 0 ? null : content, content.getAlpha() == 0 ? new ColorDrawable(Color.WHITE) : null);
-        } else {
-            StateListDrawable bg = new StateListDrawable();
-            // View.PRESSED_ENABLED_STATE_SET
-            bg.addState(new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled}, new ColorDrawable(color));
-            // View.EMPTY_STATE_SET
-            bg.addState(new int[]{}, content);
-            drawable = bg;
-        }
-        setForeground(itemView, drawable);
-    }
 
     /**
      * 通过viewId获取控件
@@ -169,7 +136,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    @SuppressLint("NewApi")
     public ViewHolder setAlpha(int viewId, float value) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             getView(viewId).setAlpha(value);
@@ -307,18 +273,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return mPosition;
     }
 
-    public void setForeground(View view, Drawable drawable) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            view.setForeground(drawable);
-        } else {
-            if (view instanceof FrameLayout) {
-                ((FrameLayout) view).setForeground(drawable);
-            } else {
-                //不可设置前景色，就只能设置背景色
-                ViewCompat.setBackground(view, drawable);
-            }
-        }
-    }
 
     /**
      * 设置item点击颜色,就当前Holder   item
@@ -327,5 +281,9 @@ public class ViewHolder extends RecyclerView.ViewHolder {
      */
     public void setItemClickColor(int itemClickColor) {
         this.itemClickColor = itemClickColor;
+    }
+
+    public int getItemClickColor() {
+        return itemClickColor;
     }
 }
