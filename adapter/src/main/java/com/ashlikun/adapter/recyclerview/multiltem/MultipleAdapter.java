@@ -321,7 +321,9 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             adapter.registerAdapterDataObserver(observer);
             hasStableIds = hasStableIds && adapter.hasStableIds();
             LayoutHelper helper = adapter.onCreateLayoutHelper();
-
+            if (adapter instanceof SimpleSingAdapter) {
+                ((SimpleSingAdapter) adapter).setLayoutHelper(helper);
+            }
             helper.setItemCount(adapter.getItemCount());
             mTotal += helper.getItemCount();
             helpers.add(helper);

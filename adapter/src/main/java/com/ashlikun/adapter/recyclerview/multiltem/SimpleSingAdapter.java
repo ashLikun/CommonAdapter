@@ -71,10 +71,14 @@ public abstract class SimpleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
         return layoutHelper;
     }
 
+    public void setLayoutHelper(LayoutHelper layoutHelper) {
+        this.layoutHelper = layoutHelper;
+    }
+
     @Override
     public int getItemCount() {
         int size = super.getItemCount();
-        if (size <= 0) {
+        if (size <= 0 && layoutHelper != null) {
             size = layoutHelper.getItemCount();
         }
         return size;
