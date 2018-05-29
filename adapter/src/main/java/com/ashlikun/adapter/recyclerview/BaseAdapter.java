@@ -165,7 +165,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
                 if (System.currentTimeMillis() - lastClickTime > clickDelay) {
                     lastClickTime = System.currentTimeMillis();
                     int position = getPosition(viewHolder);
-                    if (position >= 0 && position < mDatas.size()) {
+                    if (mDatas != null && position >= 0 && position < mDatas.size()) {
                         onItemClick(parent, v, mDatas.get(position), position);
                         if (onItemClickListener != null) {
                             onItemClickListener.onItemClick(parent, v, mDatas.get(position), position);
@@ -180,7 +180,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
                     @Override
                     public boolean onLongClick(View v) {
                         int position = getPosition(viewHolder);
-                        if (position >= 0 && position < mDatas.size()) {
+                        if (mDatas != null && position >= 0 && position < mDatas.size()) {
                             onItemLongClick(parent, v, mDatas.get(position), position);
                             if (onItemClickListener != null) {
                                 return onItemLongClickListener.onItemLongClick(parent, v, mDatas.get(position), position);
