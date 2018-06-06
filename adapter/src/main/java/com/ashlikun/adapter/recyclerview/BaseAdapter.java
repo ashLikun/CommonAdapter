@@ -140,7 +140,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * 获取position对应的数据
      */
     public T getItemData(int position) {
-        if (mDatas != null && mDatas.size() <= position) {
+        if (mDatas == null || mDatas.size() <= position) {
             return null;
         }
         return mDatas.get(position);
