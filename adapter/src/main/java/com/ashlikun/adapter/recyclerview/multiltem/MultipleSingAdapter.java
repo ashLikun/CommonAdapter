@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.ashlikun.adapter.ViewHolder;
+import com.ashlikun.adapter.recyclerview.MultiItemTypeSupport;
 
 import java.util.List;
 
@@ -13,45 +14,29 @@ import java.util.List;
  * 创建时间: 2018/4/10 0010　20:53
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：多表单的内部adapter,默认ViewHolder
+ * 功能介绍：多表单的内部adapter,可以有多个不同的type
  *
  * @OnLifecycleEvent(Lifecycle.Event.ON_RESUME) public void onResume() {
  * }
  */
-public abstract class SimpleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
+public abstract class MultipleSingAdapter<T> extends SingAdapter<T, ViewHolder> implements MultiItemTypeSupport<T> {
     LayoutHelper layoutHelper;
 
-    public SimpleSingAdapter(Context context, int layoutId, LayoutHelper layoutHelper, List<T> datas) {
-        super(context, layoutId, datas);
+    public MultipleSingAdapter(Context context, LayoutHelper layoutHelper, List<T> datas) {
+        super(context, -1, datas);
         this.layoutHelper = layoutHelper;
     }
 
-    public SimpleSingAdapter(Context context, int layoutId, LayoutHelper layoutHelper) {
-        this(context, layoutId, layoutHelper, null);
+    public MultipleSingAdapter(Context context, LayoutHelper layoutHelper) {
+        this(context, layoutHelper, null);
     }
 
-    public SimpleSingAdapter(Context context, int layoutId, List<T> datas) {
-        this(context, layoutId, null, datas);
+    public MultipleSingAdapter(Context context, List<T> datas) {
+        this(context, null, datas);
     }
 
-    public SimpleSingAdapter(Context context, int layoutId) {
-        this(context, layoutId, null, null);
-    }
-
-    /**
-     * 要使用这个构造器
-     * 这里就必须重写 @{@link SingAdapter#getLayoutId}方法
-     */
-    public SimpleSingAdapter(Context context, List<T> datas) {
-        this(context, -1, datas);
-    }
-
-    /**
-     * 要使用这个构造器
-     * 这里就必须重写 @{@link SingAdapter#getLayoutId}方法
-     */
-    public SimpleSingAdapter(Context context) {
-        this(context, null);
+    public MultipleSingAdapter(Context context) {
+        this(context, null, null);
     }
 
     @Override
@@ -62,9 +47,12 @@ public abstract class SimpleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
         return layoutHelper;
     }
 
+
     @Override
     public ViewHolder createHolder(final ViewGroup parent, int viewType) {
-        return new ViewHolder(mContext, getItemLayout(parent, getLayoutId()), -1);
+        int layoutId = getLayoutId(viewType);
+        ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, layoutId), -1);
+        return holder;
     }
 
     public LayoutHelper getLayoutHelper() {
@@ -73,6 +61,11 @@ public abstract class SimpleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
 
     public void setLayoutHelper(LayoutHelper layoutHelper) {
         this.layoutHelper = layoutHelper;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return getItemViewType(position, getItemData(position));
     }
 
     @Override

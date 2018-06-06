@@ -61,7 +61,7 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
 
     @Override
     public VH onCreateViewHolder(final ViewGroup parent, int viewType) {
-        ViewHolder holder = createHolder(parent);
+        ViewHolder holder = createHolder(parent, viewType);
         setListener(parent, holder, viewType);
         return (VH) holder;
     }
@@ -69,7 +69,7 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
     @Override
     public void onBindViewHolder(VH holder, int position) {
         holder.setPosition(position);
-        convert(holder, mDatas == null ? null : mDatas.get(position));
+        convert(holder, getItemData(position));
     }
 
     /**
@@ -95,6 +95,6 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
 
     public abstract LayoutHelper onCreateLayoutHelper();
 
-    public abstract VH createHolder(final ViewGroup parent);
+    public abstract VH createHolder(final ViewGroup parent, int viewType);
 
 }

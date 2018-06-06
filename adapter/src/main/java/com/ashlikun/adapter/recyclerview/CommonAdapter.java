@@ -39,7 +39,7 @@ public abstract class CommonAdapter<T> extends BaseAdapter<T, ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.setPosition(position);
-        convert(holder, mDatas.get(position));
+        convert(holder, getItemData(position));
     }
 
 
