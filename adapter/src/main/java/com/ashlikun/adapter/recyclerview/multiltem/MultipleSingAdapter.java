@@ -1,12 +1,14 @@
 package com.ashlikun.adapter.recyclerview.multiltem;
 
 import android.content.Context;
+import android.util.Pair;
 import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.recyclerview.MultiItemTypeSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +22,8 @@ import java.util.List;
  * }
  */
 public abstract class MultipleSingAdapter<T> extends SingAdapter<T, ViewHolder> implements MultiItemTypeSupport<T> {
-    LayoutHelper layoutHelper;
+    private LayoutHelper layoutHelper;
+    private List<Pair<Integer, Integer>> positionIndex = new ArrayList<>();
 
     public MultipleSingAdapter(Context context, LayoutHelper layoutHelper, List<T> datas) {
         super(context, -1, datas);
@@ -75,5 +78,43 @@ public abstract class MultipleSingAdapter<T> extends SingAdapter<T, ViewHolder> 
             size = layoutHelper.getItemCount();
         }
         return size;
+    }
+
+    /**
+     * 折半查找
+     *
+     * @return Pair 第一个参数 这条数据的外围Position
+     * pair 第二个参数，这条item在什么范围(开始---结束position)
+     */
+    private Pair<Integer, Pair<Integer, Integer>> halfFind(int position) {
+        int low = 0, height = positionIndex.size() - 1, mid;
+        Pair<Integer, Integer> pair;
+        while (low <= height) {
+            //中间
+            mid = (low + height) / 2;
+            pair = positionIndex.get(mid);
+            if (pair == null) {
+                continue;
+            }
+            //在前面
+            if (pair.first > position) {
+                height = mid - 1;
+            }
+            //在后面
+            else if (pair.second < position) {
+                low = mid + 1;
+            }
+            //就是这个数据
+            else if (pair.first <= position && pair.second >= position) {
+                return new Pair<>(mid, pair);
+            } else {
+                break;
+            }
+        }
+        return null;
+    }
+
+    public List<Pair<Integer, Integer>> getPositionIndex() {
+        return positionIndex;
     }
 }
