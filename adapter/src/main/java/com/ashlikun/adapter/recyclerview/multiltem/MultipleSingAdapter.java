@@ -114,7 +114,7 @@ public abstract class MultipleSingAdapter<T> extends SingAdapter<T, ViewHolder> 
      * @return Pair 第一个参数 这条数据的外围Position
      * pair 第二个参数，这条item在什么范围(开始---结束position)
      */
-    private Pair<Integer, Pair<Integer, Integer>> halfFind(int position) {
+    public Pair<Integer, Pair<Integer, Integer>> halfFind(int position) {
         int low = 0, height = positionIndex.size() - 1, mid;
         Pair<Integer, Integer> pair;
         while (low <= height) {
@@ -143,6 +143,10 @@ public abstract class MultipleSingAdapter<T> extends SingAdapter<T, ViewHolder> 
     }
 
     public List<Pair<Integer, Integer>> getPositionIndex() {
+        return positionIndex;
+    }
+
+    public List<Pair<Integer, Integer>> PositionIndex() {
         return positionIndex;
     }
 
