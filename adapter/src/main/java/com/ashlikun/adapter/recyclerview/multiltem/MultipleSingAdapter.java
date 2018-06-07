@@ -1,6 +1,7 @@
 package com.ashlikun.adapter.recyclerview.multiltem;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.ViewGroup;
 
@@ -28,6 +29,33 @@ public abstract class MultipleSingAdapter<T> extends SingAdapter<T, ViewHolder> 
     public MultipleSingAdapter(Context context, LayoutHelper layoutHelper, List<T> datas) {
         super(context, -1, datas);
         this.layoutHelper = layoutHelper;
+        setPositionIndex(positionIndex);
+        registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                setPositionIndex(positionIndex);
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                setPositionIndex(positionIndex);
+            }
+
+            @Override
+            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+                setPositionIndex(positionIndex);
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                setPositionIndex(positionIndex);
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                setPositionIndex(positionIndex);
+            }
+        });
     }
 
     public MultipleSingAdapter(Context context, LayoutHelper layoutHelper) {
@@ -116,5 +144,9 @@ public abstract class MultipleSingAdapter<T> extends SingAdapter<T, ViewHolder> 
 
     public List<Pair<Integer, Integer>> getPositionIndex() {
         return positionIndex;
+    }
+
+    public void setPositionIndex(List<Pair<Integer, Integer>> positionIndex) {
+        positionIndex.clear();
     }
 }
