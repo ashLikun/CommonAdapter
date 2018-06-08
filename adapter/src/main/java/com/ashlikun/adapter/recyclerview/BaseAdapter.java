@@ -71,6 +71,16 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
 
     public abstract void convert(V holder, T t);
 
+    /**
+     * recycleView的局部刷新
+     *
+     * @param payloads 一定不为null
+     * @return true：代表处理完毕，不走另一个刷新的方法，false表示没有处理，继续走另一个
+     */
+    public boolean convert(V holder, T t, List<Object> payloads) {
+        return false;
+    }
+
     public int getLayoutId() {
         return mLayoutId;
     }
