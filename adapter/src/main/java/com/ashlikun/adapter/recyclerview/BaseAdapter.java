@@ -84,8 +84,9 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
 
     @Override
     public long getItemId(int position) {
-        if (position < mDatas.size()) {
-            return mDatas.get(position).hashCode();
+        T d = getItemData(position);
+        if (d != null) {
+            return d.hashCode();
         }
         return 0;
     }
@@ -170,10 +171,11 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
                 if (System.currentTimeMillis() - lastClickTime > clickDelay) {
                     lastClickTime = System.currentTimeMillis();
                     int position = getPosition(viewHolder);
-                    if (mDatas != null && position >= 0 && position < mDatas.size()) {
-                        onItemClick(parent, v, mDatas.get(position), position);
+                    T d = getItemData(position);
+                    if (d != null) {
+                        onItemClick(parent, v, d, position);
                         if (onItemClickListener != null) {
-                            onItemClickListener.onItemClick(parent, v, mDatas.get(position), position);
+                            onItemClickListener.onItemClick(parent, v, d, position);
                         }
                     }
                 }
@@ -185,10 +187,11 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
                     @Override
                     public boolean onLongClick(View v) {
                         int position = getPosition(viewHolder);
-                        if (mDatas != null && position >= 0 && position < mDatas.size()) {
-                            onItemLongClick(parent, v, mDatas.get(position), position);
+                        T d = getItemData(position);
+                        if (d != null) {
+                            onItemLongClick(parent, v, d, position);
                             if (onItemClickListener != null) {
-                                return onItemLongClickListener.onItemLongClick(parent, v, mDatas.get(position), position);
+                                return onItemLongClickListener.onItemLongClick(parent, v, d, position);
                             }
                         }
                         return false;
