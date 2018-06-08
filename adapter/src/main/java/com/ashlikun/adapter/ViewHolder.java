@@ -30,7 +30,10 @@ import android.widget.TextView;
 
 public class ViewHolder extends RecyclerView.ViewHolder {
     protected SparseArray<View> mViews;
-    protected int mPosition;
+    /**
+     * position 的偏移量，相对于整个列表的真实的位置(RecycleView)
+     */
+    protected int mPositionOffset;
     protected Context mContext;
     protected int mLayoutId;
     //item点击颜色
@@ -39,12 +42,16 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     public ViewHolder(Context context, View itemView, int position) {
         super(itemView);
         mContext = context;
-        mPosition = position;
+        setPosition(position);
         mViews = new SparseArray();
     }
 
     public void setPosition(int mPosition) {
-        this.mPosition = mPosition;
+        if (getLayoutPosition() == RecyclerView.NO_POSITION) {
+            this.mPositionOffset = mPosition;
+        } else {
+            this.mPositionOffset = getLayoutPosition() - mPosition;
+        }
     }
 
 
@@ -270,7 +277,11 @@ public class ViewHolder extends RecyclerView.ViewHolder {
      * @return
      */
     public int getPositionInside() {
-        return mPosition;
+        if (getLayoutPosition() != RecyclerView.NO_POSITION) {
+            return getLayoutPosition() - mPositionOffset;
+        } else {
+            return mPositionOffset;
+        }
     }
 
 
