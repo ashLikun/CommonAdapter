@@ -30,12 +30,20 @@ public abstract class SimpleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
         this(context, layoutId, layoutHelper, null);
     }
 
+    public SimpleSingAdapter(Context context, int layoutId, List<T> datas) {
+        this(context, layoutId, null, datas);
+    }
+
+    public SimpleSingAdapter(Context context, int layoutId) {
+        this(context, layoutId, null, null);
+    }
+
     /**
      * 要使用这个构造器
      * 这里就必须重写 @{@link SingAdapter#getLayoutId}方法
      */
     public SimpleSingAdapter(Context context, List<T> datas) {
-        this(context, -1, null,datas);
+        this(context, -1, datas);
     }
 
     /**
@@ -55,8 +63,24 @@ public abstract class SimpleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
     }
 
     @Override
-    public ViewHolder createHolder(final ViewGroup parent) {
+    public ViewHolder createHolder(final ViewGroup parent, int viewType) {
         return new ViewHolder(mContext, getItemLayout(parent, getLayoutId()), -1);
     }
 
+    public LayoutHelper getLayoutHelper() {
+        return layoutHelper;
+    }
+
+    public void setLayoutHelper(LayoutHelper layoutHelper) {
+        this.layoutHelper = layoutHelper;
+    }
+
+    @Override
+    public int getItemCount() {
+        int size = super.getItemCount();
+        if (size <= 0 && layoutHelper != null) {
+            size = layoutHelper.getItemCount();
+        }
+        return size;
+    }
 }

@@ -34,7 +34,6 @@ public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T> impleme
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutId = getLayoutId(viewType);
         ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, layoutId), -1);
-        holder.setHeaderSize(getHeaderSize());
         setListener(parent, holder, viewType);
         return holder;
     }

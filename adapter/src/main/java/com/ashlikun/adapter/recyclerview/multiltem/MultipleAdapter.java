@@ -241,7 +241,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         super.onViewRecycled(holder);
 
         int position = holder.getPosition();
-        if (position > 0) {
+        if (position >= 0) {
             Pair<AdapterDataObserver, SingAdapter> pair = findAdapterByPosition(position);
             if (pair != null) {
                 pair.second.onViewRecycled(holder);
@@ -255,7 +255,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
         super.onViewAttachedToWindow(holder);
         int position = holder.getPosition();
-        if (position > 0) {
+        if (position >= 0) {
             Pair<AdapterDataObserver, SingAdapter> pair = findAdapterByPosition(position);
             if (pair != null) {
                 pair.second.onViewAttachedToWindow(holder);
@@ -268,7 +268,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         int position = holder.getPosition();
-        if (position > 0) {
+        if (position >= 0) {
             Pair<AdapterDataObserver, SingAdapter> pair = findAdapterByPosition(position);
             if (pair != null) {
                 pair.second.onViewDetachedFromWindow(holder);
@@ -276,6 +276,21 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         }
     }
 
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        for (Pair<AdapterDataObserver, SingAdapter> p : mAdapters) {
+            p.second.onAttachedToRecyclerView(recyclerView);
+        }
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        for (Pair<AdapterDataObserver, SingAdapter> p : mAdapters) {
+            p.second.onDetachedFromRecyclerView(recyclerView);
+        }
+    }
 
     /**
      * You can not set layoutHelpers to delegate adapter
@@ -306,7 +321,9 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             adapter.registerAdapterDataObserver(observer);
             hasStableIds = hasStableIds && adapter.hasStableIds();
             LayoutHelper helper = adapter.onCreateLayoutHelper();
-
+            if (adapter instanceof SimpleSingAdapter) {
+                ((SimpleSingAdapter) adapter).setLayoutHelper(helper);
+            }
             helper.setItemCount(adapter.getItemCount());
             mTotal += helper.getItemCount();
             helpers.add(helper);

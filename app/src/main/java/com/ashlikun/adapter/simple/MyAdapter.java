@@ -1,6 +1,9 @@
 package com.ashlikun.adapter.simple;
 
 import android.content.Context;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
@@ -41,6 +44,7 @@ public class MyAdapter {
         @Override
         public LayoutHelper onCreateLayoutHelper() {
             GridLayoutHelper helper = new GridLayoutHelper(3);
+            helper.setAutoExpand(false);
             return helper;
         }
 
@@ -71,6 +75,12 @@ public class MyAdapter {
         public void convert(ViewHolder holder, Neibu2Data neibuData) {
             holder.setText(R.id.textView, neibuData.name);
         }
+
+        @Override
+        public void onItemClick(int viewType, ViewGroup parent, View view, Neibu2Data data, int position) {
+            super.onItemClick(viewType, parent, view, data, position);
+            Log.e("aaaa", position + "");
+        }
     }
 
     public static class AdapterItem3 extends SimpleSingAdapter<Neibu3Data> {
@@ -79,6 +89,7 @@ public class MyAdapter {
             super(context, datas);
             setCustomAnimation(new SlideInBottomAnimation());
         }
+
 
         @Override
         public int getLayoutId() {

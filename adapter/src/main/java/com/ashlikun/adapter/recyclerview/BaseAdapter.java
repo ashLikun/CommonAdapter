@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
+import com.ashlikun.adapter.ForegroundEffects;
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.animation.BaseAnimation;
 import com.ashlikun.adapter.recyclerview.click.OnItemClickListener;
@@ -32,7 +33,8 @@ import java.util.List;
  * }
  */
 public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<V>
-        implements IHeaderAndFooter, LifecycleObserver {
+        implements IHeaderAndFooter, LifecycleObserver, OnItemClickListener<T>, OnItemLongClickListener<T> {
+    private int clickDelay = 200;
     protected int mLayoutId;
     protected Context mContext;
     protected List<T> mDatas;
@@ -46,6 +48,13 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     private BaseAnimation mCustomAnimation;//动画
     private Interpolator mInterpolator = new LinearInterpolator();
     private int mDuration = 300;
+    private long lastClickTime = 0;
+    //item点击颜色
+    private int itemClickColor = 0;
+    /**
+     * 是否打开点击效果
+     */
+    private boolean isOpenClickEffects = true;
 
     public BaseAdapter(Context context, int layoutId, List<T> datas) {
         mContext = context;
@@ -66,15 +75,18 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         return mLayoutId;
     }
 
-    //可以重写这个方法，用java代码写布局,构造方法就不用传layoutID了
+    /**
+     * 可以重写这个方法，用java代码写布局,构造方法就不用传layoutID了
+     */
     public View getItemLayout(ViewGroup parent, int layoutId) {
         return LayoutInflater.from(mContext).inflate(layoutId, parent, false);
     }
 
     @Override
     public long getItemId(int position) {
-        if (position < mDatas.size()) {
-            return mDatas.get(position).hashCode();
+        T d = getItemData(position);
+        if (d != null) {
+            return d.hashCode();
         }
         return 0;
     }
@@ -84,10 +96,13 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         return mDatas == null ? 0 : mDatas.size();
     }
 
-    protected int getPosition(RecyclerView.ViewHolder viewHolder) {
-        return viewHolder.getAdapterPosition();
+    protected int getPosition(ViewHolder viewHolder) {
+        return viewHolder.getPositionInside();
     }
 
+    /**
+     * 是否可以点击
+     */
     protected boolean isEnabled(int viewType) {
         return true;
     }
@@ -95,27 +110,38 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     /**
      * 设置新的数据源
      */
-    public void setDatas(List<T> mDatas) {
-        this.mDatas = mDatas;
+    public void setDatas(List<T> datas) {
+        this.mDatas = datas;
     }
 
     /**
      * 添加数据
      */
-    public void addDatas(List<T> mDatas) {
-        this.mDatas = mDatas;
+    public void addDatas(List<T> datas) {
         if (mDatas == null) {
             mDatas = new ArrayList<>();
         }
-        mDatas.addAll(mDatas);
+        mDatas.addAll(datas);
+    }
+
+    /**
+     * 清空全部数据
+     */
+    public void clearData() {
+        if (mDatas != null) {
+            mDatas.clear();
+        }
     }
 
     public List<T> getDatas() {
         return mDatas;
     }
 
+    /**
+     * 获取position对应的数据
+     */
     public T getItemData(int position) {
-        if (mDatas != null && mDatas.size() <= position) {
+        if (mDatas == null || mDatas.size() <= position) {
             return null;
         }
         return mDatas.get(position);
@@ -129,36 +155,49 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         this.onItemLongClickListener = onItemLongClickListener;
     }
 
-    protected void setListener(final ViewGroup parent, final ViewHolder viewHolder, int viewType) {
+    protected void setListener(final ViewGroup parent, final ViewHolder viewHolder, final int viewType) {
         if (!isEnabled(viewType)
                 || !viewHolder.itemView.isEnabled()) {
             return;
         }
-        if (onItemLongClickListener != null || onItemClickListener != null) {
-            viewHolder.setItemBackgound();
+        if (isOpenClickEffects || onItemLongClickListener != null || onItemClickListener != null) {
+            int color = itemClickColor == 0 ? viewHolder.getItemClickColor() : itemClickColor;
+            ForegroundEffects.setForeground(color, viewHolder.itemView);
         }
-        if (onItemClickListener != null) {
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //暴力点击
+                if (System.currentTimeMillis() - lastClickTime > clickDelay) {
+                    lastClickTime = System.currentTimeMillis();
                     int position = getPosition(viewHolder);
-                    onItemClickListener.onItemClick(parent, v, mDatas.get(position - getHeaderSize()), position - getHeaderSize());
-                }
-            });
-        }
-
-        if (onItemLongClickListener != null) {
-            viewHolder.itemView.setOnLongClickListener(
-                    new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
-                            int position = getPosition(viewHolder);
-                            return onItemLongClickListener.onItemLongClick(parent, v, mDatas.get(position - getHeaderSize()), position - getHeaderSize());
+                    T d = getItemData(position);
+                    if (d != null) {
+                        onItemClick(viewType, parent, v, d, position);
+                        if (onItemClickListener != null) {
+                            onItemClickListener.onItemClick(viewType, parent, v, d, position);
                         }
                     }
-            );
-        }
+                }
+            }
+        });
+
+        viewHolder.itemView.setOnLongClickListener(
+                new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        int position = getPosition(viewHolder);
+                        T d = getItemData(position);
+                        if (d != null) {
+                            onItemLongClick(viewType, parent, v, d, position);
+                            if (onItemClickListener != null) {
+                                return onItemLongClickListener.onItemLongClick(viewType, parent, v, d, position);
+                            }
+                        }
+                        return false;
+                    }
+                }
+        );
     }
 
     @Override
@@ -229,5 +268,45 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
 
     public Context getContext() {
         return mContext;
+    }
+
+    /**
+     * 暴力点击的延时
+     */
+    public void setClickDelay(int clickDelay) {
+        this.clickDelay = clickDelay;
+    }
+
+    /**
+     * 内部封装点击事件
+     */
+    @Override
+    public boolean onItemLongClick(int viewType, ViewGroup parent, View view, T data, int position) {
+        return false;
+    }
+
+    /**
+     * 内部封装点击事件
+     */
+    @Override
+    public void onItemClick(int viewType, ViewGroup parent, View view, T data, int position) {
+
+    }
+
+    /**
+     * 是否打开点击效果
+     * 如果主动设置了点击事件，那么这个参数无效
+     */
+    public void setOffClickEffects() {
+        isOpenClickEffects = false;
+    }
+
+    /**
+     * 设置item点击颜色,全局的item
+     *
+     * @param itemClickColor
+     */
+    public void setItemClickColor(int itemClickColor) {
+        this.itemClickColor = itemClickColor;
     }
 }

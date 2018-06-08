@@ -10,5 +10,5 @@ import android.view.ViewGroup;
 
 public interface OnItemLongClickListener<T> {
 
-    boolean onItemLongClick(ViewGroup parent, View view, T data, int position);
+    boolean onItemLongClick(int viewType,ViewGroup parent, View view, T data, int position);
 }

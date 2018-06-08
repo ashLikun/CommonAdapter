@@ -1,17 +1,13 @@
 package com.ashlikun.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.RippleDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.util.Linkify;
 import android.util.SparseArray;
@@ -34,51 +30,30 @@ import android.widget.TextView;
 
 public class ViewHolder extends RecyclerView.ViewHolder {
     protected SparseArray<View> mViews;
-    protected int mPosition;
+    /**
+     * position 的偏移量，相对于整个列表的真实的位置(RecycleView)
+     */
+    protected int mPositionOffset;
     protected Context mContext;
     protected int mLayoutId;
-    protected int headerSize;
+    //item点击颜色
+    private int itemClickColor = Color.GRAY;
 
     public ViewHolder(Context context, View itemView, int position) {
         super(itemView);
         mContext = context;
-        mPosition = position;
+        setPosition(position);
         mViews = new SparseArray();
     }
 
     public void setPosition(int mPosition) {
-        this.mPosition = mPosition;
-    }
-
-    public void setHeaderSize(int headerSize) {
-        this.headerSize = headerSize;
-    }
-
-    /**
-     * 作者　　: 李坤
-     * 创建时间: 2016/12/14 9:06
-     * <p>
-     * 方法功能：设置view的背景点击效果
-     */
-
-    public void setItemBackgound() {
-        int pressed = Color.GRAY;
-        Drawable content = itemView.getBackground();
-        if (content == null) {
-            content = new ColorDrawable(Color.TRANSPARENT);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ColorStateList colorList = new ColorStateList(new int[][]{{}}, new int[]{pressed});
-            RippleDrawable ripple = new RippleDrawable(colorList, content.getAlpha() == 0 ? null : content, content.getAlpha() == 0 ? new ColorDrawable(Color.WHITE) : null);
-            setBackgroundCompat(itemView, ripple);
+        if (getLayoutPosition() == RecyclerView.NO_POSITION) {
+            this.mPositionOffset = mPosition;
         } else {
-            StateListDrawable bg = new StateListDrawable();
-            // View.PRESSED_ENABLED_STATE_SET
-            bg.addState(new int[]{android.R.attr.state_pressed, android.R.attr.state_enabled}, new ColorDrawable(pressed));
-            // View.EMPTY_STATE_SET
-            bg.addState(new int[]{}, content);
+            this.mPositionOffset = getLayoutPosition() - mPosition;
         }
     }
+
 
     /**
      * 通过viewId获取控件
@@ -152,7 +127,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     public ViewHolder setBackgroundDrawable(int viewId, Drawable drawable) {
         View view = getView(viewId);
-        setBackgroundCompat(view, drawable);
+        ViewCompat.setBackground(view, drawable);
         return this;
     }
 
@@ -168,7 +143,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    @SuppressLint("NewApi")
     public ViewHolder setAlpha(int viewId, float value) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             getView(viewId).setAlpha(value);
@@ -294,25 +268,33 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return mLayoutId;
     }
 
+    /**
+     * 获取内部的位置
+     * 下面这些是相对于整个列表的位置
+     * 也可以使用这些：{@link #getLayoutPosition}
+     * 也可以使用这些：{@link #getAdapterPosition()}
+     *
+     * @return
+     */
     public int getPositionInside() {
-        int lposition = getLayoutPosition();
-        if (lposition < 0) {
-            return mPosition;
+        if (getLayoutPosition() != RecyclerView.NO_POSITION) {
+            return getLayoutPosition() - mPositionOffset;
         } else {
-            return lposition - headerSize;
+            return mPositionOffset;
         }
     }
 
-    public void setBackgroundCompat(View view, Drawable drawable) {
-        int pL = view.getPaddingLeft();
-        int pT = view.getPaddingTop();
-        int pR = view.getPaddingRight();
-        int pB = view.getPaddingBottom();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            view.setBackground(drawable);
-        } else {
-            view.setBackgroundDrawable(drawable);
-        }
-        view.setPadding(pL, pT, pR, pB);
+
+    /**
+     * 设置item点击颜色,就当前Holder   item
+     *
+     * @param itemClickColor
+     */
+    public void setItemClickColor(int itemClickColor) {
+        this.itemClickColor = itemClickColor;
+    }
+
+    public int getItemClickColor() {
+        return itemClickColor;
     }
 }
