@@ -47,7 +47,7 @@ public class DataBindHolder<DB extends ViewDataBinding> extends ViewHolder {
                     , position);
         } else {
             DataBindHolder holder = (DataBindHolder) convertView.getTag(convertView.getId());
-            holder.mPosition = position;
+            holder.setPosition(position);
             return holder;
         }
     }
@@ -114,9 +114,6 @@ public class DataBindHolder<DB extends ViewDataBinding> extends ViewHolder {
     }
 
 
-    public void updatePosition(int position) {
-        mPosition = position;
-    }
 
 
 }
