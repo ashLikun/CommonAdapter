@@ -2,6 +2,7 @@ package com.ashlikun.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -33,7 +34,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     protected Context mContext;
     protected int mLayoutId;
     //item点击颜色
-    private int itemClickColor = 0xff999999;
+    private int itemClickColor = Color.GRAY;
 
     public ViewHolder(Context context, View itemView, int position) {
         super(itemView);

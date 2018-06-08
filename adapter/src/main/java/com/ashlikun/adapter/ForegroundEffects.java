@@ -32,13 +32,13 @@ public class ForegroundEffects {
         Drawable drawable;
         Drawable background = view.getBackground();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            color = color & 0xee000000;
+            color = color & 0xEEFFFFFF;
             ColorStateList colorList = new ColorStateList(new int[][]{{}}, new int[]{color});
             drawable = new RippleDrawable(colorList, !isCanForeground(view) ? background : null,
                     background == null ? new ColorDrawable(Color.WHITE) : background);
         } else {
             if (isCanForeground(view)) {
-                color = color & 0x33000000;
+                color = color & 0x33FFFFFF;
             }
             StateListDrawable bg = new StateListDrawable();
             Drawable colorDrawable;
