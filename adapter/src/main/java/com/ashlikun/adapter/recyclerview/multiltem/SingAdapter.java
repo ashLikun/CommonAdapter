@@ -72,6 +72,18 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
         convert(holder, getItemData(position));
     }
 
+    @Override
+    public void onBindViewHolder(VH holder, int position, List<Object> payloads) {
+        if (payloads != null && !payloads.isEmpty()) {
+            holder.setPosition(position);
+            if (!convert(holder, getItemData(position), payloads)) {
+                super.onBindViewHolder(holder, position, payloads);
+            }
+        } else {
+            super.onBindViewHolder(holder, position, payloads);
+        }
+    }
+
     /**
      * @author　　: 李坤
      * 创建时间: 2018/4/16 0016 上午 10:47

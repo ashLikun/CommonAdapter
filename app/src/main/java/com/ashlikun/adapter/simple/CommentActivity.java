@@ -59,8 +59,8 @@ public class CommentActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onItemClick(ViewGroup parent, View view, NeibuData data, int position) {
-                super.onItemClick(parent, view, data, position);
+            public void onItemClick(int viewType,ViewGroup parent, View view, NeibuData data, int position) {
+                super.onItemClick(viewType,parent, view, data, position);
                 Log.e("aaaa", position + "");
 //                Intent intent = new Intent();
 //                intent.setClassName("com.tencent.mm",

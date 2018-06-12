@@ -6,5 +6,5 @@ import android.view.ViewGroup;
 
 public interface OnItemClickListener<T> {
 
-    void onItemClick(ViewGroup parent, View view, T data, int position);
+    void onItemClick(int viewType,ViewGroup parent, View view, T data, int position);
 }

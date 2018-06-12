@@ -35,6 +35,7 @@ import com.alibaba.android.vlayout.Cantor;
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.VirtualLayoutAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
+import com.ashlikun.adapter.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -152,7 +153,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         if (pair == null) {
             return;
         }
-        pair.second.onBindViewHolder(holder, position - pair.first.mStartPosition, payloads);
+        pair.second.onBindViewHolder((ViewHolder) holder, position - pair.first.mStartPosition, payloads);
         pair.second.onBindViewHolderWithOffset(holder, position - pair.first.mStartPosition, position, payloads);
 
     }

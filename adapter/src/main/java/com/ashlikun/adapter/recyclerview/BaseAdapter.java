@@ -71,6 +71,16 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
 
     public abstract void convert(V holder, T t);
 
+    /**
+     * recycleView的局部刷新
+     *
+     * @param payloads 一定不为null
+     * @return true：代表处理完毕，不走另一个刷新的方法，false表示没有处理，继续走另一个
+     */
+    public boolean convert(V holder, T t, List<Object> payloads) {
+        return false;
+    }
+
     public int getLayoutId() {
         return mLayoutId;
     }
@@ -155,7 +165,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         this.onItemLongClickListener = onItemLongClickListener;
     }
 
-    protected void setListener(final ViewGroup parent, final ViewHolder viewHolder, int viewType) {
+    protected void setListener(final ViewGroup parent, final ViewHolder viewHolder, final int viewType) {
         if (!isEnabled(viewType)
                 || !viewHolder.itemView.isEnabled()) {
             return;
@@ -173,9 +183,9 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
                     int position = getPosition(viewHolder);
                     T d = getItemData(position);
                     if (d != null) {
-                        onItemClick(parent, v, d, position);
+                        onItemClick(viewType, parent, v, d, position);
                         if (onItemClickListener != null) {
-                            onItemClickListener.onItemClick(parent, v, d, position);
+                            onItemClickListener.onItemClick(viewType, parent, v, d, position);
                         }
                     }
                 }
@@ -189,10 +199,10 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
                         int position = getPosition(viewHolder);
                         T d = getItemData(position);
                         if (d != null) {
-                            if (onItemLongClick(parent, v, d, position)) {
+                            if (onItemLongClick(viewType, parent, v, d, position)) {
                                 return true;
                             } else if (onItemClickListener != null) {
-                                return onItemLongClickListener.onItemLongClick(parent, v, d, position);
+                                return onItemLongClickListener.onItemLongClick(viewType, parent, v, d, position);
                             }
                         }
                         return false;
@@ -282,7 +292,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * 内部封装点击事件
      */
     @Override
-    public boolean onItemLongClick(ViewGroup parent, View view, T data, int position) {
+    public boolean onItemLongClick(int viewType, ViewGroup parent, View view, T data, int position) {
         return false;
     }
 
@@ -290,7 +300,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * 内部封装点击事件
      */
     @Override
-    public void onItemClick(ViewGroup parent, View view, T data, int position) {
+    public void onItemClick(int viewType, ViewGroup parent, View view, T data, int position) {
 
     }
 

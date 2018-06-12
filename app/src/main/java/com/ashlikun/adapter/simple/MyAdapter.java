@@ -77,8 +77,8 @@ public class MyAdapter {
         }
 
         @Override
-        public void onItemClick(ViewGroup parent, View view, Neibu2Data data, int position) {
-            super.onItemClick(parent, view, data, position);
+        public void onItemClick(int viewType, ViewGroup parent, View view, Neibu2Data data, int position) {
+            super.onItemClick(viewType, parent, view, data, position);
             Log.e("aaaa", position + "");
         }
     }
