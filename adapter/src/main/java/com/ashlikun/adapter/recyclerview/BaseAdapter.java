@@ -189,8 +189,9 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
                         int position = getPosition(viewHolder);
                         T d = getItemData(position);
                         if (d != null) {
-                            onItemLongClick(parent, v, d, position);
-                            if (onItemClickListener != null) {
+                            if (onItemLongClick(parent, v, d, position)) {
+                                return true;
+                            } else if (onItemClickListener != null) {
                                 return onItemLongClickListener.onItemLongClick(parent, v, d, position);
                             }
                         }
