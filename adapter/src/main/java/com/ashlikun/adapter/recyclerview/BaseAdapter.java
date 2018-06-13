@@ -172,7 +172,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         }
         if (isOpenClickEffects || onItemLongClickListener != null || onItemClickListener != null) {
             int color = itemClickColor == 0 ? viewHolder.getItemClickColor() : itemClickColor;
-            ForegroundEffects.setForeground(color, viewHolder.itemView);
+            ForegroundEffects.setForeground(color, getForegroundView(viewHolder));
         }
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,6 +209,16 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
                     }
                 }
         );
+    }
+
+    /**
+     * 获取要设置前景色效果的view，23,FrameLayout
+     *
+     * @param viewHolder
+     * @return
+     */
+    protected View getForegroundView(ViewHolder viewHolder) {
+        return viewHolder.itemView;
     }
 
     @Override
