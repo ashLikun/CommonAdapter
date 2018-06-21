@@ -260,7 +260,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     public void onViewDetachedFromWindow(V holder) {
         super.onViewDetachedFromWindow(holder);
         if (lastPositionEnable) {
-            if (holder.getLayoutPosition() > lastPosition) {
+            if (holder.getLayoutPosition() >= lastPosition - 2) {
                 lastPosition = getLastPosition();
             }
         }
