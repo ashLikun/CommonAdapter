@@ -45,7 +45,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     OnItemLongClickListener onItemLongClickListener;
     private boolean mOpenAnimationEnable = false;//动画是否开启
     private boolean mFirstOnlyEnable = true;//仅仅第一次底部出现才动画
-    private int lastPosition = -1;//最后一个显示的item(只要显示过的就不会再显示),LayouPosition
+    private int lastPosition = RecyclerView.NO_POSITION;//最后一个显示的item(只要显示过的就不会再显示),LayouPosition
     private boolean lastPositionEnable = false;//内部计算最后一个position使能
     private BaseAnimation mCustomAnimation;//动画
     private Interpolator mInterpolator = new LinearInterpolator();
@@ -252,6 +252,9 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         if (lastPositionEnable || mOpenAnimationEnable) {
             if (holder.getLayoutPosition() > lastPosition) {
                 lastPosition = holder.getLayoutPosition();
+                if (lastPosition == 0) {
+                    lastPosition = RecyclerView.NO_POSITION;
+                }
             }
         }
     }
@@ -262,6 +265,9 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         if (lastPositionEnable) {
             if (holder.getLayoutPosition() >= lastPosition - 2) {
                 lastPosition = getLastPosition();
+                if (lastPosition == 0) {
+                    lastPosition = RecyclerView.NO_POSITION;
+                }
             }
         }
     }
