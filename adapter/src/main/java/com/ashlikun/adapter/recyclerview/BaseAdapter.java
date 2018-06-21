@@ -5,12 +5,14 @@ import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
+import com.ashlikun.adapter.AdapterUtils;
 import com.ashlikun.adapter.ForegroundEffects;
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.animation.BaseAnimation;
@@ -44,7 +46,8 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     OnItemLongClickListener onItemLongClickListener;
     private boolean mOpenAnimationEnable = false;//动画是否开启
     private boolean mFirstOnlyEnable = true;//仅仅第一次底部出现才动画
-    private int mLastPosition = -1;//最后一个显示的item,LayouPosition
+    private int lastPosition = -1;//最后一个显示的item(只要显示过的就不会再显示),LayouPosition
+    private boolean lastPositionEnable = false;//内部计算最后一个position使能
     private BaseAnimation mCustomAnimation;//动画
     private Interpolator mInterpolator = new LinearInterpolator();
     private int mDuration = 300;
@@ -55,6 +58,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * 是否打开点击效果
      */
     private boolean isOpenClickEffects = true;
+    protected RecyclerView recyclerView;
 
     public BaseAdapter(Context context, int layoutId, List<T> datas) {
         mContext = context;
@@ -245,7 +249,44 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     @Override
     public void onViewAttachedToWindow(V holder) {
         super.onViewAttachedToWindow(holder);
+        onViewAttachedToWindowAnim(holder);
+        if (lastPositionEnable || mOpenAnimationEnable) {
+            if (holder.getLayoutPosition() > lastPosition) {
+                lastPosition = holder.getLayoutPosition();
+                Log.e("aaa", lastPosition + "");
+            }
+        }
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(V holder) {
+        super.onViewDetachedFromWindow(holder);
+        if (lastPositionEnable) {
+            if (holder.getLayoutPosition() > lastPosition) {
+                lastPosition = getLastPosition();
+            }
+        }
+    }
+
+    /**
+     * 附属于window时候动画
+     *
+     * @param holder
+     */
+    public void onViewAttachedToWindowAnim(V holder) {
         addAnimation(holder);
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        this.recyclerView = null;
     }
 
     /**
@@ -255,23 +296,27 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      */
     private void addAnimation(RecyclerView.ViewHolder holder) {
         if (mOpenAnimationEnable) {
-            if ((mFirstOnlyEnable && holder.getLayoutPosition() > mLastPosition) || !mFirstOnlyEnable) {
-                if (mCustomAnimation != null) {
-                    Animator[] animators = mCustomAnimation.getAnimators(holder.itemView);
-                    for (Animator anim : animators) {
-                        startAnim(anim, holder.getLayoutPosition());
-                    }
-                }
+            if (mFirstOnlyEnable && holder.getLayoutPosition() > lastPosition) {
+                Log.e("aaa", lastPosition + "    " + holder.getLayoutPosition());
+                dispathAnim(holder);
+            } else if (!mFirstOnlyEnable) {
+                dispathAnim(holder);
             }
-        }
-        if (holder.getLayoutPosition() > mLastPosition) {
-            mLastPosition = holder.getLayoutPosition();
         }
     }
 
     public void setCustomAnimation(BaseAnimation mCustomAnimation) {
         this.mCustomAnimation = mCustomAnimation;
         mOpenAnimationEnable = true;
+    }
+
+    private void dispathAnim(RecyclerView.ViewHolder holder) {
+        if (mCustomAnimation != null) {
+            Animator[] animators = mCustomAnimation.getAnimators(holder.itemView);
+            for (Animator anim : animators) {
+                startAnim(anim, holder.getLayoutPosition());
+            }
+        }
     }
 
     /**
@@ -283,11 +328,35 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     }
 
     /**
-     * 最后一个显示的item,LayouPosition
+     * 内部计算的最后一个显示的item(滑动后的底部),LayouPosition
      * 用于动画
      */
+    public int getOnlyLastPosition() {
+        return lastPosition;
+    }
+
+    /**
+     * 屏幕中的最后一个Item位置
+     *
+     * @return
+     */
     public int getLastPosition() {
-        return mLastPosition;
+        if (recyclerView == null || recyclerView.getLayoutManager() == null) {
+            return RecyclerView.NO_POSITION;
+        }
+        return AdapterUtils.findLastVisiblePosition(recyclerView.getLayoutManager());
+    }
+
+    /**
+     * 屏幕中的第一个Item位置
+     *
+     * @return
+     */
+    public int getFirstPosition() {
+        if (recyclerView == null || recyclerView.getLayoutManager() == null) {
+            return RecyclerView.NO_POSITION;
+        }
+        return AdapterUtils.findFirstVisibleItemPosition(recyclerView.getLayoutManager());
     }
 
     /**
@@ -297,6 +366,15 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      */
     public void setFirstOnlyEnable(boolean mFirstOnlyEnable) {
         this.mFirstOnlyEnable = mFirstOnlyEnable;
+    }
+
+    /**
+     * 是否内部计算lastPosition
+     *
+     * @param
+     */
+    public void setLastPositionOn() {
+        this.lastPositionEnable = true;
     }
 
     /**

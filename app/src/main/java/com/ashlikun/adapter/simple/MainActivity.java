@@ -1,8 +1,8 @@
 package com.ashlikun.adapter.simple;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -37,14 +37,13 @@ public class MainActivity extends AppCompatActivity {
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent intent = new Intent(MainActivity.this, CommentActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(MainActivity.this, CommentActivity.class);
+//                startActivity(intent);
+                onClick(null);
                 return false;
             }
         });
-//        for (int i = 0; i < 40; i++) {
-//            listDatas.add("列表数据" + i);
-//        }
+//
         Data data1 = new Data(1);
         data1.data = new NeibuData("第一個");
         listDatas.add(data1);
@@ -73,75 +72,33 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         VirtualLayoutManager layoutManager = new VirtualLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-       // recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-//        //DataBinding   adater
-//        recyclerView.setAdapter(adapter = new SectionAdapter<String, ItemViewBinding>(this, R.layout.item_view, listDatas) {
-//            @Override
-//            public void convert(DataBindHolder<ItemViewBinding> holder, String s) {
-//                holder.dataBind.setItemData(s);
-//            }
-//
-//            @Override
-//            public int sectionHeaderLayoutId() {
-//                return R.layout.item_view2;
-//            }
-//
-//            @Override
-//            public String getTitle(int position, String s) {
-//                if (position % 4 == 0) {
-//                    return "标题" + position / 4;
-//                }
-//                return null;
-//            }
-//
-//            @Override
-//            public void setTitle(DataBindHolder holder, String title, String s) {
-//                holder.setText(R.id.textView, title);
-//            }
-//        });
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        //DataBinding   adater
         adapter = new MultipleAdapter(layoutManager, false);
         recyclerView.setAdapter(adapter);
         for (int i = 0; i < 10; i++) {
             neibuData.add(new NeibuData("我是第一种" + i));
         }
-        adapter.addAdapter(new MyAdapter.AdapterItem1(this, neibuData).setViewType(Integer.MAX_VALUE));
-
-        ArrayList<Neibu2Data> neibu2Data = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            neibu2Data.add(new Neibu2Data("我是第二种" + i));
-        }
-        adapter.addAdapter(new MyAdapter.AdapterItem2(this, neibu2Data).setViewType(2));
+//        adapter.addAdapter(new MyAdapter.AdapterItem1(this, neibuData).setViewType(Integer.MAX_VALUE));
+//
+//        ArrayList<Neibu2Data> neibu2Data = new ArrayList<>();
+//        for (int i = 0; i < 20; i++) {
+//            neibu2Data.add(new Neibu2Data("我是第二种" + i));
+//        }
+//        adapter.addAdapter(new MyAdapter.AdapterItem2(this, neibu2Data).setViewType(2));
 
         ArrayList<Neibu3Data> neibu3Data = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             neibu3Data.add(new Neibu3Data("我是第三种" + i));
         }
         adapter.addAdapter(new MyAdapter.AdapterItem3(this, neibu3Data).setViewType(3));
-        adapter.addAdapter(new MyAdapter.AdapterItemSing(this).setViewType(4));
-       // recyclerView.setItemAnimator(null);
+//        adapter.addAdapter(new MyAdapter.AdapterItemSing(this).setViewType(4));
+        // recyclerView.setItemAnimator(null);
     }
 
     public void onClick(View view) {
         neibuData.add(new NeibuData("新加的数据" + neibuData.size()));
-        adapter.findAdapterByViewType(Integer.MAX_VALUE).notifyDataSetChanged();
-        // adapter.notifyChanged();
+//        adapter.findAdapterByViewType(Integer.MAX_VALUE).notifyDataSetChanged();
+        adapter.notifyChanged();
     }
-//    @Override
-//    public String getTitle(int position,String o) {
-//        if(position == 5){
-//            return "7888888888888888888";
-//        }else{
-//            return "77777777777";
-//        }
-//    }
-//
-//    @Override
-//    public void setTitle(ViewHolder holder, String title, String o) {
-//        ((ItemViewBinding) holder.dataBind).setItemData(title);
-//    }
-//
-//    @Override
-//    public void convert(ViewHolder holder, String s) {
-//        ((ItemView1Binding) holder.dataBind).setItemData(s);
-//    }
 }

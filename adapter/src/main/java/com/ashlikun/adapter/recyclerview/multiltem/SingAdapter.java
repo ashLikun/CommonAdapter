@@ -109,4 +109,7 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
 
     public abstract VH createHolder(final ViewGroup parent, int viewType);
 
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
 }

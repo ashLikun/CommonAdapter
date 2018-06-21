@@ -59,7 +59,7 @@ import static android.support.v7.widget.RecyclerView.NO_ID;
  */
 
 public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolder> {
-
+    RecyclerView recyclerView;
     @Nullable
     private AtomicInteger mIndexGen;
 
@@ -279,7 +279,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
         for (Pair<AdapterDataObserver, SingAdapter> p : mAdapters) {
             p.second.onAttachedToRecyclerView(recyclerView);
         }
@@ -287,10 +287,10 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
         for (Pair<AdapterDataObserver, SingAdapter> p : mAdapters) {
             p.second.onDetachedFromRecyclerView(recyclerView);
         }
+        this.recyclerView = null;
     }
 
     /**
@@ -330,6 +330,10 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             helpers.add(helper);
             pair = Pair.create(observer, adapter);
             mIndexAry.put(observer.mIndex, pair);
+            //设置附属到recycle
+            if (recyclerView != null && adapter.getRecyclerView() == null) {
+                adapter.onAttachedToRecyclerView(recyclerView);
+            }
             mAdapters.add(pair);
         }
 
