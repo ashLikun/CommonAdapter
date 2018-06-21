@@ -44,7 +44,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     OnItemLongClickListener onItemLongClickListener;
     private boolean mOpenAnimationEnable = false;//动画是否开启
     private boolean mFirstOnlyEnable = true;//仅仅第一次底部出现才动画
-    private int mLastPosition = -1;//最后一个显示的item
+    private int mLastPosition = -1;//最后一个显示的item,LayouPosition
     private BaseAnimation mCustomAnimation;//动画
     private Interpolator mInterpolator = new LinearInterpolator();
     private int mDuration = 300;
@@ -245,7 +245,6 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     @Override
     public void onViewAttachedToWindow(V holder) {
         super.onViewAttachedToWindow(holder);
-        int type = holder.getItemViewType();
         addAnimation(holder);
     }
 
@@ -256,15 +255,17 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      */
     private void addAnimation(RecyclerView.ViewHolder holder) {
         if (mOpenAnimationEnable) {
-            if (!mFirstOnlyEnable || holder.getLayoutPosition() > mLastPosition) {
+            if ((mFirstOnlyEnable && holder.getLayoutPosition() > mLastPosition) || !mFirstOnlyEnable) {
                 if (mCustomAnimation != null) {
                     Animator[] animators = mCustomAnimation.getAnimators(holder.itemView);
                     for (Animator anim : animators) {
                         startAnim(anim, holder.getLayoutPosition());
                     }
                 }
-                mLastPosition = holder.getLayoutPosition();
             }
+        }
+        if (holder.getLayoutPosition() > mLastPosition) {
+            mLastPosition = holder.getLayoutPosition();
         }
     }
 
@@ -279,6 +280,23 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     protected void startAnim(Animator anim, int index) {
         anim.setDuration(mDuration).start();
         anim.setInterpolator(mInterpolator);
+    }
+
+    /**
+     * 最后一个显示的item,LayouPosition
+     * 用于动画
+     */
+    public int getLastPosition() {
+        return mLastPosition;
+    }
+
+    /**
+     * 仅仅第一次底部出现才动画
+     *
+     * @param mFirstOnlyEnable
+     */
+    public void setFirstOnlyEnable(boolean mFirstOnlyEnable) {
+        this.mFirstOnlyEnable = mFirstOnlyEnable;
     }
 
     /**

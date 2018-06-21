@@ -13,7 +13,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.android.vlayout.VirtualLayoutManager;
-import com.ashlikun.adapter.recyclerview.CommonAdapter;
 import com.ashlikun.adapter.recyclerview.multiltem.MultipleAdapter;
 
 import java.util.ArrayList;
@@ -119,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
         }
         adapter.addAdapter(new MyAdapter.AdapterItem3(this, neibu3Data).setViewType(3));
         adapter.addAdapter(new MyAdapter.AdapterItemSing(this).setViewType(4));
-
        // recyclerView.setItemAnimator(null);
     }
 
