@@ -333,6 +333,17 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     }
 
     /**
+     * 主动设置最后一个显示的position
+     *
+     * @param lastPosition
+     */
+    public void setOnlyLastPosition(int lastPosition) {
+        if (lastPositionEnable) {
+            this.lastPosition = lastPosition;
+        }
+    }
+
+    /**
      * 屏幕中的最后一个Item位置
      *
      * @return

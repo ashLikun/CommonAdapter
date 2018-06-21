@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClick(View view) {
         neibuData.add(new NeibuData("新加的数据" + neibuData.size()));
-//        adapter.findAdapterByViewType(Integer.MAX_VALUE).notifyDataSetChanged();
+        adapter.findAdapterByViewType(3).cleanOnlyLastPosition();
         adapter.notifyChanged();
     }
 }
