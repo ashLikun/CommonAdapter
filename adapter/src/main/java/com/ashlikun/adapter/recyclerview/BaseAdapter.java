@@ -5,7 +5,6 @@ import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -253,7 +252,6 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         if (lastPositionEnable || mOpenAnimationEnable) {
             if (holder.getLayoutPosition() > lastPosition) {
                 lastPosition = holder.getLayoutPosition();
-                Log.e("aaa", lastPosition + "");
             }
         }
     }
@@ -297,7 +295,6 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     private void addAnimation(RecyclerView.ViewHolder holder) {
         if (mOpenAnimationEnable) {
             if (mFirstOnlyEnable && holder.getLayoutPosition() > lastPosition) {
-                Log.e("aaa", lastPosition + "    " + holder.getLayoutPosition());
                 dispathAnim(holder);
             } else if (!mFirstOnlyEnable) {
                 dispathAnim(holder);
