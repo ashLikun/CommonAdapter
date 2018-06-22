@@ -81,7 +81,11 @@ public class DataHandle<T> {
         int size = getItemCount();
         mDatas.addAll(datas);
         if (isNotify) {
-            adapter.notifyItemRangeInserted(size, datas.size());
+            if (size > 0) {
+                adapter.notifyItemRangeInserted(size, datas.size());
+            } else {
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -127,9 +131,10 @@ public class DataHandle<T> {
      */
     public void clearData(boolean isNotify) {
         if (mDatas != null) {
+            int size = getItemCount();
             mDatas.clear();
-            if (isNotify && getItemCount() > 0) {
-                adapter.notifyItemRangeRemoved(0, getItemCount());
+            if (isNotify && size > 0) {
+                adapter.notifyItemRangeRemoved(0, size);
             }
         }
     }
