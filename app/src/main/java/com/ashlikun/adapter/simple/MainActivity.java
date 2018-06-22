@@ -91,7 +91,17 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 20; i++) {
             neibu3Data.add(new Neibu3Data("我是第三种" + i));
         }
-        adapter.addAdapter(new MyAdapter.AdapterItem3(this, neibu3Data).setViewType(3));
+        MyAdapter.AdapterItem3 adapterItem3 = new MyAdapter.AdapterItem3(this, neibu3Data);
+        adapterItem3.setViewType(3);
+        adapterItem3.getAdapterAnimHelp().setLastPositionOn();
+        adapterItem3.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                Log.e("aa", "aaaaaaaaaaaaaaaaaaa");
+            }
+        });
+        adapter.addAdapter(adapterItem3);
 //        adapter.addAdapter(new MyAdapter.AdapterItemSing(this).setViewType(4));
         // recyclerView.setItemAnimator(null);
     }

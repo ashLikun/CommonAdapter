@@ -1,6 +1,5 @@
 package com.ashlikun.adapter.recyclerview;
 
-import android.animation.Animator;
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
@@ -8,12 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Interpolator;
-import android.view.animation.LinearInterpolator;
 
 import com.ashlikun.adapter.AdapterUtils;
 import com.ashlikun.adapter.ForegroundEffects;
 import com.ashlikun.adapter.ViewHolder;
+import com.ashlikun.adapter.animation.AdapterAnimHelp;
 import com.ashlikun.adapter.animation.BaseAnimation;
 import com.ashlikun.adapter.recyclerview.click.OnItemClickListener;
 import com.ashlikun.adapter.recyclerview.click.OnItemLongClickListener;
@@ -43,13 +41,8 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     private int footerSize;
     OnItemClickListener onItemClickListener;
     OnItemLongClickListener onItemLongClickListener;
-    private boolean mOpenAnimationEnable = false;//动画是否开启
-    private boolean mFirstOnlyEnable = true;//仅仅第一次底部出现才动画
-    private int lastPosition = RecyclerView.NO_POSITION;//最后一个显示的item(只要显示过的就不会再显示),LayouPosition
-    private boolean lastPositionEnable = false;//内部计算最后一个position使能
-    private BaseAnimation mCustomAnimation;//动画
-    private Interpolator mInterpolator = new LinearInterpolator();
-    private int mDuration = 300;
+    AdapterAnimHelp adapterAnimHelp;
+
     private long lastClickTime = 0;
     //item点击颜色
     private int itemClickColor = 0;
@@ -64,12 +57,11 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         mDatas = datas;
         mLayoutId = layoutId;
         setHasStableIds(true);
+        adapterAnimHelp = new AdapterAnimHelp(this);
     }
 
     public BaseAdapter(Context context, List<T> datas) {
-        mContext = context;
-        mDatas = datas;
-        setHasStableIds(true);
+        this(context, -1, datas);
     }
 
     public abstract void convert(V holder, T t);
@@ -249,27 +241,13 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     public void onViewAttachedToWindow(V holder) {
         super.onViewAttachedToWindow(holder);
         onViewAttachedToWindowAnim(holder);
-        if (lastPositionEnable || mOpenAnimationEnable) {
-            if (holder.getLayoutPosition() > lastPosition) {
-                lastPosition = holder.getLayoutPosition();
-                if (lastPosition == 0) {
-                    lastPosition = RecyclerView.NO_POSITION;
-                }
-            }
-        }
+        adapterAnimHelp.onViewAttachedToWindow(holder);
     }
 
     @Override
     public void onViewDetachedFromWindow(V holder) {
         super.onViewDetachedFromWindow(holder);
-        if (lastPositionEnable) {
-            if (holder.getLayoutPosition() >= lastPosition - 2) {
-                lastPosition = getLastPosition();
-                if (lastPosition == 0) {
-                    lastPosition = RecyclerView.NO_POSITION;
-                }
-            }
-        }
+        adapterAnimHelp.onViewDetachedFromWindow(holder);
     }
 
     /**
@@ -278,7 +256,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * @param holder
      */
     public void onViewAttachedToWindowAnim(V holder) {
-        addAnimation(holder);
+
     }
 
     @Override
@@ -293,60 +271,9 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         this.recyclerView = null;
     }
 
-    /**
-     * 开始item动画一个动画
-     *
-     * @param holder
-     */
-    private void addAnimation(RecyclerView.ViewHolder holder) {
-        if (mOpenAnimationEnable) {
-            if (mFirstOnlyEnable && holder.getLayoutPosition() > lastPosition) {
-                dispathAnim(holder);
-            } else if (!mFirstOnlyEnable) {
-                dispathAnim(holder);
-            }
-        }
-    }
 
     public void setCustomAnimation(BaseAnimation mCustomAnimation) {
-        this.mCustomAnimation = mCustomAnimation;
-        mOpenAnimationEnable = true;
-    }
-
-    private void dispathAnim(RecyclerView.ViewHolder holder) {
-        if (mCustomAnimation != null) {
-            Animator[] animators = mCustomAnimation.getAnimators(holder.itemView);
-            for (Animator anim : animators) {
-                startAnim(anim, holder.getLayoutPosition());
-            }
-        }
-    }
-
-    /**
-     * 开始动画
-     */
-    protected void startAnim(Animator anim, int index) {
-        anim.setDuration(mDuration).start();
-        anim.setInterpolator(mInterpolator);
-    }
-
-    /**
-     * 内部计算的最后一个显示的item(滑动后的底部),LayouPosition
-     * 用于动画
-     */
-    public int getOnlyLastPosition() {
-        return lastPosition;
-    }
-
-    /**
-     * 主动设置最后一个显示的position
-     *
-     * @param lastPosition
-     */
-    public void setOnlyLastPosition(int lastPosition) {
-        if (lastPositionEnable) {
-            this.lastPosition = lastPosition;
-        }
+        adapterAnimHelp.setCustomAnimation(mCustomAnimation);
     }
 
     /**
@@ -374,28 +301,19 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     }
 
     /**
-     * 仅仅第一次底部出现才动画
-     *
-     * @param mFirstOnlyEnable
-     */
-    public void setFirstOnlyEnable(boolean mFirstOnlyEnable) {
-        this.mFirstOnlyEnable = mFirstOnlyEnable;
-    }
-
-    /**
-     * 是否内部计算lastPosition
-     *
-     * @param
-     */
-    public void setLastPositionOn() {
-        this.lastPositionEnable = true;
-    }
-
-    /**
      * 设置生命周期监听
      */
     public void addLifecycle(Lifecycle lifecycle) {
         lifecycle.addObserver(this);
+    }
+
+    /**
+     * 获取动画帮助类
+     *
+     * @return
+     */
+    public AdapterAnimHelp getAdapterAnimHelp() {
+        return adapterAnimHelp;
     }
 
     public Context getContext() {
@@ -424,6 +342,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     public void onItemClick(int viewType, ViewGroup parent, View view, T data, int position) {
 
     }
+
 
     /**
      * 是否打开点击效果
