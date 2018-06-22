@@ -2,7 +2,6 @@ package com.ashlikun.adapter.animation;
 
 import android.animation.Animator;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
@@ -33,7 +32,6 @@ public class AdapterAnimHelp {
         if (lastPositionEnable) {
             if (holder.getLayoutPosition() >= lastPosition - 2) {
                 lastPosition = adapter.getLastPosition();
-                Log.e("aa", lastPosition + "");
                 if (lastPosition == 0) {
                     lastPosition = RecyclerView.NO_POSITION;
                 }
