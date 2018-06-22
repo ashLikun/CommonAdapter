@@ -66,4 +66,6 @@ public class AdapterUtils {
         }
         return max;
     }
+
+
 }

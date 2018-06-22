@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ashlikun.adapter.AdapterUtils;
+import com.ashlikun.adapter.DataHandle;
 import com.ashlikun.adapter.ForegroundEffects;
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.animation.AdapterAnimHelp;
@@ -16,7 +17,6 @@ import com.ashlikun.adapter.animation.BaseAnimation;
 import com.ashlikun.adapter.recyclerview.click.OnItemClickListener;
 import com.ashlikun.adapter.recyclerview.click.OnItemLongClickListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +36,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     private int clickDelay = 200;
     protected int mLayoutId;
     protected Context mContext;
-    protected List<T> mDatas;
+    protected DataHandle<T> dataHandle;
     private int headerSize;
     private int footerSize;
     OnItemClickListener onItemClickListener;
@@ -53,8 +53,8 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     protected RecyclerView recyclerView;
 
     public BaseAdapter(Context context, int layoutId, List<T> datas) {
+        dataHandle = new DataHandle<>(datas, this);
         mContext = context;
-        mDatas = datas;
         mLayoutId = layoutId;
         setHasStableIds(true);
         adapterAnimHelp = new AdapterAnimHelp(this);
@@ -98,7 +98,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
 
     @Override
     public int getItemCount() {
-        return mDatas == null ? 0 : mDatas.size();
+        return dataHandle.getItemCount();
     }
 
     protected int getPosition(ViewHolder viewHolder) {
@@ -116,40 +116,63 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * 设置新的数据源
      */
     public void setDatas(List<T> datas) {
-        this.mDatas = datas;
+        dataHandle.setDatas(datas);
+    }
+
+    /**
+     * 设置新的数据源
+     *
+     * @param isNotify 是否通知适配器刷新
+     */
+    public void setDatas(List<T> datas, boolean isNotify) {
+        dataHandle.setDatas(datas, isNotify);
     }
 
     /**
      * 添加数据
      */
     public void addDatas(List<T> datas) {
-        if (mDatas == null) {
-            mDatas = new ArrayList<>();
-        }
-        mDatas.addAll(datas);
+        addDatas(datas, false);
+    }
+
+    /**
+     * 添加数据
+     *
+     * @param isNotify 是否通知适配器刷新
+     */
+    public void addDatas(List<T> datas, boolean isNotify) {
+        dataHandle.addDatas(datas, isNotify);
     }
 
     /**
      * 清空全部数据
      */
     public void clearData() {
-        if (mDatas != null) {
-            mDatas.clear();
-        }
+        dataHandle.clearData();
+    }
+
+    public DataHandle<T> getDataHandle() {
+        return dataHandle;
+    }
+
+    /**
+     * 清空全部数据
+     *
+     * @param isNotify 是否通知适配器刷新
+     */
+    public void clearData(boolean isNotify) {
+        dataHandle.clearData(isNotify);
     }
 
     public List<T> getDatas() {
-        return mDatas;
+        return dataHandle.getDatas();
     }
 
     /**
      * 获取position对应的数据
      */
     public T getItemData(int position) {
-        if (mDatas == null || mDatas.size() <= position) {
-            return null;
-        }
-        return mDatas.get(position);
+        return dataHandle.getItemData(position);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

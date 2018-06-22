@@ -94,12 +94,12 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T> implements Mult
 
     //设置分组数据
     public void findSections() {
-        int n = mDatas.size();
+        int n = getItemCount();
         int nSections = 0;
         mSections.clear();
 
         for (int i = 0; i < n; i++) {
-            String sectionName = getTitle(i, mDatas.get(i));
+            String sectionName = getTitle(i, getItemData(i));
             if (!TextUtils.isEmpty(sectionName)) {
                 if (!mSections.containsKey(sectionName)) {
                     mSections.put(sectionName, i + nSections);
@@ -140,7 +140,7 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T> implements Mult
     public void onBindViewHolder(ViewHolder holder, int position) {
         position = getIndexForPosition(position);
         if (holder.getItemViewType() == TYPE_SECTION) {
-            setTitle(holder, getTitle(position, mDatas.get(position)), mDatas.get(position));
+            setTitle(holder, getTitle(position, getItemData(position)), getItemData(position));
             return;
         }
         super.onBindViewHolder(holder, position);
