@@ -30,32 +30,6 @@ public abstract class MultipleSingAdapter<T> extends SingAdapter<T, ViewHolder> 
         super(context, -1, datas);
         this.layoutHelper = layoutHelper;
         setPositionIndex(positionIndex);
-        registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onChanged() {
-                setPositionIndex(positionIndex);
-            }
-
-            @Override
-            public void onItemRangeChanged(int positionStart, int itemCount) {
-                setPositionIndex(positionIndex);
-            }
-
-            @Override
-            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-                setPositionIndex(positionIndex);
-            }
-
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                setPositionIndex(positionIndex);
-            }
-
-            @Override
-            public void onItemRangeRemoved(int positionStart, int itemCount) {
-                setPositionIndex(positionIndex);
-            }
-        });
     }
 
     public MultipleSingAdapter(Context context, LayoutHelper layoutHelper) {
@@ -146,11 +120,39 @@ public abstract class MultipleSingAdapter<T> extends SingAdapter<T, ViewHolder> 
         return positionIndex;
     }
 
-    public List<Pair<Integer, Integer>> PositionIndex() {
-        return positionIndex;
-    }
-
     public void setPositionIndex(List<Pair<Integer, Integer>> positionIndex) {
         positionIndex.clear();
+    }
+
+    /**
+     * 注意调用的时机，adapter内部是倒序回掉的
+     */
+    public void registerPositionIndexObserver() {
+        registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                setPositionIndex(positionIndex);
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                setPositionIndex(positionIndex);
+            }
+
+            @Override
+            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+                setPositionIndex(positionIndex);
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                setPositionIndex(positionIndex);
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                setPositionIndex(positionIndex);
+            }
+        });
     }
 }
