@@ -128,6 +128,7 @@ public abstract class MultipleSingAdapter<T> extends SingAdapter<T, ViewHolder> 
      * 注意调用的时机，adapter内部是倒序回掉的
      */
     public void registerPositionIndexObserver() {
+        setPositionIndex(positionIndex);
         registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
