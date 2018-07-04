@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
+import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
 import com.ashlikun.adapter.ViewHolder;
 
 import java.util.List;
@@ -77,10 +78,10 @@ public abstract class SimpleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
 
     @Override
     public int getItemCount() {
-        int size = super.getItemCount();
-        if (size <= 0 && layoutHelper != null) {
-            size = layoutHelper.getItemCount();
+        if (layoutHelper instanceof SingleLayoutHelper) {
+            return layoutHelper.getItemCount();
+        } else {
+            return super.getItemCount();
         }
-        return size;
     }
 }
