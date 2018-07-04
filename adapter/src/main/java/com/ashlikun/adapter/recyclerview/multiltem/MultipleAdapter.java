@@ -528,6 +528,32 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     }
 
     /**
+     * 查找对应的adapter的开始position
+     *
+     * @param index
+     * @return
+     */
+    public int findAdapterByIndexStartPosition(int index) {
+        Pair<AdapterDataObserver, SingAdapter> rs = mIndexAry.get(index);
+        return rs == null ? -1 : rs.first.mStartPosition;
+    }
+
+    /**
+     * 获取这种类型的adapter对于的开始position
+     */
+    public int findAdapterByViewTypeStartPosition(Object viewType) {
+        if (viewType == null) {
+            return -1;
+        }
+        for (Pair<AdapterDataObserver, SingAdapter> adapter : mAdapters) {
+            if (adapter.second != null && adapter.second.getItemViewType(0) == viewType.hashCode()) {
+                return adapter.first.mStartPosition;
+            }
+        }
+        return -1;
+    }
+
+    /**
      * 获取这种类型的adapter
      */
     public SingAdapter findAdapterByViewType(Object viewType) {
