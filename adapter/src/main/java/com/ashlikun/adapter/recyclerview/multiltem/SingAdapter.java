@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
+import com.alibaba.android.vlayout.layout.StickyLayoutHelper;
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.recyclerview.BaseAdapter;
 
