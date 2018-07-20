@@ -53,7 +53,7 @@ import static android.support.v7.widget.RecyclerView.NO_ID;
  * <p>
  * 功能介绍：alibaba的VLayout库的adapter
  * 要想使用必须使用这个库
- * implementation ('com.alibaba.android:vlayout:1.2.8@aar') {
+ * implementation ('com.alibaba.android:vlayout:1.2.16@aar') {
  * transitive = true
  * }
  */

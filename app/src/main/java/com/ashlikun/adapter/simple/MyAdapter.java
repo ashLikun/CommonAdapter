@@ -68,6 +68,7 @@ public class MyAdapter {
         @Override
         public LayoutHelper onCreateLayoutHelper() {
             LinearLayoutHelper helper = new LinearLayoutHelper(20);
+            helper.setDividerHeight(30);
             return helper;
         }
 
@@ -99,6 +100,33 @@ public class MyAdapter {
         @Override
         public LayoutHelper onCreateLayoutHelper() {
             LinearLayoutHelper helper = new LinearLayoutHelper(20);
+            return helper;
+        }
+
+        @Override
+        public void convert(ViewHolder holder, Neibu3Data neibuData) {
+            holder.setText(R.id.textView, neibuData.name);
+        }
+    }
+
+    public static class AdapterItem4 extends SimpleSingAdapter<Neibu3Data> {
+
+        public AdapterItem4(Context context, List<Neibu3Data> datas) {
+            super(context, datas);
+            setCustomAnimation(new SlideInBottomAnimation());
+            setViewType(AdapterItem4.class);
+        }
+
+
+        @Override
+        public int getLayoutId() {
+            return R.layout.item_view4;
+        }
+
+        @Override
+        public LayoutHelper onCreateLayoutHelper() {
+            OnePlusFourLayoutHelper helper = new OnePlusFourLayoutHelper(5);
+            helper.setMargin(10, 10, 10, 10);
             return helper;
         }
 

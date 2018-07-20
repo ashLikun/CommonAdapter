@@ -17,11 +17,12 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/toolBar"></android.support.v7.widget.RecyclerView>
 
-    <!--<TextView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:onClick="onClick"-->
-    <!--android:text="onClick" />-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:onClick="onClick"
+        android:padding="10dp"
+        android:text="onClick" />
 </RelativeLayout>
