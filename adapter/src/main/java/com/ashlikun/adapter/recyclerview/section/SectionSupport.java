@@ -1,4 +1,4 @@
-package com.ashlikun.adapter.recyclerview.support;
+package com.ashlikun.adapter.recyclerview.section;
 
 import com.ashlikun.adapter.ViewHolder;
 

@@ -1,6 +1,8 @@
 package com.ashlikun.adapter.recyclerview;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
+import android.util.SparseIntArray;
 import android.view.ViewGroup;
 
 import com.ashlikun.adapter.ViewHolder;
@@ -13,13 +15,16 @@ import java.util.List;
  * 邮箱　　：496546144@qq.com
  * <p>
  * 功能介绍：多种列表样式的适配器,简单版
- * 添加生命周期
- *
- * @OnLifecycleEvent(Lifecycle.Event.ON_RESUME) public void onResume() {
- * }
+ * 基本功能看 {@link BaseAdapter}类注释
+ * 第一步在构造方法addItemType关联id
  */
 
-public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T> implements MultiItemTypeSupport<T> {
+public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T> {
+    /**
+     * ItemType对应的LayoutId
+     */
+    private SparseIntArray layouts;
+    public static final int TYPE_NOT_FOUND = -404;
 
     public MultiItemCommonAdapter(Context context, List<T> datas) {
         super(context, -1, datas);
@@ -30,6 +35,7 @@ public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T> impleme
         return getItemViewType(position, getItemData(position));
     }
 
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutId = getLayoutId(viewType);
@@ -38,4 +44,22 @@ public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T> impleme
         return holder;
     }
 
+    /**
+     * 关联 viewType与layoutResId
+     *
+     * @param viewType
+     * @param layoutResId
+     */
+    public void addItemType(int viewType, @LayoutRes int layoutResId) {
+        if (layouts == null) {
+            layouts = new SparseIntArray();
+        }
+        layouts.put(viewType, layoutResId);
+    }
+
+    private int getLayoutId(int viewType) {
+        return layouts.get(viewType, TYPE_NOT_FOUND);
+    }
+
+    public abstract int getItemViewType(int position, T data);
 }

@@ -1,4 +1,4 @@
-package com.ashlikun.adapter.recyclerview.support;
+package com.ashlikun.adapter.recyclerview.section;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.recyclerview.CommonAdapter;
-import com.ashlikun.adapter.recyclerview.MultiItemTypeSupport;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -22,7 +21,10 @@ import java.util.Set;
  * 功能介绍：分组adapter
  */
 
-public abstract class SectionAdapter<T> extends CommonAdapter<T> implements MultiItemTypeSupport<T>, SectionSupport<T> {
+public abstract class SectionAdapter<T> extends CommonAdapter<T> implements SectionSupport<T> {
+    /**
+     * 头部ItemType
+     */
     private static final int TYPE_SECTION = 0;
     private LinkedHashMap<String, Integer> mSections;
 
@@ -45,15 +47,11 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T> implements Mult
         }
     };
 
-    @Override
     public int getLayoutId(int itemType) {
         return mLayoutId;
     }
 
-    @Override
-    public int getItemViewType(int position, T t) {
-        return -1;
-    }
+    public abstract int getItemViewType(int position, T data);
 
     @Override
     public int getItemViewType(int position) {
@@ -65,9 +63,9 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T> implements Mult
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutId;
-        if (viewType == TYPE_SECTION)
+        if (viewType == TYPE_SECTION) {
             layoutId = sectionHeaderLayoutId();
-        else {
+        } else {
             layoutId = getLayoutId(viewType);
         }
         if (layoutId <= 0) {
@@ -81,9 +79,7 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T> implements Mult
 
     @Override
     protected boolean isEnabled(int viewType) {
-        if (viewType == TYPE_SECTION)
-            return false;
-        return super.isEnabled(viewType);
+        return viewType != TYPE_SECTION && super.isEnabled(viewType);
     }
 
     @Override
@@ -92,7 +88,9 @@ public abstract class SectionAdapter<T> extends CommonAdapter<T> implements Mult
         unregisterAdapterDataObserver(observer);
     }
 
-    //设置分组数据
+    /**
+     * 设置分组数据
+     */
     public void findSections() {
         int n = getItemCount();
         int nSections = 0;

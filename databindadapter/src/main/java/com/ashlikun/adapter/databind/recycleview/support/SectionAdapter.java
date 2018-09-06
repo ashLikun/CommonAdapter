@@ -57,9 +57,9 @@ public abstract class SectionAdapter<T, DB extends ViewDataBinding> extends Comm
     @Override
     public DataBindHolder<DB> onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutId;
-        if (viewType == TYPE_SECTION)
+        if (viewType == TYPE_SECTION) {
             layoutId = sectionHeaderLayoutId();
-        else {
+        } else {
             layoutId = getLayoutId(viewType);
         }
         if (layoutId <= 0) {
@@ -84,8 +84,9 @@ public abstract class SectionAdapter<T, DB extends ViewDataBinding> extends Comm
 
     @Override
     protected boolean isEnabled(int viewType) {
-        if (viewType == TYPE_SECTION)
+        if (viewType == TYPE_SECTION) {
             return false;
+        }
         return super.isEnabled(viewType);
     }
 

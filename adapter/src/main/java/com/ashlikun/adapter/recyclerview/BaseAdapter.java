@@ -26,10 +26,16 @@ import java.util.List;
  * <p>
  * 功能介绍：基础的RecycleView的adapter
  * <p>
- * 添加生命周期
+ * 1:一行代码实现item{@link BaseAdapter#convert}
+ * 2:添加生命周期
  *
  * @OnLifecycleEvent(Lifecycle.Event.ON_RESUME) public void onResume() {
  * }
+ * 3：动画{@link  BaseAdapter#getAdapterAnimHelp}{@link  BaseAdapter#setCustomAnimation}  -> {@link AdapterAnimHelp}
+ * 4:{@link OnItemClickListener},{@link OnItemLongClickListener}
+ * 5:前景点击效果水波纹
+ * 6:灵活操作数据{@link DataHandle}
+ * 7:布局可用XML，也可实现{@link BaseAdapter#getItemLayout}代码生成
  */
 public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<V>
         implements IHeaderAndFooter, LifecycleObserver, OnItemClickListener<T>, OnItemLongClickListener<T> {
@@ -44,7 +50,9 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     AdapterAnimHelp adapterAnimHelp;
 
     private long lastClickTime = 0;
-    //item点击颜色
+    /**
+     * item点击颜色
+     */
     private int itemClickColor = 0;
     /**
      * 是否打开点击效果

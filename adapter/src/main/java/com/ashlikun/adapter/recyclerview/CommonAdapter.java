@@ -13,10 +13,7 @@ import java.util.List;
  * 邮箱　　：496546144@qq.com
  * <p>
  * 功能介绍：公共的RecycleView的adapter
- * 添加生命周期
- *
- * @OnLifecycleEvent(Lifecycle.Event.ON_RESUME) public void onResume() {
- * }
+ * 在BaseAdapter基础上封装了 onCreateViewHolder,onBindViewHolder
  */
 public abstract class CommonAdapter<T> extends BaseAdapter<T, ViewHolder> {
 

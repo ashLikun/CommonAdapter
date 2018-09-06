@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
-import com.alibaba.android.vlayout.layout.StickyLayoutHelper;
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.recyclerview.BaseAdapter;
 
@@ -16,13 +15,12 @@ import java.util.List;
  * 创建时间: 2018/4/10 0010　20:48
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：多表单的内部adapter,得自己穿件ViewHolder
- *
- * @OnLifecycleEvent(Lifecycle.Event.ON_RESUME) public void onResume() {
- * }
+ * 功能介绍：VLayout的ItemAdapter ,得自己创建ViewHolder
  */
 public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<T, VH> {
-    //内部的adapter建议只用一个type
+    /**
+     * 内部的adapter建议只用一个type
+     */
     private Object viewType;
 
     /**
@@ -31,7 +29,6 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
     protected void onBindViewHolderWithOffset(RecyclerView.ViewHolder holder, int position, int offsetTotal) {
 
     }
-
 
     /**
      * 这2个方法是父Adapter onBindViewHolder回掉的

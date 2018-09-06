@@ -75,7 +75,9 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     private int mTotal = 0;
 
     private final SparseArray<Pair<AdapterDataObserver, SingAdapter>> mIndexAry = new SparseArray<>();
-    //防止Cantor(康托)算法溢出int和long最大值
+    /**
+     * 防止Cantor(康托)算法溢出int和long最大值
+     */
     private final ArrayList<Long> mCantorTemp = new ArrayList<Long>();
 
     private long[] cantorReverse = new long[2];

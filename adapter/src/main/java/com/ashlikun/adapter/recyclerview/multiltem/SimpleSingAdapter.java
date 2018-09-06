@@ -14,10 +14,7 @@ import java.util.List;
  * 创建时间: 2018/4/10 0010　20:53
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：多表单的内部adapter,默认ViewHolder
- *
- * @OnLifecycleEvent(Lifecycle.Event.ON_RESUME) public void onResume() {
- * }
+ * 功能介绍：VLayout的ItemAdapter,默认ViewHolder
  */
 public abstract class SimpleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
     LayoutHelper layoutHelper;

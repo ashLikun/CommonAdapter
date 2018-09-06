@@ -1,13 +1,14 @@
 package com.ashlikun.adapter.recyclerview.multiltem;
 
 import android.content.Context;
+import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
+import android.util.SparseIntArray;
 import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.ashlikun.adapter.ViewHolder;
-import com.ashlikun.adapter.recyclerview.MultiItemTypeSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +18,19 @@ import java.util.List;
  * 创建时间: 2018/4/10 0010　20:53
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：多表单的内部adapter,可以有多个不同的type
+ * 功能介绍：VLayout的ItemAdapter
  *
- * @OnLifecycleEvent(Lifecycle.Event.ON_RESUME) public void onResume() {
- * }
+ * 多表单的内部adapter,可以有多个不同的type,
+ * 第一步在构造方法addItemType关联id
  */
-public abstract class MultipleSingAdapter<T> extends SingAdapter<T, ViewHolder> implements MultiItemTypeSupport<T> {
+public abstract class MultipleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
     private LayoutHelper layoutHelper;
     private List<Pair<Integer, Integer>> positionIndex = new ArrayList<>();
+    /**
+     * ItemType对应的LayoutId
+     */
+    private SparseIntArray layouts;
+    public static final int TYPE_NOT_FOUND = -404;
 
     public MultipleSingAdapter(Context context, LayoutHelper layoutHelper, List<T> datas) {
         super(context, -1, datas);
@@ -42,6 +48,23 @@ public abstract class MultipleSingAdapter<T> extends SingAdapter<T, ViewHolder> 
 
     public MultipleSingAdapter(Context context) {
         this(context, null, null);
+    }
+
+    /**
+     * 关联 viewType与layoutResId
+     *
+     * @param viewType
+     * @param layoutResId
+     */
+    public void addItemType(int viewType, @LayoutRes int layoutResId) {
+        if (layouts == null) {
+            layouts = new SparseIntArray();
+        }
+        layouts.put(viewType, layoutResId);
+    }
+
+    private int getLayoutId(int viewType) {
+        return layouts.get(viewType, TYPE_NOT_FOUND);
     }
 
     @Override
@@ -123,6 +146,8 @@ public abstract class MultipleSingAdapter<T> extends SingAdapter<T, ViewHolder> 
     public void setPositionIndex(List<Pair<Integer, Integer>> positionIndex) {
         positionIndex.clear();
     }
+
+    public abstract int getItemViewType(int position, T data);
 
     /**
      * 注意调用的时机，adapter内部是倒序回掉的
