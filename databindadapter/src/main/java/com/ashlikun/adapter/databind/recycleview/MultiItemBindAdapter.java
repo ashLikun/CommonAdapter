@@ -2,10 +2,11 @@ package com.ashlikun.adapter.databind.recycleview;
 
 import android.content.Context;
 import android.databinding.ViewDataBinding;
+import android.support.annotation.LayoutRes;
+import android.util.SparseIntArray;
 import android.view.ViewGroup;
 
 import com.ashlikun.adapter.databind.DataBindHolder;
-import com.ashlikun.adapter.recyclerview.MultiItemTypeSupport;
 
 import java.util.List;
 
@@ -18,8 +19,12 @@ import java.util.List;
  */
 
 
-public abstract class MultiItemBindAdapter<T> extends CommonBindAdapter<T, ViewDataBinding> implements MultiItemTypeSupport<T> {
-
+public abstract class MultiItemBindAdapter<T> extends CommonBindAdapter<T, ViewDataBinding>  {
+    /**
+     * ItemType对应的LayoutId
+     */
+    private SparseIntArray layouts;
+    public static final int TYPE_NOT_FOUND = -404;
 
     public MultiItemBindAdapter(Context context, List<T> datas) {
         super(context, -1, datas);
@@ -36,4 +41,22 @@ public abstract class MultiItemBindAdapter<T> extends CommonBindAdapter<T, ViewD
         setListener(parent, holder, viewType);
         return holder;
     }
+    /**
+     * 关联 viewType与layoutResId
+     *
+     * @param viewType
+     * @param layoutResId
+     */
+    public void addItemType(int viewType, @LayoutRes int layoutResId) {
+        if (layouts == null) {
+            layouts = new SparseIntArray();
+        }
+        layouts.put(viewType, layoutResId);
+    }
+
+    private int getLayoutId(int viewType) {
+        return layouts.get(viewType, TYPE_NOT_FOUND);
+    }
+
+    public abstract int getItemViewType(int position, T data);
 }
