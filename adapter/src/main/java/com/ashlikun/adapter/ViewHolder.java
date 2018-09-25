@@ -36,7 +36,9 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     protected int mPositionOffset;
     protected Context mContext;
     protected int mLayoutId;
-    //item点击颜色
+    /**
+     * item点击颜色
+     */
     private int itemClickColor = Color.GRAY;
 
     public ViewHolder(Context context, View itemView, int position) {

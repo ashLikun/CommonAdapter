@@ -39,6 +39,8 @@ public class ForegroundEffects {
         } else {
             if (isCanForeground(view)) {
                 color = color & 0x33FFFFFF;
+            } else if (color == Color.GRAY) {
+                color = Color.LTGRAY;
             }
             StateListDrawable bg = new StateListDrawable();
             Drawable colorDrawable;
