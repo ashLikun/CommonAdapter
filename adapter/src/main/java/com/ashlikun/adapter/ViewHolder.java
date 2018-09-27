@@ -33,7 +33,8 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     /**
      * position 的偏移量，相对于整个列表的真实的位置(RecycleView)
      */
-    protected int mPositionOffset;
+    protected int mPositionOffset = RecyclerView.NO_POSITION;
+    protected int mLayoutPosition;
     protected Context mContext;
     protected int mLayoutId;
     /**
@@ -52,6 +53,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         if (getLayoutPosition() == RecyclerView.NO_POSITION) {
             this.mPositionOffset = mPosition;
         } else {
+            mLayoutPosition = getLayoutPosition();
             this.mPositionOffset = getLayoutPosition() - mPosition;
         }
     }
@@ -280,6 +282,12 @@ public class ViewHolder extends RecyclerView.ViewHolder {
      */
     public int getPositionInside() {
         if (getLayoutPosition() != RecyclerView.NO_POSITION) {
+            if (mLayoutPosition != RecyclerView.NO_POSITION) {
+                mPositionOffset -= mLayoutPosition - getLayoutPosition();
+            }
+            if (mPositionOffset < 0) {
+                mPositionOffset = 0;
+            }
             return getLayoutPosition() - mPositionOffset;
         } else {
             return mPositionOffset;
