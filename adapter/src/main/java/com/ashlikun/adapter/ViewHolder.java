@@ -282,8 +282,9 @@ public class ViewHolder extends RecyclerView.ViewHolder {
      */
     public int getPositionInside() {
         if (getLayoutPosition() != RecyclerView.NO_POSITION) {
-            if (mLayoutPosition != RecyclerView.NO_POSITION) {
+            if (mLayoutPosition != RecyclerView.NO_POSITION && mLayoutPosition != getLayoutPosition()) {
                 mPositionOffset -= mLayoutPosition - getLayoutPosition();
+                mLayoutPosition = getLayoutPosition();
             }
             if (mPositionOffset < 0) {
                 mPositionOffset = 0;
