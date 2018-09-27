@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.RelativeLayout;
 
+import com.alibaba.android.vlayout.Cantor;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.ashlikun.adapter.recyclerview.multiltem.MultipleAdapter;
 
@@ -30,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        long aa = Cantor.getCantor(Integer.MAX_VALUE,Integer.MAX_VALUE-1);
+        long[] result = new long[2];
+        Cantor.reverseCantor(aa, result);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolBar);
         toolbar.setTitle(R.string.app_name);
