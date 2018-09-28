@@ -230,7 +230,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
                         if (d != null) {
                             if (onItemLongClick(viewType, parent, v, d, position)) {
                                 return true;
-                            } else if (onItemClickListener != null) {
+                            } else if (onItemLongClickListener != null) {
                                 return onItemLongClickListener.onItemLongClick(viewType, parent, v, d, position);
                             }
                         }
