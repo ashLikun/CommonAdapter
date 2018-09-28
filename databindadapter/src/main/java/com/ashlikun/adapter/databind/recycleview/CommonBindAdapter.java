@@ -31,6 +31,7 @@ public abstract class CommonBindAdapter<T, DB extends ViewDataBinding> extends B
     @Override
     public void onBindViewHolder(DataBindHolder holder, int position) {
         holder.setPosition(position);
+        setListener(recyclerView, holder, holder.getItemViewType());
         convert(holder, getItemData(position));
     }
 

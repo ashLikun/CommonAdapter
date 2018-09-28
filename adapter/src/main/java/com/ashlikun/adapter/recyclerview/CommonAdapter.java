@@ -36,6 +36,7 @@ public abstract class CommonAdapter<T> extends BaseAdapter<T, ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.setPosition(position);
+        setListener(recyclerView, holder, holder.getItemViewType());
         convert(holder, getItemData(position));
     }
 

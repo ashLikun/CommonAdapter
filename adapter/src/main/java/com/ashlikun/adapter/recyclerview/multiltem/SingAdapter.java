@@ -67,6 +67,7 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
     @Override
     public void onBindViewHolder(VH holder, int position) {
         holder.setPosition(position);
+        setListener(recyclerView, holder, holder.getItemViewType());
         convert(holder, getItemData(position));
     }
 
