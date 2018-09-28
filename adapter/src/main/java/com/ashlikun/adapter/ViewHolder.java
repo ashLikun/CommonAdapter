@@ -42,6 +42,11 @@ public class ViewHolder extends RecyclerView.ViewHolder {
      */
     private int itemClickColor = Color.GRAY;
 
+    /**
+     * 当前布局设置的点击颜色，标记是否设置过
+     */
+    private int isSetClickColor = -1;
+
     public ViewHolder(Context context, View itemView, int position) {
         super(itemView);
         mContext = context;
@@ -58,6 +63,19 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
+    /**
+     * 是否设置过item点击效果
+     *
+     * @param color
+     * @return
+     */
+    public boolean isSetEffects(int color) {
+        return isSetClickColor == color;
+    }
+
+    public void setEffects(int color) {
+        isSetClickColor = color;
+    }
 
     /**
      * 通过viewId获取控件
