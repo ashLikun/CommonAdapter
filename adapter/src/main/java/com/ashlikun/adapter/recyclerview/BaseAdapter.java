@@ -196,7 +196,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
                 || !viewHolder.itemView.isEnabled()) {
             return;
         }
-        if (isOpenClickEffects || onItemLongClickListener != null || onItemClickListener != null) {
+        if (isOpenClickEffects) {
             int color = itemClickColor == 0 ? viewHolder.getItemClickColor() : itemClickColor;
             if (!viewHolder.isSetEffects(color)) {
                 ForegroundEffects.setForeground(color, getForegroundView(viewHolder, viewType));
