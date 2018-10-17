@@ -18,9 +18,9 @@ import java.util.List;
 
 public abstract class SectionSingAdapter<T extends SectionEntity> extends SimpleSingAdapter<T> {
     /**
-     * 头部ItemType
+     * 头部ItemType,这里Vlayout是不允许type为负数的
      */
-    public static final int TYPE_SECTION = -0x00000444;
+    public static final int TYPE_SECTION = Math.abs("TYPE_SECTION".hashCode());
     /**
      * 头布局id
      */
@@ -38,6 +38,7 @@ public abstract class SectionSingAdapter<T extends SectionEntity> extends Simple
         super(context, layoutId, datas);
         this.mSectionHeadResId = mSectionHeadResId;
     }
+
     @Override
     public int getItemViewType(int position) {
         return getItemData(position).isHeader() ?

@@ -20,7 +20,7 @@ public abstract class SectionAdapter<T extends SectionEntity> extends CommonAdap
     /**
      * 头部ItemType
      */
-    public static final int TYPE_SECTION = -0x00000444;
+    public static final int TYPE_SECTION = "TYPE_SECTION".hashCode();
     /**
      * 头布局id
      */
