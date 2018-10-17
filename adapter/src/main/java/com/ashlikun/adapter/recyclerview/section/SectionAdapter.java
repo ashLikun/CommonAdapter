@@ -39,13 +39,11 @@ public abstract class SectionAdapter<T extends SectionEntity> extends CommonAdap
         this.mSectionHeadResId = mSectionHeadResId;
     }
 
-    public abstract int getItemViewType(int position, T data);
-
     @Override
     public int getItemViewType(int position) {
         return getItemData(position).isHeader() ?
                 TYPE_SECTION :
-                getItemViewType(position, getItemData(position));
+                super.getItemViewType(position);
     }
 
     @Override

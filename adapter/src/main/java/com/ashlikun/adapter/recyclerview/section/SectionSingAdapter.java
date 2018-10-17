@@ -38,14 +38,11 @@ public abstract class SectionSingAdapter<T extends SectionEntity> extends Simple
         super(context, layoutId, datas);
         this.mSectionHeadResId = mSectionHeadResId;
     }
-
-    public abstract int getItemViewType(int position, T data);
-
     @Override
     public int getItemViewType(int position) {
         return getItemData(position).isHeader() ?
                 TYPE_SECTION :
-                getItemViewType(position, getItemData(position));
+                super.getItemViewType(position);
     }
 
     @Override
