@@ -104,6 +104,7 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
     }
 
 
+
     public abstract LayoutHelper onCreateLayoutHelper();
 
     public abstract VH createHolder(final ViewGroup parent, int viewType);

@@ -75,4 +75,7 @@ public class AdapterUtils {
         }
     }
 
+    public static int viewTypeToVLayout(Object viewType) {
+        return Math.abs(viewType.hashCode());
+    }
 }

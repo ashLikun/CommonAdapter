@@ -35,6 +35,7 @@ import com.alibaba.android.vlayout.Cantor;
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.VirtualLayoutAdapter;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
+import com.ashlikun.adapter.AdapterUtils;
 import com.ashlikun.adapter.ViewHolder;
 
 import java.util.ArrayList;
@@ -548,7 +549,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             return -1;
         }
         for (Pair<AdapterDataObserver, SingAdapter> adapter : mAdapters) {
-            if (adapter.second != null && adapter.second.getItemViewType(0) == viewType.hashCode()) {
+            if (adapter.second != null && adapter.second.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(viewType)) {
                 return adapter.first.mStartPosition;
             }
         }
@@ -563,7 +564,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             return null;
         }
         for (Pair<AdapterDataObserver, SingAdapter> adapter : mAdapters) {
-            if (adapter.second != null && adapter.second.getItemViewType(0) == viewType.hashCode()) {
+            if (adapter.second != null && adapter.second.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(viewType)) {
                 return adapter.second;
             }
         }
@@ -578,7 +579,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             return false;
         }
         for (Pair<AdapterDataObserver, SingAdapter> adapter : mAdapters) {
-            if (adapter.second != null && adapter.second.getItemViewType(0) == viewType.hashCode()) {
+            if (adapter.second != null && adapter.second.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(viewType)) {
                 return true;
             }
         }
