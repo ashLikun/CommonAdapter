@@ -67,7 +67,9 @@ public abstract class SectionAdapter<T extends SectionEntity> extends CommonAdap
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (holder.getItemViewType() == TYPE_SECTION) {
-            bindHeader(holder, position);
+            holder.setPosition(position);
+            setListener(recyclerView, holder, holder.getItemViewType());
+            bindHeader(holder, getItemData(position));
             return;
         }
         super.onBindViewHolder(holder, position);
@@ -78,5 +80,5 @@ public abstract class SectionAdapter<T extends SectionEntity> extends CommonAdap
      *
      * @param holder
      */
-    public abstract void bindHeader(ViewHolder holder, int position);
+    public abstract void bindHeader(ViewHolder holder, T data);
 }
