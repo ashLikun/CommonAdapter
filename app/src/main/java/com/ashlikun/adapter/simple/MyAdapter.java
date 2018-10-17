@@ -11,7 +11,7 @@ import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.animation.SlideInBottomAnimation;
-import com.ashlikun.adapter.recyclerview.multiltem.SimpleSingAdapter;
+import com.ashlikun.adapter.recyclerview.vlayout.SimpleSingAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

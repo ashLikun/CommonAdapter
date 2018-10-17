@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.ViewGroup;
 
 import com.ashlikun.adapter.ViewHolder;
-import com.ashlikun.adapter.recyclerview.CommonAdapter;
+import com.ashlikun.adapter.recyclerview.vlayout.SimpleSingAdapter;
 
 import java.util.List;
 
@@ -13,10 +13,10 @@ import java.util.List;
  * 创建时间: 9:57 Administrator
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：分组adapter
+ * 功能介绍：分组adapter 给Vlayout的
  */
 
-public abstract class SectionAdapter<T extends SectionEntity> extends CommonAdapter<T> {
+public abstract class SectionSingAdapter<T extends SectionEntity> extends SimpleSingAdapter<T> {
     /**
      * 头部ItemType
      */
@@ -26,15 +26,15 @@ public abstract class SectionAdapter<T extends SectionEntity> extends CommonAdap
      */
     protected int mSectionHeadResId = -2;
 
-    public SectionAdapter(Context context, List<T> datas) {
+    public SectionSingAdapter(Context context, List<T> datas) {
         this(context, -1, -2, datas);
     }
 
-    public SectionAdapter(Context context, int mSectionHeadResId, List<T> datas) {
+    public SectionSingAdapter(Context context, int mSectionHeadResId, List<T> datas) {
         this(context, -1, mSectionHeadResId, datas);
     }
 
-    public SectionAdapter(Context context, int layoutId, int mSectionHeadResId, List<T> datas) {
+    public SectionSingAdapter(Context context, int layoutId, int mSectionHeadResId, List<T> datas) {
         super(context, layoutId, datas);
         this.mSectionHeadResId = mSectionHeadResId;
     }

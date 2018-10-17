@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.ashlikun.adapter.recyclerview.multiltem;
+package com.ashlikun.adapter.recyclerview.vlayout;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

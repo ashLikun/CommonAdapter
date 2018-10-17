@@ -1,4 +1,4 @@
-package com.ashlikun.adapter.recyclerview;
+package com.ashlikun.adapter.recyclerview.multiltem;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
@@ -6,6 +6,8 @@ import android.util.SparseIntArray;
 import android.view.ViewGroup;
 
 import com.ashlikun.adapter.ViewHolder;
+import com.ashlikun.adapter.recyclerview.BaseAdapter;
+import com.ashlikun.adapter.recyclerview.CommonAdapter;
 
 import java.util.List;
 

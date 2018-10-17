@@ -67,5 +67,12 @@ public class AdapterUtils {
         return max;
     }
 
+    public static void setFullSpan(RecyclerView.ViewHolder holder) {
+        if (holder.itemView.getLayoutParams() instanceof StaggeredGridLayoutManager.LayoutParams) {
+            StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) holder
+                    .itemView.getLayoutParams();
+            params.setFullSpan(true);
+        }
+    }
 
 }

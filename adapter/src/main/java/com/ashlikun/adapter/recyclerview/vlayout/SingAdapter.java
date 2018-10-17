@@ -1,4 +1,4 @@
-package com.ashlikun.adapter.recyclerview.multiltem;
+package com.ashlikun.adapter.recyclerview.vlayout;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

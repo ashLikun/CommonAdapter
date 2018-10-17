@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 
 import com.alibaba.android.vlayout.Cantor;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
-import com.ashlikun.adapter.recyclerview.multiltem.MultipleAdapter;
+import com.ashlikun.adapter.recyclerview.vlayout.MultipleAdapter;
 
 import java.util.ArrayList;
 
