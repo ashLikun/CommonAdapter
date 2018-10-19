@@ -26,6 +26,7 @@ public abstract class MultipleSingAdapter<T> extends SimpleSingAdapter<T> {
      */
     private SparseIntArray layouts;
     public static final int TYPE_NOT_FOUND = -404;
+    public static final int DEFAULT_VIEW_TYPE = -0xff;
 
     public MultipleSingAdapter(Context context, List<T> datas) {
         super(context, -1, datas);
@@ -56,6 +57,15 @@ public abstract class MultipleSingAdapter<T> extends SimpleSingAdapter<T> {
             layouts = new SparseIntArray();
         }
         layouts.put(viewType, layoutResId);
+    }
+
+    /**
+     * 添加默认的view
+     *
+     * @param layoutResId
+     */
+    protected void setDefaultViewTypeLayout(@LayoutRes int layoutResId) {
+        addItemType(DEFAULT_VIEW_TYPE, layoutResId);
     }
 
     private int getLayoutId(int viewType) {
