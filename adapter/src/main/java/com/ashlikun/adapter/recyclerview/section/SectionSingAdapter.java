@@ -49,7 +49,7 @@ public abstract class SectionSingAdapter<T extends SectionEntity> extends Simple
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_SECTION) {
-            ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, mSectionHeadResId), -1);
+            ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, mSectionHeadResId), this);
             setListener(parent, holder, viewType);
             return holder;
         } else {
@@ -65,7 +65,6 @@ public abstract class SectionSingAdapter<T extends SectionEntity> extends Simple
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (holder.getItemViewType() == TYPE_SECTION) {
-            holder.setPosition(position);
             setListener(recyclerView, holder, holder.getItemViewType());
             bindHeader(holder, getItemData(position));
             return;

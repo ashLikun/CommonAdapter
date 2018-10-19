@@ -20,6 +20,8 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition;
+
 /**
  * 作者　　: 李坤
  * 创建时间: 2017/4/20 0020 11:48a
@@ -30,12 +32,8 @@ import android.widget.TextView;
 
 public class ViewHolder extends RecyclerView.ViewHolder {
     protected SparseArray<View> mViews;
-    /**
-     * position 的偏移量，相对于整个列表的真实的位置(RecycleView)
-     */
-    protected int mPositionOffset = RecyclerView.NO_POSITION;
-    protected int mLayoutPosition;
     protected Context mContext;
+    protected IStartPosition iStartPosition;
     protected int mLayoutId;
     /**
      * item点击颜色
@@ -47,20 +45,11 @@ public class ViewHolder extends RecyclerView.ViewHolder {
      */
     private int isSetClickColor = -1;
 
-    public ViewHolder(Context context, View itemView, int position) {
+    public ViewHolder(Context context, View itemView, IStartPosition iStartPosition) {
         super(itemView);
         mContext = context;
-        setPosition(position);
+        iStartPosition = iStartPosition;
         mViews = new SparseArray();
-    }
-
-    public void setPosition(int mPosition) {
-        if (getLayoutPosition() == RecyclerView.NO_POSITION) {
-            this.mPositionOffset = mPosition;
-        } else {
-            mLayoutPosition = getLayoutPosition();
-            this.mPositionOffset = getLayoutPosition() - mPosition;
-        }
     }
 
     /**
@@ -299,20 +288,16 @@ public class ViewHolder extends RecyclerView.ViewHolder {
      * @return
      */
     public int getPositionInside() {
-        if (getLayoutPosition() != RecyclerView.NO_POSITION) {
-            if (mLayoutPosition != RecyclerView.NO_POSITION && mLayoutPosition != getLayoutPosition()) {
-                mPositionOffset -= mLayoutPosition - getLayoutPosition();
-                mLayoutPosition = getLayoutPosition();
-            }
-            if (mPositionOffset < 0) {
-                mPositionOffset = 0;
-            }
-            return getLayoutPosition() - mPositionOffset;
-        } else {
-            return mPositionOffset;
-        }
+        return getLayoutPosition() - getStartPosition();
     }
 
+    public int getStartPosition() {
+        if (iStartPosition != null) {
+            return iStartPosition.getStartPosition();
+        } else {
+            return 0;
+        }
+    }
 
     /**
      * 设置item点击颜色,就当前Holder   item

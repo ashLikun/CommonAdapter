@@ -22,12 +22,44 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
      * 内部的adapter建议只用一个type
      */
     private Object viewType;
+    MultipleAdapter.AdapterDataObserver observer;
 
     /**
      * 这2个方法是父Adapter onBindViewHolder回掉的
      */
     protected void onBindViewHolderWithOffset(RecyclerView.ViewHolder holder, int position, int offsetTotal) {
 
+    }
+
+    @Override
+    public void registerAdapterDataObserver(RecyclerView.AdapterDataObserver observer) {
+        super.registerAdapterDataObserver(observer);
+        if (observer instanceof MultipleAdapter.AdapterDataObserver) {
+            this.observer = (MultipleAdapter.AdapterDataObserver) observer;
+        }
+    }
+
+    @Override
+    public void unregisterAdapterDataObserver(RecyclerView.AdapterDataObserver observer) {
+        super.unregisterAdapterDataObserver(observer);
+        if (observer instanceof MultipleAdapter.AdapterDataObserver) {
+            this.observer = null;
+        }
+    }
+
+    /**
+     * 获取开始的position
+     * 可能有头
+     * 或者Vlayout内部是多个adapter
+     *
+     * @return
+     */
+    @Override
+    public int getStartPosition() {
+        if (observer != null) {
+            return observer.mStartPosition;
+        }
+        return super.getStartPosition();
     }
 
     /**
@@ -66,7 +98,6 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
 
     @Override
     public void onBindViewHolder(VH holder, int position) {
-        holder.setPosition(position);
         setListener(recyclerView, holder, holder.getItemViewType());
         convert(holder, getItemData(position));
     }
@@ -74,7 +105,6 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
     @Override
     public void onBindViewHolder(VH holder, int position, List<Object> payloads) {
         if (payloads != null && !payloads.isEmpty()) {
-            holder.setPosition(position);
             if (!convert(holder, getItemData(position), payloads)) {
                 super.onBindViewHolder(holder, position, payloads);
             }
@@ -102,7 +132,6 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
         }
         return Math.abs(viewType.hashCode());
     }
-
 
 
     public abstract LayoutHelper onCreateLayoutHelper();

@@ -3,7 +3,6 @@ package com.ashlikun.adapter.recyclerview.callback;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.recyclerview.CommonAdapter;
@@ -73,7 +72,7 @@ public abstract class ItemDraggableAdapter<T> extends CommonAdapter<T> implement
     }
 
     @Override
-    public void onItemDragMoving(RecyclerView.ViewHolder source, RecyclerView.ViewHolder target) {
+    public boolean onItemDragMoving(RecyclerView.ViewHolder source, RecyclerView.ViewHolder target) {
         int from = getViewHolderPosition(source);
         int to = getViewHolderPosition(target);
 
@@ -93,6 +92,7 @@ public abstract class ItemDraggableAdapter<T> extends CommonAdapter<T> implement
         if (mOnItemDragListener != null && itemDragEnabled) {
             mOnItemDragListener.onItemDragMoving(source, from, target, to);
         }
+        return true;
     }
 
     @Override

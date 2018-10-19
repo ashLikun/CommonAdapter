@@ -28,14 +28,13 @@ public abstract class CommonAdapter<T> extends BaseAdapter<T, ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-        ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, getLayoutId()), -1);
+        ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, getLayoutId()), this);
         setListener(parent, holder, viewType);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.setPosition(position);
         setListener(recyclerView, holder, holder.getItemViewType());
         convert(holder, getItemData(position));
     }
@@ -43,7 +42,6 @@ public abstract class CommonAdapter<T> extends BaseAdapter<T, ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
         if (payloads != null && !payloads.isEmpty()) {
-            holder.setPosition(position);
             if (!convert(holder, getItemData(position), payloads)) {
                 super.onBindViewHolder(holder, position, payloads);
             }

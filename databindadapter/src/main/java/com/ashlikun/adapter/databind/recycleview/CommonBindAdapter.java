@@ -23,14 +23,13 @@ public abstract class CommonBindAdapter<T, DB extends ViewDataBinding> extends B
 
     @Override
     public DataBindHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
-        DataBindHolder viewHolder = DataBindHolder.get(mContext, null, parent, mLayoutId, -1);
+        DataBindHolder viewHolder = DataBindHolder.get(mContext, null, parent, mLayoutId, this);
         setListener(parent, viewHolder, viewType);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(DataBindHolder holder, int position) {
-        holder.setPosition(position);
         setListener(recyclerView, holder, holder.getItemViewType());
         convert(holder, getItemData(position));
     }
@@ -39,7 +38,6 @@ public abstract class CommonBindAdapter<T, DB extends ViewDataBinding> extends B
     @Override
     public void onBindViewHolder(DataBindHolder<DB> holder, int position, List<Object> payloads) {
         if (payloads != null && !payloads.isEmpty()) {
-            holder.setPosition(position);
             if (!convert(holder, getItemData(position), payloads)) {
                 super.onBindViewHolder(holder, position, payloads);
             }

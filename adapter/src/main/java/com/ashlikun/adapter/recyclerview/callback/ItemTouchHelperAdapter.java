@@ -19,7 +19,7 @@ public interface ItemTouchHelperAdapter {
 
     public void onItemSwipeClear(RecyclerView.ViewHolder viewHolder);
 
-    public void onItemDragMoving(RecyclerView.ViewHolder source, RecyclerView.ViewHolder target);
+    public boolean onItemDragMoving(RecyclerView.ViewHolder source, RecyclerView.ViewHolder target);
 
     public void onItemSwiped(RecyclerView.ViewHolder viewHolder);
 

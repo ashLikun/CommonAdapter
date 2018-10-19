@@ -16,6 +16,7 @@ import com.ashlikun.adapter.animation.AdapterAnimHelp;
 import com.ashlikun.adapter.animation.BaseAnimation;
 import com.ashlikun.adapter.recyclerview.click.OnItemClickListener;
 import com.ashlikun.adapter.recyclerview.click.OnItemLongClickListener;
+import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ import java.util.List;
  * 7:布局可用XML，也可实现{@link BaseAdapter#getItemLayout}代码生成
  */
 public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<V>
-        implements IHeaderAndFooter, LifecycleObserver, OnItemClickListener<T>, OnItemLongClickListener<T> {
+        implements IHeaderAndFooter, LifecycleObserver, OnItemClickListener<T>, OnItemLongClickListener<T>, IStartPosition {
     private int clickDelay = 200;
     protected int mLayoutId;
     protected Context mContext;
@@ -82,6 +83,18 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      */
     public boolean convert(V holder, T t, List<Object> payloads) {
         return false;
+    }
+
+    /**
+     * 获取开始的position
+     * 可能有头
+     * 或者Vlayout内部是多个adapter
+     *
+     * @return
+     */
+    @Override
+    public int getStartPosition() {
+        return headerSize;
     }
 
     public int getLayoutId() {

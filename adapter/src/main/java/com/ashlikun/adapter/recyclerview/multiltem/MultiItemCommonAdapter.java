@@ -27,6 +27,7 @@ public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T> {
      */
     private SparseIntArray layouts;
     public static final int TYPE_NOT_FOUND = -404;
+    public static final int DEFAULT_VIEW_TYPE = -0xff;
 
     public MultiItemCommonAdapter(Context context, List<T> datas) {
         super(context, -1, datas);
@@ -41,7 +42,7 @@ public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutId = getLayoutId(viewType);
-        ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, layoutId), -1);
+        ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, layoutId), this);
         setListener(parent, holder, viewType);
         return holder;
     }
@@ -61,6 +62,15 @@ public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T> {
 
     private int getLayoutId(int viewType) {
         return layouts.get(viewType, TYPE_NOT_FOUND);
+    }
+
+    /**
+     * 添加默认的view
+     *
+     * @param layoutResId
+     */
+    protected void setDefaultViewTypeLayout(@LayoutRes int layoutResId) {
+        addItemType(DEFAULT_VIEW_TYPE, layoutResId);
     }
 
     public abstract int getItemViewType(int position, T data);

@@ -62,7 +62,7 @@ public abstract class SimpleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
 
     @Override
     public ViewHolder createHolder(final ViewGroup parent, int viewType) {
-        return new ViewHolder(mContext, getItemLayout(parent, getLayoutId()), -1);
+        return new ViewHolder(mContext, getItemLayout(parent, getLayoutId()), this);
     }
 
     public LayoutHelper getLayoutHelper() {

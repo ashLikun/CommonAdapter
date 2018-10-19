@@ -37,7 +37,7 @@ public abstract class MultiItemBindAdapter<T> extends CommonBindAdapter<T, ViewD
 
     @Override
     public DataBindHolder<ViewDataBinding> onCreateViewHolder(ViewGroup parent, int viewType) {
-        DataBindHolder holder = DataBindHolder.get(mContext, null, parent, getLayoutId(viewType), -1);
+        DataBindHolder holder = DataBindHolder.get(mContext, null, parent, getLayoutId(viewType), this);
         setListener(parent, holder, viewType);
         return holder;
     }

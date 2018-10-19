@@ -156,4 +156,5 @@ dependencies {
         private com.ashlikun.adapter.recyclerview.BaseAdapter footerSize;
         private com.ashlikun.adapter.recyclerview.BaseAdapter headerSize;
     }
+    #类不混淆
 

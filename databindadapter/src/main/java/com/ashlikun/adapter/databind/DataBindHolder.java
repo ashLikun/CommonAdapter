@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ashlikun.adapter.ViewHolder;
+import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition;
 
 
 public class DataBindHolder<DB extends ViewDataBinding> extends ViewHolder {
@@ -27,21 +28,20 @@ public class DataBindHolder<DB extends ViewDataBinding> extends ViewHolder {
         return (DB) dataBind;
     }
 
-    private DataBindHolder(Context context, DB dataBind, int position) {
-        super(context, dataBind.getRoot(), position);
+    private DataBindHolder(Context context, DB dataBind, IStartPosition startPosition) {
+        super(context, dataBind.getRoot(), startPosition);
         this.dataBind = dataBind;
         dataBind.getRoot().setTag(dataBind.getRoot().getId(), this);
     }
 
     public static DataBindHolder get(final Context context, View convertView,
-                                     ViewGroup parent, int layoutId, int position) {
+                                     ViewGroup parent, int layoutId, IStartPosition startPosition) {
         if (convertView == null) {
             return new DataBindHolder(context,
                     DataBindingUtil.inflate(LayoutInflater.from(context), layoutId, parent, false)
-                    , position);
+                    , startPosition);
         } else {
             DataBindHolder holder = (DataBindHolder) convertView.getTag(convertView.getId());
-            holder.setPosition(position);
             return holder;
         }
     }
