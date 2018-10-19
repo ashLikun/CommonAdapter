@@ -48,7 +48,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
     public ViewHolder(Context context, View itemView, IStartPosition iStartPosition) {
         super(itemView);
         mContext = context;
-        iStartPosition = iStartPosition;
+        this.iStartPosition = iStartPosition;
         mViews = new SparseArray();
     }
 
