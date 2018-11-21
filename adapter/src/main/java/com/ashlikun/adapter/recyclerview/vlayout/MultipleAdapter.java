@@ -152,7 +152,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
         super.onBindViewHolder(holder, position, payloads);
-        Pair<AdapterDataObserver, SingAdapter> pair = findAdapterByPosition(position);
+        Pair<AdapterDataObserver, SingAdapter> pair = findAdapter(position);
         if (pair == null) {
             return;
         }
@@ -174,7 +174,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
      */
     @Override
     public int getItemViewType(int position) {
-        Pair<AdapterDataObserver, SingAdapter> p = findAdapterByPosition(position);
+        Pair<AdapterDataObserver, SingAdapter> p = findAdapter(position);
         if (p == null) {
             return RecyclerView.INVALID_TYPE;
         }
@@ -215,7 +215,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
     @Override
     public long getItemId(int position) {
-        Pair<AdapterDataObserver, SingAdapter> p = findAdapterByPosition(position);
+        Pair<AdapterDataObserver, SingAdapter> p = findAdapter(position);
 
         if (p == null) {
             return NO_ID;
@@ -246,7 +246,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
 
         int position = holder.getPosition();
         if (position >= 0) {
-            Pair<AdapterDataObserver, SingAdapter> pair = findAdapterByPosition(position);
+            Pair<AdapterDataObserver, SingAdapter> pair = findAdapter(position);
             if (pair != null) {
                 pair.second.onViewRecycled(holder);
             }
@@ -260,7 +260,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         super.onViewAttachedToWindow(holder);
         int position = holder.getPosition();
         if (position >= 0) {
-            Pair<AdapterDataObserver, SingAdapter> pair = findAdapterByPosition(position);
+            Pair<AdapterDataObserver, SingAdapter> pair = findAdapter(position);
             if (pair != null) {
                 pair.second.onViewAttachedToWindow(holder);
             }
@@ -273,7 +273,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         super.onViewDetachedFromWindow(holder);
         int position = holder.getPosition();
         if (position >= 0) {
-            Pair<AdapterDataObserver, SingAdapter> pair = findAdapterByPosition(position);
+            Pair<AdapterDataObserver, SingAdapter> pair = findAdapter(position);
             if (pair != null) {
                 pair.second.onViewDetachedFromWindow(holder);
             }
@@ -481,7 +481,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
      * @return the relative position in sub adapter by the absoulte position in DelegaterAdapter. Return -1 if no sub adapter founded.
      */
     public int findOffsetPosition(int absoultePosition) {
-        Pair<AdapterDataObserver, SingAdapter> p = findAdapterByPosition(absoultePosition);
+        Pair<AdapterDataObserver, SingAdapter> p = findAdapter(absoultePosition);
         if (p == null) {
             return -1;
         }
@@ -490,7 +490,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     }
 
     @Nullable
-    public Pair<AdapterDataObserver, SingAdapter> findAdapterByPosition(int position) {
+    private Pair<AdapterDataObserver, SingAdapter> findAdapter(int position) {
         final int count = mAdapters.size();
         if (count == 0) {
             return null;
@@ -554,6 +554,20 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
             }
         }
         return -1;
+    }
+
+    /**
+     * 查找对应position的adapter
+     *
+     * @param position
+     * @return
+     */
+    public SingAdapter findAdapterByPosition(int position) {
+        Pair<AdapterDataObserver, SingAdapter> a = findAdapter(position);
+        if (a != null) {
+            return a.second;
+        }
+        return null;
     }
 
     /**
