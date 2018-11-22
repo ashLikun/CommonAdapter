@@ -197,7 +197,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     }
 
     /**
-     * 对应的adapter转换成对应真实的ViewType
+     * 获取adapter转换成对应真实的ViewType
      * 需要在addadapter后才能调用
      *
      * @param adapter
