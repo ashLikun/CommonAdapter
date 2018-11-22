@@ -63,6 +63,18 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
     }
 
     /**
+     * 在Vlayout里面第几个
+     *
+     * @return
+     */
+    public int getIndex() {
+        if (observer != null) {
+            return observer.mIndex;
+        }
+        return -1;
+    }
+
+    /**
      * 这2个方法是父Adapter onBindViewHolder回掉的
      */
     protected void onBindViewHolderWithOffset(RecyclerView.ViewHolder holder, int position, int offsetTotal, List<Object> payloads) {

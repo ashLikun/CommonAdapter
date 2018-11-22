@@ -197,6 +197,31 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
     }
 
     /**
+     * 对应的adapter转换成对应真实的ViewType
+     * 需要在addadapter后才能调用
+     *
+     * @param adapter
+     * @return
+     */
+    public int getAdapterItemViewType(SingAdapter adapter) {
+        if (adapter == null) {
+            return RecyclerView.INVALID_TYPE;
+        }
+        int subItemType = adapter.getItemViewType(0);
+        if (subItemType < 0) {
+            // negative integer, invalid, just return
+            return subItemType;
+        }
+        if (mHasConsistItemType) {
+            return subItemType;
+        }
+        int index = adapter.getIndex();
+        //防止Cantor(康托)算法溢出int和long最大值
+        subItemType = getCantorToViewType(subItemType);
+        return (int) Cantor.getCantor(subItemType, index);
+    }
+
+    /**
      * 防止Cantor(康托)算法溢出int和long最大值
      * 这里从新从1开始赋值
      *
