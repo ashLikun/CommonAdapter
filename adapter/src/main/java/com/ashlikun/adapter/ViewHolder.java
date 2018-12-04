@@ -52,6 +52,10 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         mViews = new SparseArray();
     }
 
+    public void setStartPosition(IStartPosition iStartPosition) {
+        this.iStartPosition = iStartPosition;
+    }
+
     /**
      * 是否设置过item点击效果
      *

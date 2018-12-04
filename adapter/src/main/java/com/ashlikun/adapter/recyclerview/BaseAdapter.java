@@ -205,6 +205,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     }
 
     protected void setListener(final ViewGroup parent, final ViewHolder viewHolder, final int viewType) {
+        viewHolder.setStartPosition(this);
         if (!isEnabled(viewType)
                 || !viewHolder.itemView.isEnabled()) {
             return;

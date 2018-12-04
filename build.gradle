@@ -28,7 +28,7 @@ task clean(type: Delete) {
 ext {
     superVersion = "27.0.2"
     compileSdkVersion = 27
-    buildToolsVersion = "27.0.2"
+    buildToolsVersion = "27.0.3"
     designVersion = "com.android.support:design:" + superVersion
     v4Version = "com.android.support:support-v4:" + superVersion
     v7AppCompat = "com.android.support:appcompat-v7:" + superVersion
