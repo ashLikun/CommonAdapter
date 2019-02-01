@@ -26,6 +26,10 @@ public class DataHandle<T> {
         return mDatas == null ? 0 : mDatas.size();
     }
 
+    public boolean isEmpty() {
+        return getItemCount() == 0;
+    }
+
     public List<T> getDatas() {
         return mDatas;
     }

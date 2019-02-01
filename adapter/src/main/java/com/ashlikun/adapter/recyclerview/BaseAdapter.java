@@ -122,6 +122,10 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         return dataHandle.getItemCount();
     }
 
+    public boolean isEmpty() {
+        return dataHandle.isEmpty();
+    }
+
     protected int getPosition(ViewHolder viewHolder) {
         return viewHolder.getPositionInside();
     }
