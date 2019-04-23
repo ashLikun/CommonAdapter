@@ -19,7 +19,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly rootProject.ext.designVersion
     compileOnly('com.alibaba.android:vlayout:1.2.18@aar') {
         transitive = true

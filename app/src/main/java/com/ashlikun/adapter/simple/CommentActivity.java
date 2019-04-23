@@ -1,10 +1,6 @@
 package com.ashlikun.adapter.simple;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +8,14 @@ import android.widget.ImageView;
 
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.recyclerview.CommonAdapter;
-import com.ashlikun.xrecycleview.RecyclerViewWithHeaderAndFooter;
+import com.ashlikun.xrecycleview.RecyclerViewExtend;
 
 import java.util.ArrayList;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 作者　　: 李坤
@@ -24,7 +25,7 @@ import java.util.ArrayList;
  * 功能介绍：
  */
 public class CommentActivity extends AppCompatActivity {
-    RecyclerViewWithHeaderAndFooter recycleView;
+    RecyclerViewExtend recycleView;
     CommonAdapter<NeibuData> adapter;
     ArrayList<NeibuData> neibuData = new ArrayList<>();
 

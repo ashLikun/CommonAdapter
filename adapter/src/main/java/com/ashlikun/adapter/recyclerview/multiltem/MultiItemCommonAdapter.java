@@ -1,7 +1,7 @@
 package com.ashlikun.adapter.recyclerview.multiltem;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
+import androidx.annotation.LayoutRes;
 import android.util.SparseIntArray;
 import android.view.ViewGroup;
 

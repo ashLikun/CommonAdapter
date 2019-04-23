@@ -1,9 +1,6 @@
 package com.ashlikun.adapter.recyclerview;
 
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleObserver;
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +16,10 @@ import com.ashlikun.adapter.recyclerview.click.OnItemLongClickListener;
 import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition;
 
 import java.util.List;
+
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 作者　　: 李坤

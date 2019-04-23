@@ -1,7 +1,7 @@
 package com.ashlikun.adapter.animation;
 
 import android.animation.Animator;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 

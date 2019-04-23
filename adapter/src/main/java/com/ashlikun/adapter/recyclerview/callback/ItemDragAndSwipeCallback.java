@@ -1,11 +1,12 @@
 package com.ashlikun.adapter.recyclerview.callback;
 
 import android.graphics.Canvas;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.ashlikun.adapter.R;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * @author　　: 李坤
