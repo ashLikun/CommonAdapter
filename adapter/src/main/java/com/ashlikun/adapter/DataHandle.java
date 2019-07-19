@@ -64,11 +64,28 @@ public class DataHandle<T> {
     }
 
     /**
+     * 第一个前面添加数据
+     */
+    public void addFirstDatas(List<T> datas) {
+        addDatas(datas, true, false);
+    }
+
+    /**
+     * 第一个前面添加数据
+     *
+     * @param isNotify 是否通知适配器刷新
+     */
+    public void addFirstDatas(List<T> datas, boolean isNotify) {
+        addDatas(datas, true, isNotify);
+    }
+
+    /**
      * 添加数据
      */
     public void addDatas(List<T> datas) {
         addDatas(datas, false);
     }
+
 
     /**
      * 添加数据
@@ -76,6 +93,16 @@ public class DataHandle<T> {
      * @param isNotify 是否通知适配器刷新
      */
     public void addDatas(List<T> datas, boolean isNotify) {
+        addDatas(datas, true, isNotify);
+    }
+
+    /**
+     * 添加数据
+     *
+     * @param isNotify 是否通知适配器刷新
+     * @param isEnd    是否从末尾插入
+     */
+    public void addDatas(List<T> datas, boolean isEnd, boolean isNotify) {
         if (datas == null || datas.isEmpty()) {
             return;
         }
@@ -83,10 +110,18 @@ public class DataHandle<T> {
             mDatas = new ArrayList<>();
         }
         int size = getItemCount();
-        mDatas.addAll(datas);
+        if (isEnd) {
+            mDatas.addAll(datas);
+        } else {
+            mDatas.addAll(0, datas);
+        }
         if (isNotify) {
             if (size > 0) {
-                adapter.notifyItemRangeInserted(size, datas.size());
+                if (isEnd) {
+                    adapter.notifyItemRangeInserted(size, datas.size());
+                } else {
+                    adapter.notifyItemRangeInserted(0, datas.size());
+                }
             } else {
                 adapter.notifyDataSetChanged();
             }
