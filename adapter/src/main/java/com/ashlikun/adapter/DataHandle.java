@@ -67,7 +67,7 @@ public class DataHandle<T> {
      * 第一个前面添加数据
      */
     public void addFirstDatas(List<T> datas) {
-        addDatas(datas, true, false);
+        addDatas(datas, false, false);
     }
 
     /**
@@ -76,7 +76,7 @@ public class DataHandle<T> {
      * @param isNotify 是否通知适配器刷新
      */
     public void addFirstDatas(List<T> datas, boolean isNotify) {
-        addDatas(datas, true, isNotify);
+        addDatas(datas, false, isNotify);
     }
 
     /**
