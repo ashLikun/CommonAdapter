@@ -405,6 +405,10 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         isOpenClickEffects = false;
     }
 
+    public void setOpenClickEffects() {
+        isOpenClickEffects = true;
+    }
+
     /**
      * 设置item点击颜色,全局的item
      *
