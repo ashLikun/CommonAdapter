@@ -5,6 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.ashlikun.adapter.AdapterUtils;
 import com.ashlikun.adapter.DataHandle;
 import com.ashlikun.adapter.ForegroundEffects;
@@ -16,10 +20,6 @@ import com.ashlikun.adapter.recyclerview.click.OnItemLongClickListener;
 import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition;
 
 import java.util.List;
-
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 作者　　: 李坤
@@ -59,7 +59,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     /**
      * 是否打开点击效果
      */
-    private boolean isOpenClickEffects = true;
+    private boolean isOpenClickEffects = false;
     protected RecyclerView recyclerView;
 
     public BaseAdapter(Context context, int layoutId, List<T> datas) {
