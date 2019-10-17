@@ -116,15 +116,12 @@ public class DataHandle<T> {
             mDatas.addAll(0, datas);
         }
         if (isNotify) {
-            if (size > 0) {
-                if (isEnd) {
-                    adapter.notifyItemRangeInserted(size, datas.size());
-                } else {
-                    adapter.notifyItemRangeInserted(0, datas.size());
-                }
+            if (isEnd) {
+                adapter.notifyItemRangeInserted(size + adapter.getHeaderSize(), datas.size() + adapter.getHeaderSize());
             } else {
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemRangeInserted(adapter.getHeaderSize(), datas.size() + adapter.getHeaderSize());
             }
+
         }
     }
 
