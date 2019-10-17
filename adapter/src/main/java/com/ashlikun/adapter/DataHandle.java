@@ -117,9 +117,9 @@ public class DataHandle<T> {
         }
         if (isNotify) {
             if (isEnd) {
-                adapter.notifyItemRangeInserted(size + adapter.getHeaderSize(), datas.size() + adapter.getHeaderSize());
+                adapter.notifyItemRangeInserted(size + adapter.getHeaderSize(), datas.size());
             } else {
-                adapter.notifyItemRangeInserted(adapter.getHeaderSize(), datas.size() + adapter.getHeaderSize());
+                adapter.notifyItemRangeInserted(adapter.getHeaderSize(), datas.size());
             }
 
         }
