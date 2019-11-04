@@ -118,9 +118,9 @@ public class DataHandle<T> {
         if (isNotify) {
             if (size > 0) {
                 if (isEnd) {
-                    adapter.notifyItemRangeInserted(size, datas.size());
+                    adapter.notifyItemRangeInserted(size + adapter.getHeaderSize(), datas.size());
                 } else {
-                    adapter.notifyItemRangeInserted(0, datas.size());
+                    adapter.notifyItemRangeInserted(adapter.getHeaderSize(), datas.size());
                 }
             } else {
                 adapter.notifyDataSetChanged();
