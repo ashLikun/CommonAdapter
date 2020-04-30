@@ -1,11 +1,8 @@
 package com.ashlikun.adapter.recyclerview.vlayout;
 
 import android.content.Context;
-import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
-import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
-import com.ashlikun.adapter.ViewHolder;
 
 import java.util.List;
 
@@ -15,9 +12,12 @@ import java.util.List;
  * 邮箱　　：496546144@qq.com
  * <p>
  * 功能介绍：VLayout的ItemAdapter,默认ViewHolder
+ *
+ * @Deprecated 请直接使用{@link SingAdapter}
  */
-public abstract class SimpleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
-    LayoutHelper layoutHelper;
+@Deprecated
+public abstract class SimpleSingAdapter<T> extends SingAdapter<T> {
+
 
     public SimpleSingAdapter(Context context, int layoutId, LayoutHelper layoutHelper, List<T> datas) {
         super(context, layoutId, datas);
@@ -52,33 +52,4 @@ public abstract class SimpleSingAdapter<T> extends SingAdapter<T, ViewHolder> {
         this(context, null);
     }
 
-    @Override
-    public LayoutHelper onCreateLayoutHelper() {
-        if (layoutHelper == null) {
-            throw new RuntimeException(getClass().getSimpleName() + " layoutHelper is null");
-        }
-        return layoutHelper;
-    }
-
-    @Override
-    public ViewHolder createHolder(final ViewGroup parent, int viewType) {
-        return new ViewHolder(mContext, getItemLayout(parent, getLayoutId()), this);
-    }
-
-    public LayoutHelper getLayoutHelper() {
-        return layoutHelper;
-    }
-
-    public void setLayoutHelper(LayoutHelper layoutHelper) {
-        this.layoutHelper = layoutHelper;
-    }
-
-    @Override
-    public int getItemCount() {
-        if (layoutHelper != null && layoutHelper instanceof SingleLayoutHelper) {
-            return layoutHelper.getItemCount();
-        } else {
-            return super.getItemCount();
-        }
-    }
 }

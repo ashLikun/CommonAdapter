@@ -1,12 +1,12 @@
 package com.ashlikun.adapter.recyclerview.vlayout;
 
 import android.content.Context;
+
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
-import com.ashlikun.adapter.ViewHolder;
-import com.ashlikun.adapter.recyclerview.BaseAdapter;
+import com.alibaba.android.vlayout.layout.SingleLayoutHelper;
+import com.ashlikun.adapter.recyclerview.CommonAdapter;
 
 import java.util.List;
 
@@ -15,14 +15,28 @@ import java.util.List;
  * 创建时间: 2018/4/10 0010　20:48
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：VLayout的ItemAdapter ,得自己创建ViewHolder
+ * 功能介绍：VLayout的ItemAdapter
  */
-public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<T, VH> {
+public abstract class SingAdapter<T> extends CommonAdapter<T> {
     /**
      * 内部的adapter建议只用一个type
      */
-    private Object viewType;
-    MultipleAdapter.AdapterDataObserver observer;
+    protected Object viewType = this.getClass();
+    protected LayoutHelper layoutHelper;
+
+    protected MultipleAdapter.AdapterDataObserver observer;
+
+    public LayoutHelper onCreateLayoutHelper() {
+        return layoutHelper;
+    }
+
+    public LayoutHelper getLayoutHelper() {
+        return layoutHelper;
+    }
+
+    public void setLayoutHelper(LayoutHelper layoutHelper) {
+        this.layoutHelper = layoutHelper;
+    }
 
     /**
      * 这2个方法是父Adapter onBindViewHolder回掉的
@@ -101,28 +115,9 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
         this(context, -1, null);
     }
 
-    @Override
-    public VH onCreateViewHolder(final ViewGroup parent, int viewType) {
-        ViewHolder holder = createHolder(parent, viewType);
-        setListener(parent, holder, viewType);
-        return (VH) holder;
-    }
-
-    @Override
-    public void onBindViewHolder(VH holder, int position) {
-        setListener(recyclerView, holder, holder.getItemViewType());
-        convert(holder, getItemData(position));
-    }
-
-    @Override
-    public void onBindViewHolder(VH holder, int position, List<Object> payloads) {
-        if (payloads != null && !payloads.isEmpty()) {
-            if (!convert(holder, getItemData(position), payloads)) {
-                super.onBindViewHolder(holder, position, payloads);
-            }
-        } else {
-            super.onBindViewHolder(holder, position, payloads);
-        }
+    public SingAdapter(Context context, int layoutId, LayoutHelper layoutHelper, List<T> datas) {
+        this(context, layoutId, datas);
+        this.layoutHelper = layoutHelper;
     }
 
     /**
@@ -146,11 +141,16 @@ public abstract class SingAdapter<T, VH extends ViewHolder> extends BaseAdapter<
     }
 
 
-    public abstract LayoutHelper onCreateLayoutHelper();
-
-    public abstract VH createHolder(final ViewGroup parent, int viewType);
-
     public RecyclerView getRecyclerView() {
         return recyclerView;
+    }
+
+    @Override
+    public int getItemCount() {
+        if (layoutHelper != null && layoutHelper instanceof SingleLayoutHelper) {
+            return layoutHelper.getItemCount();
+        } else {
+            return super.getItemCount();
+        }
     }
 }
