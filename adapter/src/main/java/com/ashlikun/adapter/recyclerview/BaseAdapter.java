@@ -106,6 +106,13 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * 可以重写这个方法，用java代码写布局,构造方法就不用传layoutID了
      */
     public View getItemLayout(ViewGroup parent, int layoutId) {
+        return getItemLayout(parent, layoutId, getItemViewType(0));
+    }
+
+    /**
+     * 可以重写这个方法，用java代码写布局,构造方法就不用传layoutID了
+     */
+    public View getItemLayout(ViewGroup parent, int layoutId, int viewType) {
         return LayoutInflater.from(mContext).inflate(layoutId, parent, false);
     }
 

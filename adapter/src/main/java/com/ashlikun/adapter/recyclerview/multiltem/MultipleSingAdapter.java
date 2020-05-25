@@ -1,12 +1,13 @@
 package com.ashlikun.adapter.recyclerview.multiltem;
 
 import android.content.Context;
-import androidx.annotation.LayoutRes;
 import android.util.SparseIntArray;
 import android.view.ViewGroup;
 
+import androidx.annotation.LayoutRes;
+
 import com.ashlikun.adapter.ViewHolder;
-import com.ashlikun.adapter.recyclerview.vlayout.SimpleSingAdapter;
+import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ import java.util.List;
  * 多表单的内部adapter,可以有多个不同的type,
  * 第一步在构造方法addItemType关联id
  */
-public abstract class MultipleSingAdapter<T> extends SimpleSingAdapter<T> {
+public abstract class MultipleSingAdapter<T> extends SingAdapter<T> {
     /**
      * ItemType对应的LayoutId
      */
@@ -41,7 +42,7 @@ public abstract class MultipleSingAdapter<T> extends SimpleSingAdapter<T> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutId = getLayoutId(viewType);
-        ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, layoutId), this);
+        ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, layoutId, viewType), this);
         setListener(parent, holder, viewType);
         return holder;
     }
