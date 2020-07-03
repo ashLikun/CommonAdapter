@@ -38,7 +38,7 @@ public class DataHandle<T> {
      * 获取position对应的数据
      */
     public T getItemData(int position) {
-        if (mDatas == null || mDatas.size() <= position) {
+        if (mDatas == null || position < 0 || mDatas.size() <= position) {
             return null;
         }
         return mDatas.get(position);

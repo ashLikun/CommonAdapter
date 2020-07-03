@@ -2,4 +2,8 @@
 <resources>
     <item name="adapter_swiping_support" type="id" />
     <item name="adapter_dragging_support" type="id" />
+    <item name="adapter_type_header" type="id" />
+    <item name="adapter_type_footer" type="id" />
+    <item name="adapter_type_child" type="id" />
+    <item name="adapter_type_empty" type="id" />
 </resources>

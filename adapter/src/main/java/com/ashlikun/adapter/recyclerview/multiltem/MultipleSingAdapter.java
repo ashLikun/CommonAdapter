@@ -30,7 +30,7 @@ public abstract class MultipleSingAdapter<T> extends SingAdapter<T> {
     public static final int DEFAULT_VIEW_TYPE = -0xff;
 
     public MultipleSingAdapter(Context context, List<T> datas) {
-        super(context, -1, datas);
+        super(context, datas);
     }
 
     @Override
@@ -42,7 +42,7 @@ public abstract class MultipleSingAdapter<T> extends SingAdapter<T> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutId = getLayoutId(viewType);
-        ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, layoutId, viewType), this);
+        ViewHolder holder = new ViewHolder(mContext, createLayout(parent, layoutId, viewType), this);
         setListener(parent, holder, viewType);
         return holder;
     }
@@ -69,7 +69,8 @@ public abstract class MultipleSingAdapter<T> extends SingAdapter<T> {
         addItemType(DEFAULT_VIEW_TYPE, layoutResId);
     }
 
-    private int getLayoutId(int viewType) {
+    @Override
+    public int getLayoutId(int viewType) {
         return layouts.get(viewType, TYPE_NOT_FOUND);
     }
 

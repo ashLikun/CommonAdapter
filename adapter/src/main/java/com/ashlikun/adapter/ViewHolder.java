@@ -7,8 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.util.Linkify;
 import android.util.SparseArray;
 import android.view.View;
@@ -19,6 +17,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition;
 
@@ -314,5 +316,18 @@ public class ViewHolder extends RecyclerView.ViewHolder {
 
     public int getItemClickColor() {
         return itemClickColor;
+    }
+
+    /**
+     * 是否是瀑布流
+     *
+     * @return
+     */
+    public boolean isStaggeredGridLayout() {
+        ViewGroup.LayoutParams layoutParams = itemView.getLayoutParams();
+        if (layoutParams instanceof StaggeredGridLayoutManager.LayoutParams) {
+            return true;
+        }
+        return false;
     }
 }

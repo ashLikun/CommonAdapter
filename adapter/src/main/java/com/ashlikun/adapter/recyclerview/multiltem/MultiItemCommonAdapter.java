@@ -2,11 +2,9 @@ package com.ashlikun.adapter.recyclerview.multiltem;
 
 import android.content.Context;
 import android.util.SparseIntArray;
-import android.view.ViewGroup;
 
 import androidx.annotation.LayoutRes;
 
-import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.recyclerview.BaseAdapter;
 import com.ashlikun.adapter.recyclerview.CommonAdapter;
 
@@ -31,21 +29,12 @@ public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T> {
     public static final int DEFAULT_VIEW_TYPE = -0xff;
 
     public MultiItemCommonAdapter(Context context, List<T> datas) {
-        super(context, -1, datas);
+        super(context, datas);
     }
 
     @Override
     public int getItemViewType(int position) {
         return getItemViewType(position, getItemData(position));
-    }
-
-
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        int layoutId = getLayoutId(viewType);
-        ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, layoutId, viewType), this);
-        setListener(parent, holder, viewType);
-        return holder;
     }
 
     /**
@@ -61,7 +50,8 @@ public abstract class MultiItemCommonAdapter<T> extends CommonAdapter<T> {
         layouts.put(viewType, layoutResId);
     }
 
-    private int getLayoutId(int viewType) {
+    @Override
+    public int getLayoutId(int viewType) {
         return layouts.get(viewType, TYPE_NOT_FOUND);
     }
 

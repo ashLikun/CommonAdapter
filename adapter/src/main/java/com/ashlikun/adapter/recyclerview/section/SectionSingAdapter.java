@@ -27,11 +27,11 @@ public abstract class SectionSingAdapter<T extends SectionEntity> extends Simple
     protected int mSectionHeadResId = -2;
 
     public SectionSingAdapter(Context context, List<T> datas) {
-        this(context, -1, -2, datas);
+        this(context, -DEFAULT_LAYOUT_ID, -2, datas);
     }
 
     public SectionSingAdapter(Context context, int mSectionHeadResId, List<T> datas) {
-        this(context, -1, mSectionHeadResId, datas);
+        this(context, DEFAULT_LAYOUT_ID, mSectionHeadResId, datas);
     }
 
     public SectionSingAdapter(Context context, int layoutId, int mSectionHeadResId, List<T> datas) {
@@ -49,7 +49,7 @@ public abstract class SectionSingAdapter<T extends SectionEntity> extends Simple
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_SECTION) {
-            ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, mSectionHeadResId), this);
+            ViewHolder holder = new ViewHolder(mContext, createLayout(parent, mSectionHeadResId, viewType), this);
             setListener(parent, holder, viewType);
             return holder;
         } else {

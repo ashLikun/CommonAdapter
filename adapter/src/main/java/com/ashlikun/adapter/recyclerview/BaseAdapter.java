@@ -37,12 +37,13 @@ import java.util.List;
  * 4:{@link OnItemClickListener},{@link OnItemLongClickListener}
  * 5:前景点击效果水波纹
  * 6:灵活操作数据{@link DataHandle}
- * 7:布局可用XML，也可实现{@link BaseAdapter#getItemLayout}代码生成
+ * 7:布局可用XML，也可实现{@link BaseAdapter#createLayout}代码生成
  */
 public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<V>
         implements IHeaderAndFooter, LifecycleObserver, OnItemClickListener<T>, OnItemLongClickListener<T>, IStartPosition {
+    public static int DEFAULT_LAYOUT_ID = -1;
     private int clickDelay = 200;
-    protected int mLayoutId;
+    protected int mLayoutId = DEFAULT_LAYOUT_ID;
     protected Context mContext;
     protected DataHandle<T> dataHandle;
     private int headerSize;
@@ -71,7 +72,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     }
 
     public BaseAdapter(Context context, List<T> datas) {
-        this(context, -1, datas);
+        this(context, DEFAULT_LAYOUT_ID, datas);
     }
 
     public abstract void convert(V holder, T t);
@@ -102,17 +103,17 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         return mLayoutId;
     }
 
-    /**
-     * 可以重写这个方法，用java代码写布局,构造方法就不用传layoutID了
-     */
-    public View getItemLayout(ViewGroup parent, int layoutId) {
-        return getItemLayout(parent, layoutId, getItemViewType(0));
+    public int getLayoutId(int viewType) {
+        if (mLayoutId == DEFAULT_LAYOUT_ID) {
+            return getLayoutId();
+        }
+        return mLayoutId;
     }
 
     /**
      * 可以重写这个方法，用java代码写布局,构造方法就不用传layoutID了
      */
-    public View getItemLayout(ViewGroup parent, int layoutId, int viewType) {
+    public View createLayout(ViewGroup parent, int layoutId, int viewType) {
         return LayoutInflater.from(mContext).inflate(layoutId, parent, false);
     }
 
@@ -122,7 +123,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         if (d != null) {
             return d.hashCode();
         }
-        return 0;
+        return RecyclerView.NO_ID;
     }
 
     @Override

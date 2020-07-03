@@ -2,17 +2,19 @@ package com.ashlikun.adapter.simple;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.RelativeLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.alibaba.android.vlayout.Cantor;
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.ashlikun.adapter.recyclerview.vlayout.MultipleAdapter;
+import com.ashlikun.adapter.simple.group.GroupedListActivity;
 
 import java.util.ArrayList;
 
@@ -46,6 +48,18 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, CommentActivity.class);
                 startActivity(intent);
                 return false;
+            }
+        });
+        findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GroupedListActivity.openActivity(MainActivity.this);
             }
         });
 //
@@ -82,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
         }
         MyAdapter.AdapterItem4 adapterItem4 = new MyAdapter.AdapterItem4(this, neibu4Data);
         adapter.addAdapter(adapterItem4);
+
     }
 
     public void onClick(View view) {

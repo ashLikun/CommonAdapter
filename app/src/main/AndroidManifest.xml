@@ -24,6 +24,9 @@
         <activity android:name=".CommentActivity">
 
         </activity>
+        <activity android:name=".group.GroupedListActivity">
+
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

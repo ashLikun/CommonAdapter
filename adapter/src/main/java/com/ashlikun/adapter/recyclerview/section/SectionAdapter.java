@@ -27,11 +27,11 @@ public abstract class SectionAdapter<T extends SectionEntity> extends CommonAdap
     protected int mSectionHeadResId = -2;
 
     public SectionAdapter(Context context, List<T> datas) {
-        this(context, -1, -2, datas);
+        this(context, DEFAULT_LAYOUT_ID, -2, datas);
     }
 
     public SectionAdapter(Context context, int mSectionHeadResId, List<T> datas) {
-        this(context, -1, mSectionHeadResId, datas);
+        this(context, DEFAULT_LAYOUT_ID, mSectionHeadResId, datas);
     }
 
     public SectionAdapter(Context context, int layoutId, int mSectionHeadResId, List<T> datas) {
@@ -49,7 +49,7 @@ public abstract class SectionAdapter<T extends SectionEntity> extends CommonAdap
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_SECTION) {
-            ViewHolder holder = new ViewHolder(mContext, getItemLayout(parent, mSectionHeadResId), this);
+            ViewHolder holder = new ViewHolder(mContext, createLayout(parent, mSectionHeadResId, viewType), this);
             setListener(parent, holder, viewType);
             return holder;
         } else {

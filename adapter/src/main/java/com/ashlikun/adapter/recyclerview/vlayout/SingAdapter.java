@@ -104,7 +104,7 @@ public abstract class SingAdapter<T> extends CommonAdapter<T> {
     }
 
     public SingAdapter(Context context, List<T> datas) {
-        this(context, -1, datas);
+        this(context, DEFAULT_LAYOUT_ID, datas);
     }
 
     /**
