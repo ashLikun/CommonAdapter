@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ashlikun.adapter.recyclerview.group.GroupedCommonAdapter;
@@ -20,6 +19,9 @@ import com.ashlikun.adapter.simple.group.adapter.GroupedListAdapter;
 import com.ashlikun.adapter.simple.group.javaben.ChildEntity;
 import com.ashlikun.adapter.simple.group.javaben.GroupEntity;
 import com.ashlikun.adapter.simple.group.javaben.GroupModel;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexWrap;
+import com.google.android.flexbox.FlexboxLayoutManager;
 
 
 /**
@@ -55,7 +57,11 @@ public class GroupedListActivity extends AppCompatActivity {
                 adapter.notifyChildRangeChanged(9, 0, 5);
             }
         });
-        rvList.setLayoutManager(new GridLayoutManager(this, 3));
+        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
+        layoutManager.setFlexDirection(FlexDirection.ROW);
+        layoutManager.setFlexWrap(FlexWrap.WRAP);
+        //确定主轴与换行方式，这样的方式类似于一般的ListView的样式
+        rvList.setLayoutManager(layoutManager);
         adapter = new GroupedListAdapter(this, GroupModel.getGroups(10, 5));
         adapter.setOnHeaderClickListener(new GroupedListAdapter.OnHeaderClickListener() {
             @Override

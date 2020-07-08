@@ -121,9 +121,9 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     public long getItemId(int position) {
         T d = getItemData(position);
         if (d != null) {
-            return d.hashCode();
+            return d.hashCode() + getStartPosition() + position;
         }
-        return RecyclerView.NO_ID;
+        return getStartPosition() + position;
     }
 
     @Override

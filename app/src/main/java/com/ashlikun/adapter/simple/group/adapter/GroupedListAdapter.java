@@ -2,12 +2,14 @@ package com.ashlikun.adapter.simple.group.adapter;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.ViewGroup;
 
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.recyclerview.group.GroupedCommonAdapter;
 import com.ashlikun.adapter.simple.R;
 import com.ashlikun.adapter.simple.group.javaben.ChildEntity;
 import com.ashlikun.adapter.simple.group.javaben.GroupEntity;
+import com.google.android.flexbox.FlexboxLayoutManager;
 
 import java.util.ArrayList;
 
@@ -56,6 +58,12 @@ public class GroupedListAdapter extends GroupedCommonAdapter<GroupEntity> {
     @Override
     public void onBindChildViewHolder(ViewHolder holder, GroupEntity itemData, int groupPosition, int childPosition) {
         Log.e("onBindChildViewHolder", "groupPosition = " + groupPosition + "     childPosition = " + childPosition);
+        ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
+        if (layoutParams instanceof FlexboxLayoutManager.LayoutParams){
+            ((FlexboxLayoutManager.LayoutParams) layoutParams).setFlexGrow(0.5f);
+            //加上这句话，保证主轴上的子view均分主轴剩余空间
+            //完全可以给网络数据添加type，在这里手动设置同一主轴上子View占据的空间
+        }
         ChildEntity entity = itemData.getChildren().get(childPosition);
         holder.setText(R.id.tv_child, entity.getChild());
     }

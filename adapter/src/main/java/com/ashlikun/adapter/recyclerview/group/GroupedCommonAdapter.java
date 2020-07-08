@@ -70,13 +70,6 @@ public abstract class GroupedCommonAdapter<T>
             }
         }
     }
-
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
     /**
      * 重写父类，用组的position替代
      */
