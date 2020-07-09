@@ -1,7 +1,6 @@
 package com.ashlikun.adapter.recyclerview;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import com.ashlikun.adapter.ViewHolder;
@@ -36,14 +35,12 @@ public abstract class CommonAdapter<T> extends BaseAdapter<T, ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Log.e("onBindViewHolder", "position = " + position);
         setListener(recyclerView, holder, holder.getItemViewType());
         convert(holder, getItemData(position));
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
-        Log.e("onBindViewHolder2", "position = " + position);
         if (payloads != null && !payloads.isEmpty()) {
             if (!convert(holder, getItemData(position), payloads)) {
                 super.onBindViewHolder(holder, position, payloads);
