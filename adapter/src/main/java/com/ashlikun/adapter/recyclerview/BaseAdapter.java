@@ -78,7 +78,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         this(context, DEFAULT_LAYOUT_ID, datas);
     }
 
-    public abstract void convert(@NonNull V holder, @NonNull T t);
+    public abstract void convert(@NonNull V holder, T t);
 
     /**
      * recycleView的局部刷新
@@ -86,7 +86,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * @param payloads 一定不为null
      * @return true：代表处理完毕，不走另一个刷新的方法，false表示没有处理，继续走另一个
      */
-    public boolean convert(@NonNull V holder, @NonNull T t, List<Object> payloads) {
+    public boolean convert(@NonNull V holder, T t, List<Object> payloads) {
         return false;
     }
 
@@ -392,7 +392,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * 内部封装点击事件
      */
     @Override
-    public boolean onItemLongClick(int viewType, @NonNull ViewGroup parent, @NonNull View view, @NonNull T data, int position) {
+    public boolean onItemLongClick(int viewType, @NonNull ViewGroup parent, @NonNull View view, T data, int position) {
         return false;
     }
 
@@ -400,7 +400,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * 内部封装点击事件
      */
     @Override
-    public void onItemClick(int viewType, @NonNull ViewGroup parent, @NonNull View view, @NonNull T data, int position) {
+    public void onItemClick(int viewType, @NonNull ViewGroup parent, @NonNull View view, T data, int position) {
 
     }
 
