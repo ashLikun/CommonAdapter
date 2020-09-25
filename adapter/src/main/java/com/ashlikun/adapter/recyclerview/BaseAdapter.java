@@ -31,7 +31,7 @@ import java.util.List;
  * <p>
  * 1:一行代码实现item{@link BaseAdapter#convert}
  * 2:添加生命周期
- * addLifecycle(lifecycle)
+ * 先添加监听 addLifecycle(lifecycle)
  *
  * @OnLifecycleEvent(Lifecycle.Event.ON_RESUME) public void onResume() {
  * }
