@@ -31,9 +31,11 @@ import java.util.List;
  * <p>
  * 1:一行代码实现item{@link BaseAdapter#convert}
  * 2:添加生命周期
+ * addLifecycle(lifecycle)
  *
  * @OnLifecycleEvent(Lifecycle.Event.ON_RESUME) public void onResume() {
  * }
+ * <p>
  * 3：动画{@link  BaseAdapter#getAdapterAnimHelp}{@link  BaseAdapter#setCustomAnimation}  -> {@link AdapterAnimHelp}
  * 4:{@link OnItemClickListener},{@link OnItemLongClickListener}
  * 5:前景点击效果水波纹

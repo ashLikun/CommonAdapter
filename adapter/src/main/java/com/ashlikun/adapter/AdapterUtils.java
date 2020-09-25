@@ -1,5 +1,10 @@
 package com.ashlikun.adapter;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.ContextWrapper;
+
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -125,6 +130,23 @@ public class AdapterUtils {
                 e.printStackTrace();
             }
             claxx = claxx.getSuperclass();
+        }
+        return null;
+    }
+
+    /**
+     * 方法功能：从context中获取activity，如果context不是activity那么久返回null
+     */
+    public static Activity getActivity(Context context) {
+        if (context == null) {
+            return null;
+        }
+        if (context instanceof Activity) {
+            return (Activity) context;
+        } else if (context instanceof ContextWrapper) {
+            return getActivity(((ContextWrapper) context).getBaseContext());
+        } else if (context instanceof ContextThemeWrapper) {
+            return getActivity(((ContextThemeWrapper) context).getBaseContext());
         }
         return null;
     }
