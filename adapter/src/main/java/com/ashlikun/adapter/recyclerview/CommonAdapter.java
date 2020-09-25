@@ -3,6 +3,8 @@ package com.ashlikun.adapter.recyclerview;
 import android.content.Context;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+
 import com.ashlikun.adapter.ViewHolder;
 
 import java.util.List;
@@ -18,29 +20,29 @@ import java.util.List;
 public abstract class CommonAdapter<T> extends BaseAdapter<T, ViewHolder> {
 
 
-    public CommonAdapter(Context context, int layoutId, List<T> datas) {
+    public CommonAdapter(@NonNull Context context, int layoutId, List<T> datas) {
         super(context, layoutId, datas);
     }
 
-    public CommonAdapter(Context context, List<T> datas) {
+    public CommonAdapter(@NonNull Context context, List<T> datas) {
         super(context, datas);
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
         ViewHolder holder = new ViewHolder(mContext, createLayout(parent, getLayoutId(viewType), viewType), this);
         setListener(parent, holder, viewType);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         setListener(recyclerView, holder, holder.getItemViewType());
         convert(holder, getItemData(position));
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position, List<Object> payloads) {
         if (payloads != null && !payloads.isEmpty()) {
             if (!convert(holder, getItemData(position), payloads)) {
                 super.onBindViewHolder(holder, position, payloads);

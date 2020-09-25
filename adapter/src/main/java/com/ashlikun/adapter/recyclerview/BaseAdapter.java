@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.recyclerview.widget.RecyclerView;
@@ -63,7 +64,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     private boolean isOpenClickEffects = false;
     protected RecyclerView recyclerView;
 
-    public BaseAdapter(Context context, int layoutId, List<T> datas) {
+    public BaseAdapter(@NonNull Context context, int layoutId, List<T> datas) {
         dataHandle = new DataHandle<>(datas, this);
         mContext = context;
         mLayoutId = layoutId;
@@ -71,11 +72,11 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         adapterAnimHelp = new AdapterAnimHelp(this);
     }
 
-    public BaseAdapter(Context context, List<T> datas) {
+    public BaseAdapter(@NonNull Context context, List<T> datas) {
         this(context, DEFAULT_LAYOUT_ID, datas);
     }
 
-    public abstract void convert(V holder, T t);
+    public abstract void convert(@NonNull V holder, @NonNull T t);
 
     /**
      * recycleView的局部刷新
@@ -83,7 +84,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * @param payloads 一定不为null
      * @return true：代表处理完毕，不走另一个刷新的方法，false表示没有处理，继续走另一个
      */
-    public boolean convert(V holder, T t, List<Object> payloads) {
+    public boolean convert(@NonNull V holder, @NonNull T t, List<Object> payloads) {
         return false;
     }
 
@@ -181,7 +182,8 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         dataHandle.clearData();
     }
 
-    public DataHandle<T> getDataHandle() {
+    public @NonNull
+    DataHandle<T> getDataHandle() {
         return dataHandle;
     }
 
@@ -213,7 +215,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         this.onItemLongClickListener = onItemLongClickListener;
     }
 
-    protected void setListener(final ViewGroup parent, final ViewHolder viewHolder, final int viewType) {
+    protected void setListener(@NonNull final ViewGroup parent, final ViewHolder viewHolder, final int viewType) {
         viewHolder.setStartPosition(this);
         if (!isEnabled(viewType)
                 || !viewHolder.itemView.isEnabled()) {
@@ -295,14 +297,14 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     }
 
     @Override
-    public void onViewAttachedToWindow(V holder) {
+    public void onViewAttachedToWindow(@NonNull V holder) {
         super.onViewAttachedToWindow(holder);
         onViewAttachedToWindowAnim(holder);
         adapterAnimHelp.onViewAttachedToWindow(holder);
     }
 
     @Override
-    public void onViewDetachedFromWindow(V holder) {
+    public void onViewDetachedFromWindow(@NonNull V holder) {
         super.onViewDetachedFromWindow(holder);
         adapterAnimHelp.onViewDetachedFromWindow(holder);
     }
@@ -312,7 +314,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      *
      * @param holder
      */
-    public void onViewAttachedToWindowAnim(V holder) {
+    public void onViewAttachedToWindowAnim(@NonNull V holder) {
 
     }
 
@@ -360,7 +362,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     /**
      * 设置生命周期监听
      */
-    public void addLifecycle(Lifecycle lifecycle) {
+    public void addLifecycle(@NonNull Lifecycle lifecycle) {
         lifecycle.addObserver(this);
     }
 
@@ -388,7 +390,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * 内部封装点击事件
      */
     @Override
-    public boolean onItemLongClick(int viewType, ViewGroup parent, View view, T data, int position) {
+    public boolean onItemLongClick(int viewType, @NonNull ViewGroup parent, @NonNull View view, @NonNull T data, int position) {
         return false;
     }
 
@@ -396,7 +398,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * 内部封装点击事件
      */
     @Override
-    public void onItemClick(int viewType, ViewGroup parent, View view, T data, int position) {
+    public void onItemClick(int viewType, @NonNull ViewGroup parent, @NonNull View view, @NonNull T data, int position) {
 
     }
 

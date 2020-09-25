@@ -3,6 +3,8 @@ package com.ashlikun.adapter.recyclerview.click;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+
 /**
  * @author　　: 李坤
  * 创建时间: 2018/9/6 10:29
@@ -13,5 +15,5 @@ import android.view.ViewGroup;
 
 public interface OnItemClickListener<T> {
 
-    void onItemClick(int viewType, ViewGroup parent, View view, T data, int position);
+    void onItemClick(int viewType, @NonNull ViewGroup parent, @NonNull View view, @NonNull T data, int position);
 }
