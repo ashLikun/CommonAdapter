@@ -57,9 +57,12 @@ open class MultipleAdapterHelp
     /**
      * 清空数据
      */
-    fun clearData() {
+    fun clearData(isScrollTop: Boolean = true) {
         adapter.clear()
         //如果使用动态(个数不一致)addAddpter，那么这里要重新设置adapter，不然RecyclerView的缓存会使Position错乱，点击事件错乱
         recyclerView.adapter = adapter
+        if (isScrollTop) {
+            recyclerView.scrollToPosition(0)
+        }
     }
 }

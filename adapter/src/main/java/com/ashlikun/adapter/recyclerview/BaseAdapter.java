@@ -392,7 +392,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * 内部封装点击事件
      */
     @Override
-    public boolean onItemLongClick(int viewType, @NonNull ViewGroup parent, @NonNull View view, T data, int position) {
+    public boolean onItemLongClick(int viewType, @NonNull ViewGroup parent, @NonNull View view, @NonNull T data, int position) {
         return false;
     }
 
@@ -400,7 +400,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * 内部封装点击事件
      */
     @Override
-    public void onItemClick(int viewType, @NonNull ViewGroup parent, @NonNull View view, T data, int position) {
+    public void onItemClick(int viewType, @NonNull ViewGroup parent, @NonNull View view, @NonNull T data, int position) {
 
     }
 
