@@ -2,6 +2,7 @@ package com.ashlikun.adapter.recyclerview.callback;
 
 import android.content.Context;
 import android.graphics.Canvas;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ashlikun.adapter.ViewHolder;
@@ -69,6 +70,16 @@ public abstract class ItemDraggableAdapter<T> extends CommonAdapter<T> implement
         if (mOnItemDragListener != null && itemDragEnabled) {
             mOnItemDragListener.onItemDragStart(viewHolder, getViewHolderPosition(viewHolder));
         }
+    }
+
+    //必须这样，不然会抖动
+    @Override
+    public long getItemId(int position) {
+        T d = getItemData(position);
+        if (d != null) {
+            return d.hashCode();
+        }
+        return 0;
     }
 
     @Override
