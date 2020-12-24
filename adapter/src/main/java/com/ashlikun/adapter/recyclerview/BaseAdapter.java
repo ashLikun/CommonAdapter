@@ -18,6 +18,7 @@ import com.ashlikun.adapter.animation.AdapterAnimHelp;
 import com.ashlikun.adapter.animation.BaseAnimation;
 import com.ashlikun.adapter.recyclerview.click.OnItemClickListener;
 import com.ashlikun.adapter.recyclerview.click.OnItemLongClickListener;
+import com.ashlikun.adapter.recyclerview.click.SingleClickListener;
 import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition;
 
 import java.util.List;
@@ -45,7 +46,7 @@ import java.util.List;
 public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<V>
         implements IHeaderAndFooter, LifecycleObserver, OnItemClickListener<T>, OnItemLongClickListener<T>, IStartPosition {
     public static int DEFAULT_LAYOUT_ID = -1;
-    private int clickDelay = 200;
+    private int clickDelay = 500;
     protected int mLayoutId = DEFAULT_LAYOUT_ID;
     protected Context mContext;
     protected DataHandle<T> dataHandle;
@@ -54,8 +55,6 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     OnItemClickListener onItemClickListener;
     OnItemLongClickListener onItemLongClickListener;
     AdapterAnimHelp adapterAnimHelp;
-
-    private long lastClickTime = 0;
     /**
      * item点击颜色
      */
@@ -234,19 +233,15 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
                 viewHolder.setEffects(color);
             }
         }
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+        viewHolder.itemView.setOnClickListener(new SingleClickListener(clickDelay) {
             @Override
-            public void onClick(View v) {
-                //暴力点击
-                if (System.currentTimeMillis() - lastClickTime > clickDelay) {
-                    lastClickTime = System.currentTimeMillis();
-                    int position = getPosition(viewHolder);
-                    T d = getItemData(position);
-                    if (d != null) {
-                        onItemClick(viewType, parent, v, d, position);
-                        if (onItemClickListener != null) {
-                            onItemClickListener.onItemClick(viewType, parent, v, d, position);
-                        }
+            public void onSingleClick(View v) {
+                int position = getPosition(viewHolder);
+                T d = getItemData(position);
+                if (d != null) {
+                    onItemClick(viewType, parent, v, d, position);
+                    if (onItemClickListener != null) {
+                        onItemClickListener.onItemClick(viewType, parent, v, d, position);
                     }
                 }
             }
