@@ -46,18 +46,18 @@ open class MultipleAdapterHelp
         recyclerView.adapter = adapter
     }
 
-    fun addObserver(observer: LifecycleObserver?) {
+    open fun addObserver(observer: LifecycleObserver?) {
         if (observer != null) {
             lifecycle?.addObserver(observer)
         }
     }
 
-    fun isEmpty() = adapter.itemCount == 0
+    open  fun isEmpty() = adapter.itemCount == 0
 
     /**
      * 清空数据
      */
-    fun clearData(isScrollTop: Boolean = true) {
+    open fun clearData(isScrollTop: Boolean = true) {
         adapter.clear()
         //如果使用动态(个数不一致)addAddpter，那么这里要重新设置adapter，不然RecyclerView的缓存会使Position错乱，点击事件错乱
         recyclerView.adapter = adapter
