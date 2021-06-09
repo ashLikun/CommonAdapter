@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.vlayout.VirtualLayoutManager
 import com.ashlikun.adapter.AdapterUtils
 import com.ashlikun.adapter.recyclerview.vlayout.MultipleAdapter
+import com.ashlikun.adapter.recyclerview.vlayout.mode.IAdapterBindData
 
 /**
  * 作者　　: 李坤
@@ -52,7 +53,14 @@ open class MultipleAdapterHelp
         }
     }
 
-    open  fun isEmpty() = adapter.itemCount == 0
+    open fun isEmpty() = adapter.itemCount == 0
+
+    /**
+     * 绑定数据
+     */
+    open fun bindUi(data: List<IAdapterBindData>) {
+
+    }
 
     /**
      * 清空数据
