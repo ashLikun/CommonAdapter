@@ -5,7 +5,7 @@ package com.ashlikun.adapter.recyclerview.vlayout.mode
  * 创建时间: 2021/6/9　17:54
  * 邮箱　　：496546144@qq.com
  *
- * 功能介绍：
+ * 功能介绍：数据层实现的接口
  */
 interface IAdapterBindData {
     /**

@@ -1,7 +1,9 @@
 package com.ashlikun.adapter.recyclerview.vlayout
 
 import androidx.recyclerview.widget.RecyclerView
+import com.ashlikun.adapter.AdapterUtils
 import com.ashlikun.adapter.recyclerview.vlayout.mode.IAdapterBindData
+import kotlin.reflect.KClass
 
 /**
  * 作者　　: 李坤
@@ -10,13 +12,15 @@ import com.ashlikun.adapter.recyclerview.vlayout.mode.IAdapterBindData
  *
  * 功能介绍：全局管理Adapter
  */
+typealias OnAdapterCreate = () -> Unit
+
 object AdapterManage {
     /**
      * 管理的Adapter
      */
-    val adapterMapper = mutableMapOf<String, Class<RecyclerView.Adapter<*>>>()
+    val adapterMapper = mutableMapOf<String, OnAdapterCreate>()
 
-    fun add(type: String, cls: Class<RecyclerView.Adapter<*>>) {
+    fun add(type: String, cls: KClass<SingAdapter<*>>) {
         adapterMapper[type] = cls
     }
 
@@ -29,13 +33,18 @@ object AdapterManage {
      */
     fun bindUi(adapter: MultipleAdapter, data: List<IAdapterBindData>) {
         data.forEach {
-            adapter.addAdapter()
             val cls = adapterMapper[it.getType()]
-            var adapter :
-            if(cls != null){
+            var ada: SingAdapter<*>
+            if (cls != null) {
                 //实例化适配器
-
+                cls.constructors.forEach {
+                    it.call()
+                }
+                adapter.addAdapter(ada)
+            } else {
+                //数据丢失
             }
+
         }
     }
 }
