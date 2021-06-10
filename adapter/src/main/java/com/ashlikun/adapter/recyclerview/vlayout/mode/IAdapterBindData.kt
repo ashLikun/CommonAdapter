@@ -12,4 +12,16 @@ interface IAdapterBindData {
      * 获取适配类型
      */
     fun getType(): String
+
+    /**
+     * 获取对于类型的data
+     */
+    fun getData(): Any
+
+    /**
+     * 适配器对应的其他数据
+     */
+    open fun getParams(): Map<String, Any>? {
+        return null
+    }
 }

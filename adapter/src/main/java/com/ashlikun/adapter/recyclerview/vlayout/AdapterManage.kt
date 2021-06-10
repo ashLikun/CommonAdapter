@@ -1,9 +1,7 @@
 package com.ashlikun.adapter.recyclerview.vlayout
 
-import androidx.recyclerview.widget.RecyclerView
-import com.ashlikun.adapter.AdapterUtils
+import android.content.Context
 import com.ashlikun.adapter.recyclerview.vlayout.mode.IAdapterBindData
-import kotlin.reflect.KClass
 
 /**
  * 作者　　: 李坤
@@ -12,39 +10,92 @@ import kotlin.reflect.KClass
  *
  * 功能介绍：全局管理Adapter
  */
-typealias OnAdapterCreate = () -> Unit
+/**
+ * 创建Adapter的回调
+ */
+typealias OnAdapterCreate = (OnAdapterCreateParams) -> SingAdapter<*>
+/**
+ *
+ */
+typealias OnAdapterEvent = (Map<String, Any>) -> Boolean
+
+/**
+ * 创建适配器的参数
+ */
+data class OnAdapterCreateParams(
+        val context: Context,
+        //总的适配器
+        val adapter: MultipleAdapter,
+        //数据
+        val data: Any,
+        //其他参数，一般用于改变UI
+        val params: Map<String, Any>? = null
+) {
+}
 
 object AdapterManage {
     /**
-     * 管理的Adapter
+     * Adapter创建的回调,由外部创建Adapter
      */
-    val adapterMapper = mutableMapOf<String, OnAdapterCreate>()
+    private val adapterCreates = mutableListOf<OnAdapterCreate>()
 
-    fun add(type: String, cls: KClass<SingAdapter<*>>) {
-        adapterMapper[type] = cls
+    /**
+     * Adapter的事件回调
+     */
+    private val adapterEvent = mutableListOf<OnAdapterEvent>()
+
+    fun addCreate(create: OnAdapterCreate) {
+        if (!adapterCreates.contains(create)) {
+            adapterCreates.add(create)
+        }
     }
 
-    fun remove(type: String) {
-        adapterMapper.remove(type)
+    fun addCreates(creates: List<OnAdapterCreate>) {
+        creates.forEach {
+            addCreate(it)
+        }
+    }
+
+    fun removeCreate(create: OnAdapterCreate) {
+        adapterCreates.remove(create)
+    }
+
+    fun removeCreates(creates: List<OnAdapterCreate>) {
+        adapterCreates.removeAll(creates)
     }
 
     /**
      * 绑定数据
+     * @param otherParams 创建这个Adapter需要的额外参数，一般用于改变UI,优先级没有data里面的getParams 权限高
      */
-    fun bindUi(adapter: MultipleAdapter, data: List<IAdapterBindData>) {
+    fun bindUi(
+            context: Context, adapter: MultipleAdapter, data: List<IAdapterBindData>,
+            otherParams: Map<String, Map<String, Any>>? = null,
+            onEvent: Map<String, OnAdapterEvent>? = null
+    ) {
         data.forEach {
-            val cls = adapterMapper[it.getType()]
-            var ada: SingAdapter<*>
-            if (cls != null) {
-                //实例化适配器
-                cls.constructors.forEach {
-                    it.call()
+            adapterCreates.forEach { ait ->
+                val params = OnAdapterCreateParams(
+                        context = context,
+                        adapter = adapter,
+                        data = it.getData(),
+                        //其他参数，先用data的，如果为null，再用方法的
+                        params = it.getParams() ?: otherParams?.get(it.getType())
+                )
+                val ada = ait.invoke(params)
+                //默认赋值
+                if (ada.params == null) {
+                    ada.params = params.params
                 }
+                //设置事件管理
+                ada.onEvent = onEvent
+                //添加之前
+                ada.beforeAdd()
+                //添加
                 adapter.addAdapter(ada)
-            } else {
-                //数据丢失
+                //添加之后
+                ada.afterAdd()
             }
-
         }
     }
 }

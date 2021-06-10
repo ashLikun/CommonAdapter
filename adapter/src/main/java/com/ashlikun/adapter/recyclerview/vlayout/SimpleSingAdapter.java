@@ -21,7 +21,7 @@ public abstract class SimpleSingAdapter<T> extends SingAdapter<T> {
 
     public SimpleSingAdapter(Context context, int layoutId, LayoutHelper layoutHelper, List<T> datas) {
         super(context, layoutId, datas);
-        this.layoutHelper = layoutHelper;
+        this.setLayoutHelper(layoutHelper);
     }
 
     public SimpleSingAdapter(Context context, int layoutId, LayoutHelper layoutHelper) {
@@ -41,7 +41,7 @@ public abstract class SimpleSingAdapter<T> extends SingAdapter<T> {
      * 这里就必须重写 @{@link SingAdapter#getLayoutId}方法
      */
     public SimpleSingAdapter(Context context, List<T> datas) {
-        super(context, datas);
+        super(context, -1, datas);
     }
 
     /**

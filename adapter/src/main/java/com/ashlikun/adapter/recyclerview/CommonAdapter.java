@@ -20,6 +20,7 @@ import java.util.List;
 public abstract class CommonAdapter<T> extends BaseAdapter<T, ViewHolder> {
 
 
+
     public CommonAdapter(@NonNull Context context, int layoutId, List<T> datas) {
         super(context, layoutId, datas);
     }

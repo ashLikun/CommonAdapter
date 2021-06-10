@@ -18,10 +18,14 @@ import com.ashlikun.adapter.recyclerview.vlayout.mode.IAdapterBindData
  *
  * 功能介绍：MultipleAdapter 的帮助类
  * @param hasConsistItemType 子适配器项类型是否一致,可以复用相同的viewtype
+ * @param onEvent 处理adapter发出的事件,在创建adapter的时候会赋值
+ * @param otherParams 创建Adapter回调的其他参数，一般用于改变UI
  */
 open class MultipleAdapterHelp
 @JvmOverloads constructor(var recyclerView: RecyclerView,
-                          hasConsistItemType: Boolean = true) : LifecycleObserver {
+                          var hasConsistItemType: Boolean = true,
+                          var onEvent: Map<String, OnAdapterEvent>? = null,
+                          var otherParams: Map<String, Map<String, Any>>? = null) : LifecycleObserver {
     var adapter: MultipleAdapter
         protected set
     var context: Context
@@ -47,6 +51,21 @@ open class MultipleAdapterHelp
         recyclerView.adapter = adapter
     }
 
+    /**
+     * 处理adapter发出的事件,在创建adapter的时候会赋值
+     * @param action 动作
+     * @param event 事件回调
+     */
+    fun addOnEvent(action: String, event: OnAdapterEvent) {
+        if (onEvent == null) {
+            onEvent = mutableMapOf()
+        }
+        if (onEvent !is MutableMap) {
+            onEvent = onEvent!!.toMutableMap()
+        }
+        (onEvent as MutableMap<String, OnAdapterEvent>)?.put(action, event)
+    }
+
     open fun addObserver(observer: LifecycleObserver?) {
         if (observer != null) {
             lifecycle?.addObserver(observer)
@@ -58,8 +77,8 @@ open class MultipleAdapterHelp
     /**
      * 绑定数据
      */
-    open fun bindUi(data: List<IAdapterBindData>) {
-
+    open fun bindUi(data: List<IAdapterBindData>, params: Map<String, Map<String, Any>>? = null) {
+        AdapterManage.bindUi(context, adapter, data, params ?: otherParams, onEvent)
     }
 
     /**

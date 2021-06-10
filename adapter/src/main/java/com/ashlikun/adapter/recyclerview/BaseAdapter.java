@@ -22,6 +22,7 @@ import com.ashlikun.adapter.recyclerview.click.SingleClickListener;
 import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 作者　　: 李坤
@@ -64,6 +65,11 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      */
     private boolean isOpenClickEffects = false;
     protected RecyclerView recyclerView;
+
+    /**
+     * 创建Adapter回调的其他参数，一般用于改变UI
+     */
+    public Map<String, Object> params;
 
     public BaseAdapter(@NonNull Context context, int layoutId, List<T> datas) {
         dataHandle = new DataHandle<>(datas, this);
@@ -295,6 +301,10 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     @Override
     public void setHeaderSize(int headerSize) {
         this.headerSize = headerSize;
+    }
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
     }
 
     @Override

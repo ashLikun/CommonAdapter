@@ -24,12 +24,13 @@
 
 package com.ashlikun.adapter.recyclerview.vlayout;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Pair;
 import android.util.SparseArray;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.vlayout.Cantor;
 import com.alibaba.android.vlayout.LayoutHelper;
@@ -636,7 +637,7 @@ public class MultipleAdapter extends VirtualLayoutAdapter<RecyclerView.ViewHolde
         }
     }
 
-    protected class AdapterDataObserver extends RecyclerView.AdapterDataObserver {
+   protected class AdapterDataObserver extends RecyclerView.AdapterDataObserver {
         int mStartPosition;
 
         int mIndex = -1;
