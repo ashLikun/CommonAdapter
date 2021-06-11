@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.vlayout.VirtualLayoutManager
 import com.ashlikun.adapter.AdapterUtils
 import com.ashlikun.adapter.recyclerview.vlayout.MultipleAdapter
+import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.IAdapterBindData
+import java.util.HashMap
 
 /**
  * 作者　　: 李坤
@@ -18,14 +20,18 @@ import com.ashlikun.adapter.recyclerview.vlayout.mode.IAdapterBindData
  *
  * 功能介绍：MultipleAdapter 的帮助类
  * @param hasConsistItemType 子适配器项类型是否一致,可以复用相同的viewtype
- * @param onEvent 处理adapter发出的事件,在创建adapter的时候会赋值
- * @param otherParams 创建Adapter回调的其他参数，一般用于改变UI
+ * @param onEvent 处理adapter发出的事件,在创建adapter的时候会赋值  key:数据层的type，value：这个type对应的事件（key/value）
+ * @param otherParams 创建Adapter回调的其他参数，一般用于改变UI,   key:数据层的type，value：这个type对应的参数（key/value）
  */
 open class MultipleAdapterHelp
-@JvmOverloads constructor(var recyclerView: RecyclerView,
-                          var hasConsistItemType: Boolean = true,
-                          var onEvent: Map<String, OnAdapterEvent>? = null,
-                          var otherParams: Map<String, Map<String, Any>>? = null) : LifecycleObserver {
+@JvmOverloads
+constructor(var recyclerView: RecyclerView,
+            var hasConsistItemType: Boolean = true,
+        //监听事件和ui参数的总线
+            bus: List<AdapterBus>? = null) : LifecycleObserver {
+    //event 处理adapter发出的事件,在创建adapter的时候会赋值  key:数据层的type，value：这个type对应的事件（key/value）
+    //params 创建Adapter回调的其他参数，一般用于改变UI,   key:数据层的type，value：这个type对应的参数（key/value）
+    var busMap: MutableMap<String, AdapterBus>? = null
     var adapter: MultipleAdapter
         protected set
     var context: Context
@@ -49,21 +55,33 @@ open class MultipleAdapterHelp
         this.adapter = MultipleAdapter(layoutManager, hasConsistItemType)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
+        bus?.forEach {
+            busMap?.put(it.type, it)
+        }
     }
 
     /**
-     * 处理adapter发出的事件,在创建adapter的时候会赋值
-     * @param action 动作
-     * @param event 事件回调
+     * 添加监听事件和ui参数的总线
      */
-    fun addOnEvent(action: String, event: OnAdapterEvent) {
-        if (onEvent == null) {
-            onEvent = mutableMapOf()
+    fun addBus(adapterBus: AdapterBus) {
+        if (busMap == null) {
+            busMap = mutableMapOf()
         }
-        if (onEvent !is MutableMap) {
-            onEvent = onEvent!!.toMutableMap()
+        busMap?.put(adapterBus.type, adapterBus)
+    }
+
+    /**
+     * 添加监听事件和ui参数的总线
+     */
+    fun addBus(bus: Map<String, AdapterBus>) {
+        if (busMap == null) {
+            busMap = mutableMapOf()
         }
-        (onEvent as MutableMap<String, OnAdapterEvent>)?.put(action, event)
+        busMap?.putAll(bus)
+    }
+
+    fun removeBus(type: String) {
+        busMap?.remove(type)
     }
 
     open fun addObserver(observer: LifecycleObserver?) {
@@ -76,9 +94,14 @@ open class MultipleAdapterHelp
 
     /**
      * 绑定数据
+     * @param data 要绑定的数据集合
+     * @param bus 监听和额外参数
      */
-    open fun bindUi(data: List<IAdapterBindData>, params: Map<String, Map<String, Any>>? = null) {
-        AdapterManage.bindUi(context, adapter, data, params ?: otherParams, onEvent)
+    open fun bindUi(data: List<IAdapterBindData>, bus: Map<String, AdapterBus>? = null) {
+        if (bus != null) {
+            addBus(bus)
+        }
+        AdapterManage.bindUi(context, adapter, data, busMap)
     }
 
     /**

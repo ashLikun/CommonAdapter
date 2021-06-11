@@ -1,7 +1,10 @@
 package com.ashlikun.adapter.recyclerview.vlayout
 
 import android.content.Context
+import android.util.Log
+import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.IAdapterBindData
+import kotlin.reflect.KClass
 
 /**
  * 作者　　: 李坤
@@ -19,6 +22,7 @@ typealias OnAdapterCreate = (OnAdapterCreateParams) -> SingAdapter<*>
  */
 typealias OnAdapterEvent = (Map<String, Any>) -> Boolean
 
+
 /**
  * 创建适配器的参数
  */
@@ -28,73 +32,87 @@ data class OnAdapterCreateParams(
         val adapter: MultipleAdapter,
         //数据
         val data: Any,
-        //其他参数，一般用于改变UI
-        val params: Map<String, Any>? = null
-) {
-}
+        //Adapter与外界交互的参数集合
+        val bus: AdapterBus? = null
+)
 
 object AdapterManage {
     /**
      * Adapter创建的回调,由外部创建Adapter
      */
-    private val adapterCreates = mutableListOf<OnAdapterCreate>()
+    private val adapterCreates = mutableMapOf<String, OnAdapterCreate>()
 
     /**
-     * Adapter的事件回调
+     * 类型对应Type
      */
-    private val adapterEvent = mutableListOf<OnAdapterEvent>()
+    private val adapterType = mutableMapOf<KClass<*>, String>()
 
-    fun addCreate(create: OnAdapterCreate) {
-        if (!adapterCreates.contains(create)) {
-            adapterCreates.add(create)
+
+    fun addCreate(type: String, create: OnAdapterCreate) {
+        adapterCreates[type] = create
+    }
+
+    fun addCreates(creates: Map<String, OnAdapterCreate>) {
+        adapterCreates.putAll(creates)
+    }
+
+    fun removeCreate(type: String? = null) {
+        if (type != null) {
+            adapterCreates.remove(type)
         }
     }
 
-    fun addCreates(creates: List<OnAdapterCreate>) {
-        creates.forEach {
-            addCreate(it)
+    fun removeCreates(types: List<String>) {
+        types.forEach {
+            adapterCreates.remove(it)
         }
     }
 
-    fun removeCreate(create: OnAdapterCreate) {
-        adapterCreates.remove(create)
-    }
-
-    fun removeCreates(creates: List<OnAdapterCreate>) {
-        adapterCreates.removeAll(creates)
+    fun removeCreates(vararg types: String) {
+        types.forEach {
+            adapterCreates.remove(it)
+        }
     }
 
     /**
      * 绑定数据
-     * @param otherParams 创建这个Adapter需要的额外参数，一般用于改变UI,优先级没有data里面的getParams 权限高
      */
     fun bindUi(
-            context: Context, adapter: MultipleAdapter, data: List<IAdapterBindData>,
-            otherParams: Map<String, Map<String, Any>>? = null,
-            onEvent: Map<String, OnAdapterEvent>? = null
+            context: Context,
+            adapter: MultipleAdapter,
+            data: List<IAdapterBindData>,
+            busMap: Map<String, AdapterBus>? = null
     ) {
         data.forEach {
-            adapterCreates.forEach { ait ->
+            var adaCreate = adapterCreates[it.getType()]
+            if (adaCreate != null) {
+                val adaBus = busMap?.get(it.getType())?.plus(it.getBus())
+                //数据内部的
                 val params = OnAdapterCreateParams(
                         context = context,
                         adapter = adapter,
                         data = it.getData(),
                         //其他参数，先用data的，如果为null，再用方法的
-                        params = it.getParams() ?: otherParams?.get(it.getType())
+                        bus = adaBus
                 )
-                val ada = ait.invoke(params)
-                //默认赋值
-                if (ada.params == null) {
-                    ada.params = params.params
-                }
+                val ada = adaCreate.invoke(params)
+                //赋值Type
+                ada.viewType = it.getType()
                 //设置事件管理
-                ada.onEvent = onEvent
+                ada.bus = adaBus
                 //添加之前
                 ada.beforeAdd()
                 //添加
                 adapter.addAdapter(ada)
                 //添加之后
                 ada.afterAdd()
+                //保存类型对应的映射关系
+                if (!adapterType.containsKey(ada::class)) {
+                    adapterType[ada::class] = it.getType()
+                }
+            } else {
+                //数据丢失
+                Log.e(AdapterManage::class.java.name, "数据已经丢失->类型：${it.getType()}")
             }
         }
     }

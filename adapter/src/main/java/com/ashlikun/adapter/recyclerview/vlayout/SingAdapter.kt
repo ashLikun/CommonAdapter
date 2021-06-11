@@ -23,10 +23,6 @@ abstract class SingAdapter<T>
 @JvmOverloads constructor(context: Context, layoutId: Int = -1, datas: List<T>? = null,
                           var layoutHelper: LayoutHelper? = null)
     : CommonAdapter<T>(context, layoutId, datas) {
-    /**
-     * 创建Adapter回调的其他参数，一般用于改变UI
-     */
-    internal var onEvent: Map<String, OnAdapterEvent>? = null
 
     /**
      * 内部的adapter建议只用一个type
@@ -106,7 +102,7 @@ abstract class SingAdapter<T>
      * @param params 这个事件对应的参数
      * @return 是否处理，true：外部已经处理，内部就不处理了  ，，， false:未处理
      */
-    open fun sendEvent(action: String, params: Map<String, Any>): Boolean {
-        return onEvent?.get(action)?.invoke(params) ?: false
+    open fun sendEvent(action: String, params: Map<String, Any> = emptyMap()): Boolean {
+        return bus?.event?.get(action)?.invoke(params) ?: false
     }
 }

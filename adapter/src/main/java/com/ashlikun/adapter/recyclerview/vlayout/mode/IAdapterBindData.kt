@@ -19,9 +19,12 @@ interface IAdapterBindData {
     fun getData(): Any
 
     /**
-     * 适配器对应的其他数据
+     * Adapter与外界交互的参数集合
      */
-    open fun getParams(): Map<String, Any>? {
+    open fun getBus(): AdapterBus? {
         return null
     }
+
+
+
 }

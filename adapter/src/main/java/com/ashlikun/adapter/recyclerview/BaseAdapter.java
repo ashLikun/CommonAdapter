@@ -20,9 +20,9 @@ import com.ashlikun.adapter.recyclerview.click.OnItemClickListener;
 import com.ashlikun.adapter.recyclerview.click.OnItemLongClickListener;
 import com.ashlikun.adapter.recyclerview.click.SingleClickListener;
 import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition;
+import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 作者　　: 李坤
@@ -67,9 +67,10 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     protected RecyclerView recyclerView;
 
     /**
-     * 创建Adapter回调的其他参数，一般用于改变UI
+     * 1:创建Adapter回调的其他参数，一般用于改变UI
+     * 2:事件的回调
      */
-    public Map<String, Object> params;
+    public AdapterBus bus;
 
     public BaseAdapter(@NonNull Context context, int layoutId, List<T> datas) {
         dataHandle = new DataHandle<>(datas, this);
