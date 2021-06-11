@@ -96,4 +96,4 @@ class MarginStyle {
 //文字颜色
 //图片大小
 //图片圆角
-//
+//vGap hGap//一行几个
