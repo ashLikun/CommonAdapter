@@ -3,8 +3,10 @@ package com.ashlikun.adapter.recyclerview.vlayout
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.vlayout.LayoutHelper
+import com.alibaba.android.vlayout.layout.MarginLayoutHelper
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper
 import com.ashlikun.adapter.recyclerview.CommonAdapter
+import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
 import kotlin.math.abs
 
 /**
@@ -20,9 +22,16 @@ abstract class SingAdapter<T>
  * 要使用这个构造器
  * 这里就必须重写 @[SingAdapter.getLayoutId]方法
  */
-@JvmOverloads constructor(context: Context, layoutId: Int = -1, datas: List<T>? = null,
-                          var layoutHelper: LayoutHelper? = null)
+@JvmOverloads constructor(context: Context, layoutId: Int = -1, datas: List<T>? = null)
     : CommonAdapter<T>(context, layoutId, datas) {
+    var layoutHelper: LayoutHelper? = null
+        set(value) {
+            //赋值MarginLayoutHelper
+            if (value is MarginLayoutHelper) {
+                busStyle?.bindHelperUI(context, value)
+            }
+            field = value
+        }
 
     /**
      * 内部的adapter建议只用一个type
@@ -95,14 +104,4 @@ abstract class SingAdapter<T>
      * 添加到MultipleAdapter 之后的回调
      */
     open fun afterAdd() {}
-
-    /**
-     * 发送事件，由外部处理,一般是由某个界面处理
-     * @param action 事件的类型
-     * @param params 这个事件对应的参数
-     * @return 是否处理，true：外部已经处理，内部就不处理了  ，，， false:未处理
-     */
-    open fun sendEvent(action: String, params: Map<String, Any> = emptyMap()): Boolean {
-        return bus?.event?.get(action)?.invoke(params) ?: false
-    }
 }

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.recyclerview.widget.RecyclerView;
@@ -70,6 +71,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * 1:创建Adapter回调的其他参数，一般用于改变UI
      * 2:事件的回调
      */
+    @Nullable
     public AdapterBus bus;
 
     public BaseAdapter(@NonNull Context context, int layoutId, List<T> datas) {
@@ -243,14 +245,7 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         viewHolder.itemView.setOnClickListener(new SingleClickListener(clickDelay) {
             @Override
             public void onSingleClick(View v) {
-                int position = getPosition(viewHolder);
-                T d = getItemData(position);
-                if (d != null) {
-                    onItemClick(viewType, parent, v, d, position);
-                    if (onItemClickListener != null) {
-                        onItemClickListener.onItemClick(viewType, parent, v, d, position);
-                    }
-                }
+                dispatchClick(parent, v, viewHolder, viewType);
             }
         });
 
@@ -258,19 +253,51 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
                 new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        int position = getPosition(viewHolder);
-                        T d = getItemData(position);
-                        if (d != null) {
-                            if (onItemLongClick(viewType, parent, v, d, position)) {
-                                return true;
-                            } else if (onItemLongClickListener != null) {
-                                return onItemLongClickListener.onItemLongClick(viewType, parent, v, d, position);
-                            }
-                        }
-                        return false;
+                        return dispatchLongClick(parent, v, viewHolder, viewType);
                     }
                 }
         );
+    }
+
+    /**
+     * 分发点击事件
+     *
+     * @param parent
+     * @param v
+     * @param viewHolder
+     * @param viewType
+     */
+    protected void dispatchClick(@NonNull ViewGroup parent, @NonNull View v, @NonNull ViewHolder viewHolder, int viewType) {
+        int position = getPosition(viewHolder);
+        T d = getItemData(position);
+        if (d != null) {
+            //事件之前判断是否有事件总线
+            onItemClick(viewType, parent, v, d, position);
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(viewType, parent, v, d, position);
+            }
+        }
+    }
+
+    /**
+     * 分发长按事件
+     *
+     * @param parent
+     * @param v
+     * @param viewHolder
+     * @param viewType
+     */
+    protected boolean dispatchLongClick(@NonNull ViewGroup parent, @NonNull View v, @NonNull ViewHolder viewHolder, int viewType) {
+        int position = getPosition(viewHolder);
+        T d = getItemData(position);
+        if (d != null) {
+            if (onItemLongClick(viewType, parent, v, d, position)) {
+                return true;
+            } else if (onItemLongClickListener != null) {
+                return onItemLongClickListener.onItemLongClick(viewType, parent, v, d, position);
+            }
+        }
+        return false;
     }
 
     /**
@@ -435,4 +462,6 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     public void setItemClickColor(int itemClickColor) {
         this.itemClickColor = itemClickColor;
     }
+
+
 }

@@ -19,7 +19,7 @@ interface IAdapterBindData {
     fun getData(): Any
 
     /**
-     * Adapter与外界交互的参数集合
+     * Adapter与外界交互的参数集合,这里的AdapterBus 不需要type,内部自动赋值
      */
     open fun getBus(): AdapterBus? {
         return null

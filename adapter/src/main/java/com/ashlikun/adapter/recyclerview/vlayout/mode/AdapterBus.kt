@@ -1,7 +1,6 @@
 package com.ashlikun.adapter.recyclerview.vlayout.mode
 
 import android.view.View
-import com.ashlikun.adapter.recyclerview.vlayout.OnAdapterEvent
 
 /**
  * 作者　　: 李坤
@@ -15,12 +14,40 @@ import com.ashlikun.adapter.recyclerview.vlayout.OnAdapterEvent
  */
 data class AdapterBus(
         //对应数据层的type
-        val type: String = "",
+        var type: String = "",
         //处理adapter发出的事件,在创建adapter的时候会赋值
         var event: Map<String, OnAdapterEvent>? = null,
         //创建Adapter回调的其他参数，一般用于改变UI,如果data里面也有设置那么就是合并
         var params: Map<String, Any>? = null
 ) {
+    /**
+     * 不要设置type
+     */
+    constructor(
+            event: Map<String, OnAdapterEvent>? = null,
+            params: Map<String, Any>? = null) : this("", event, params)
+
+    /**
+     * 获取key对应的event或者params,优先event
+     */
+    fun <T> get(key: String): T? = (event?.get(key) ?: params?.get(key)) as T?
+
+    /**
+     * 获取AdapterBus.STYLE
+     */
+    open val busStyle
+        get() = get<AdapterStyle>(STYLE)
+
+    /**
+     * 获取AdapterBus.STYLE
+     */
+    open fun busParams(key: String) = get<Any>(key)
+
+    /**
+     * 获取Bus里面的Event
+     */
+    open fun <T : OnAdapterEvent> busEvent(key: String) = get<OnAdapterEvent>(key) as T?
+
     /**
      * 处理adapter发出的事件,在创建adapter的时候会赋值
      * @param action 动作
@@ -58,42 +85,7 @@ data class AdapterBus(
         const val LONG_CLICK = "LONG_CLICK"
 
         //常用的UI属性
-        //间距,一般用MarginStyle
-        const val manage = "manage"
+        const val STYLE = "STYLE"
     }
 }
 
-/**
- * 边距的样式
- */
-class MarginStyle {
-    var paddingLeft = 0f
-    var paddingRight = 0f
-    var paddingTop = 0f
-    var paddingBottom = 0f
-
-    var marginLeft = 0f
-    var marginRight = 0f
-    var marginTop = 0f
-    var marginBottom = 0f
-
-
-    fun margin(margin: Float) {
-        marginLeft = margin
-        marginRight = margin
-        marginTop = margin
-        marginBottom = margin
-    }
-
-    fun padding(padding: Float) {
-        paddingLeft = padding
-        paddingRight = padding
-        paddingTop = padding
-        paddingBottom = padding
-    }
-}
-//文字大小
-//文字颜色
-//图片大小
-//图片圆角
-//vGap hGap//一行几个

@@ -17,10 +17,6 @@ import kotlin.reflect.KClass
  * 创建Adapter的回调
  */
 typealias OnAdapterCreate = (OnAdapterCreateParams) -> SingAdapter<*>
-/**
- *
- */
-typealias OnAdapterEvent = (Map<String, Any>) -> Boolean
 
 
 /**
@@ -30,11 +26,29 @@ data class OnAdapterCreateParams(
         val context: Context,
         //总的适配器
         val adapter: MultipleAdapter,
-        //数据
+        //数据,就是数据层的getData
         val data: Any,
         //Adapter与外界交互的参数集合
         val bus: AdapterBus? = null
 )
+
+/**
+ * 反射创建Adapter
+ * @param cls 必须有双单参数或者双参数构造方法，并且第一个必须是Context,第二个必须是数据
+ */
+class OnAdapterCreateClass(val cls: Class<out SingAdapter<*>>) : OnAdapterCreate {
+    override fun invoke(param: OnAdapterCreateParams): SingAdapter<*> {
+        cls.constructors.forEach {
+            val typeParameters = it.typeParameters
+            if (typeParameters.size == 2 && typeParameters[0] is Context) {
+                return it.newInstance(param.context, param.data) as SingAdapter<*>
+            } else if (typeParameters.size == 1 && typeParameters[0] is Context) {
+                return it.newInstance(param.context) as SingAdapter<*>
+            }
+        }
+        throw NullPointerException("这个Class：${cls},必须有双单参数或者双参数构造方法，并且第一个必须是Context,第二个必须是数据")
+    }
+}
 
 object AdapterManage {
     /**
@@ -54,6 +68,16 @@ object AdapterManage {
 
     fun addCreates(creates: Map<String, OnAdapterCreate>) {
         adapterCreates.putAll(creates)
+    }
+
+    fun addCreateClass(type: String, create: Class<out SingAdapter<*>>) {
+        adapterCreates[type] = OnAdapterCreateClass(create)
+    }
+
+    fun addCreatesClass(creates: Map<String, Class<SingAdapter<*>>>) {
+        creates.forEach {
+            addCreateClass(it.key, it.value)
+        }
     }
 
     fun removeCreate(type: String? = null) {
@@ -86,7 +110,9 @@ object AdapterManage {
         data.forEach {
             var adaCreate = adapterCreates[it.getType()]
             if (adaCreate != null) {
-                val adaBus = busMap?.get(it.getType())?.plus(it.getBus())
+                val dataBus = it.getBus()
+                dataBus?.type = it.getType()
+                val adaBus = busMap?.get(it.getType())?.plus(dataBus)
                 //数据内部的
                 val params = OnAdapterCreateParams(
                         context = context,
