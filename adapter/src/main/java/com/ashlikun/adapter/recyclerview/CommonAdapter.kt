@@ -20,6 +20,7 @@ import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
 abstract class CommonAdapter<T>
 @JvmOverloads constructor(context: Context, layoutId: Int = -1, datas: List<T>? = null)
     : BaseAdapter<T, ViewHolder?>(context, layoutId, datas) {
+    constructor(context: Context, datas: List<T>? = null) : this(context, -1, datas)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val holder = ViewHolder(mContext, createLayout(parent, getLayoutId(viewType), viewType), this)
@@ -32,8 +33,8 @@ abstract class CommonAdapter<T>
         convert(holder, getItemData(position))
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: List<Any>) {
-        if (payloads != null && !payloads.isEmpty()) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+        if (payloads != null && payloads.isNotEmpty()) {
             if (!convert(holder, getItemData(position), payloads)) {
                 super.onBindViewHolder(holder, position, payloads)
             }

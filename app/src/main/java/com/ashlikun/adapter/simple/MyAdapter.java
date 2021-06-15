@@ -12,6 +12,7 @@ import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.animation.SlideInBottomAnimation;
 import com.ashlikun.adapter.recyclerview.vlayout.SimpleSingAdapter;
+import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 
 public class MyAdapter {
-    public static class AdapterItem1 extends SimpleSingAdapter<NeibuData> {
+    public static class AdapterItem1 extends SingAdapter<NeibuData> {
 
         public AdapterItem1(Context context, List<NeibuData> datas) {
             super(context, datas);
@@ -54,7 +55,7 @@ public class MyAdapter {
         }
     }
 
-    public static class AdapterItem2 extends SimpleSingAdapter<Neibu2Data> {
+    public static class AdapterItem2 extends SingAdapter<Neibu2Data> {
 
         public AdapterItem2(Context context, List<Neibu2Data> datas) {
             super(context, datas);
@@ -84,7 +85,7 @@ public class MyAdapter {
         }
     }
 
-    public static class AdapterItem3 extends SimpleSingAdapter<Neibu3Data> {
+    public static class AdapterItem3 extends SingAdapter<Neibu3Data> {
 
         public AdapterItem3(Context context, List<Neibu3Data> datas) {
             super(context, datas);
@@ -109,7 +110,7 @@ public class MyAdapter {
         }
     }
 
-    public static class AdapterItem4 extends SimpleSingAdapter<Neibu3Data> {
+    public static class AdapterItem4 extends SingAdapter<Neibu3Data> {
 
         public AdapterItem4(Context context, List<Neibu3Data> datas) {
             super(context, datas);
@@ -136,7 +137,7 @@ public class MyAdapter {
         }
     }
 
-    public static class AdapterItemSing extends SimpleSingAdapter<String> {
+    public static class AdapterItemSing extends SingAdapter<String> {
 
         public AdapterItemSing(Context context) {
             super(context, null);

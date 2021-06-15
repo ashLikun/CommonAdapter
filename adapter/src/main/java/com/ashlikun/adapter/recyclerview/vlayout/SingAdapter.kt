@@ -24,6 +24,8 @@ abstract class SingAdapter<T>
  */
 @JvmOverloads constructor(context: Context, layoutId: Int = -1, datas: List<T>? = null)
     : CommonAdapter<T>(context, layoutId, datas) {
+    constructor(context: Context, datas: List<T>? = null) : this(context, -1, datas)
+
     var layoutHelper: LayoutHelper? = null
         set(value) {
             //赋值MarginLayoutHelper
