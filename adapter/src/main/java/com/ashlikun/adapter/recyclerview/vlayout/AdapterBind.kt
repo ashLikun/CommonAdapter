@@ -50,7 +50,7 @@ class OnAdapterCreateClass(val cls: Class<out SingAdapter<*>>) : OnAdapterCreate
     }
 }
 
-object AdapterManage {
+object AdapterBind {
     /**
      * Adapter创建的回调,由外部创建Adapter
      */
@@ -138,7 +138,7 @@ object AdapterManage {
                 }
             } else {
                 //数据丢失
-                Log.e(AdapterManage::class.java.name, "数据已经丢失->类型：${it.getType()}")
+                Log.e(AdapterBind::class.java.name, "数据已经丢失->类型：${it.getType()}")
             }
         }
     }

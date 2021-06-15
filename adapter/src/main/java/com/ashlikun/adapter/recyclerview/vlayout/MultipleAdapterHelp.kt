@@ -7,10 +7,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.vlayout.VirtualLayoutManager
 import com.ashlikun.adapter.AdapterUtils
-import com.ashlikun.adapter.recyclerview.vlayout.MultipleAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.IAdapterBindData
-import java.util.HashMap
 
 /**
  * 作者　　: 李坤
@@ -101,7 +99,7 @@ constructor(var recyclerView: RecyclerView,
         if (bus != null) {
             addBus(bus)
         }
-        AdapterManage.bindUi(context, adapter, data, busMap)
+        AdapterBind.bindUi(context, adapter, data, busMap)
     }
 
     /**
