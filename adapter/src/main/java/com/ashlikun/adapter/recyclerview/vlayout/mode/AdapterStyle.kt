@@ -17,7 +17,7 @@ import java.io.Serializable
 /**
  * 样式
  */
-class AdapterStyle :Serializable{
+class AdapterStyle : Serializable {
     //单位DP
     var padding = 0f
     var paddingLeft = 0f
