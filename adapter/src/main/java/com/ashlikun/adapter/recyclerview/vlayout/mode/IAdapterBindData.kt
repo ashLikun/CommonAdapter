@@ -7,16 +7,16 @@ package com.ashlikun.adapter.recyclerview.vlayout.mode
  *
  * 功能介绍：数据层实现的接口
  */
-interface IAdapterBindData {
+interface IAdapterBindData<T> {
     /**
      * 获取适配类型
      */
-    fun getType(): String
+    var type: String
+    var data: T
 
     /**
      * 获取对于类型的data
      */
-    fun getData(): Any
 
     /**
      * Adapter与外界交互的参数集合,这里的AdapterBus 不需要type,内部自动赋值
@@ -26,5 +26,9 @@ interface IAdapterBindData {
     }
 
 
+}
 
+class Aa() : IAdapterBindData<String> {
+    override var type: String = ""
+    override var data = ""
 }

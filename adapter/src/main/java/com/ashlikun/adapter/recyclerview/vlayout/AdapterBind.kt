@@ -27,7 +27,7 @@ data class OnAdapterCreateParams(
         //总的适配器
         val adapter: MultipleAdapter,
         //数据,就是数据层的getData
-        val data: Any,
+        val data: Any?,
         //Adapter与外界交互的参数集合
         val bus: AdapterBus? = null
 )
@@ -104,26 +104,26 @@ object AdapterBind {
     fun bindUi(
             context: Context,
             adapter: MultipleAdapter,
-            data: List<IAdapterBindData>,
+            data: List<IAdapterBindData<*>>,
             busMap: Map<String, AdapterBus>? = null
     ) {
         data.forEach {
-            var adaCreate = adapterCreates[it.getType()]
+            var adaCreate = adapterCreates[it.type]
             if (adaCreate != null) {
                 val dataBus = it.getBus()
-                dataBus?.type = it.getType()
-                val adaBus = busMap?.get(it.getType())?.plus(dataBus)
+                dataBus?.type = it.type
+                val adaBus = busMap?.get(it.type)?.plus(dataBus)
                 //数据内部的
                 val params = OnAdapterCreateParams(
                         context = context,
                         adapter = adapter,
-                        data = it.getData(),
+                        data = it.data,
                         //其他参数，先用data的，如果为null，再用方法的
                         bus = adaBus
                 )
                 val ada = adaCreate.invoke(params)
                 //赋值Type
-                ada.viewType = it.getType()
+                ada.viewType = it.type
                 //设置事件管理
                 ada.bus = adaBus
                 //添加之前
@@ -134,11 +134,11 @@ object AdapterBind {
                 ada.afterAdd()
                 //保存类型对应的映射关系
                 if (!adapterType.containsKey(ada::class)) {
-                    adapterType[ada::class] = it.getType()
+                    adapterType[ada::class] = it.type
                 }
             } else {
                 //数据丢失
-                Log.e(AdapterBind::class.java.name, "数据已经丢失->类型：${it.getType()}")
+                Log.e(AdapterBind::class.java.name, "数据已经丢失->类型：${it.type}")
             }
         }
     }

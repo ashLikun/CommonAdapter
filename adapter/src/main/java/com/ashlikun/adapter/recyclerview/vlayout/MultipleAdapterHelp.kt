@@ -95,7 +95,7 @@ constructor(var recyclerView: RecyclerView,
      * @param data 要绑定的数据集合
      * @param bus 监听和额外参数
      */
-    open fun bindUi(data: List<IAdapterBindData>, bus: Map<String, AdapterBus>? = null) {
+    open fun bindUi(data: List<IAdapterBindData<*>>, bus: Map<String, AdapterBus>? = null) {
         if (bus != null) {
             addBus(bus)
         }
