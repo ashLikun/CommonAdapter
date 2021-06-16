@@ -127,11 +127,11 @@ object AdapterBind {
                 //设置事件管理
                 ada.bus = adaBus
                 //添加之前
-                ada.beforeAdd()
+                ada.beforeAdd(adapter)
                 //添加
                 adapter.addAdapter(ada)
                 //添加之后
-                ada.afterAdd()
+                ada.afterAdd(adapter)
                 //保存类型对应的映射关系
                 if (!adapterType.containsKey(ada::class)) {
                     adapterType[ada::class] = it.type

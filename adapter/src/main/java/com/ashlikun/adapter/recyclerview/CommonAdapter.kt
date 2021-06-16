@@ -44,13 +44,13 @@ abstract class CommonAdapter<T>
     }
 
     override fun dispatchClick(parent: ViewGroup, v: View, viewHolder: ViewHolder, viewType: Int) {
-        if (!sendEvent(AdapterBus.CLICK)) {
+        if (!sendEvent(AdapterBus.ITEM_CLICK)) {
             super.dispatchClick(parent, v, viewHolder, viewType)
         }
     }
 
     override fun dispatchLongClick(parent: ViewGroup, v: View, viewHolder: ViewHolder, viewType: Int): Boolean {
-        if (!sendEvent(AdapterBus.LONG_CLICK)) {
+        if (!sendEvent(AdapterBus.ITEM_LONG_CLICK)) {
             return super.dispatchLongClick(parent, v, viewHolder, viewType)
         }
         return true

@@ -6,7 +6,6 @@ import com.alibaba.android.vlayout.LayoutHelper
 import com.alibaba.android.vlayout.layout.MarginLayoutHelper
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper
 import com.ashlikun.adapter.recyclerview.CommonAdapter
-import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
 import kotlin.math.abs
 
 /**
@@ -100,10 +99,10 @@ abstract class SingAdapter<T>
     /**
      * 添加到MultipleAdapter 之前的回调
      */
-    open fun beforeAdd() {}
+    open fun beforeAdd(adapter: MultipleAdapter) {}
 
     /**
      * 添加到MultipleAdapter 之后的回调
      */
-    open fun afterAdd() {}
+    open fun afterAdd(adapter: MultipleAdapter) {}
 }
