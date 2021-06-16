@@ -12,7 +12,7 @@ interface IAdapterBindData<T> {
      * 获取适配类型
      */
     var type: String
-    var data: T
+    var data: T?
 
     /**
      * 获取对于类型的data
@@ -24,11 +24,4 @@ interface IAdapterBindData<T> {
     open fun getBus(): AdapterBus? {
         return null
     }
-
-
-}
-
-class Aa() : IAdapterBindData<String> {
-    override var type: String = ""
-    override var data = ""
 }
