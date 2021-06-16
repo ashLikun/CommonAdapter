@@ -99,10 +99,10 @@ abstract class SingAdapter<T>
     /**
      * 添加到MultipleAdapter 之前的回调
      */
-    open fun beforeAdd(adapter: MultipleAdapter) {}
+    open fun beforeAdd(adapter: MultipleAdapter, params: OnAdapterCreateParams) {}
 
     /**
      * 添加到MultipleAdapter 之后的回调
      */
-    open fun afterAdd(adapter: MultipleAdapter) {}
+    open fun afterAdd(adapter: MultipleAdapter, params: OnAdapterCreateParams) {}
 }

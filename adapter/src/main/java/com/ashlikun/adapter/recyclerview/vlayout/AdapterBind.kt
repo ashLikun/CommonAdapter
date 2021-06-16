@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.IAdapterBindData
-import kotlin.reflect.KClass
 
 /**
  * 作者　　: 李坤
@@ -26,8 +25,8 @@ data class OnAdapterCreateParams(
         val context: Context,
         //总的适配器
         val adapter: MultipleAdapter,
-        //数据,就是数据层的getData
-        val data: Any?,
+        //数据,就是数据层
+        val data: IAdapterBindData<*>?,
         //Adapter与外界交互的参数集合
         val bus: AdapterBus? = null
 )
@@ -41,7 +40,7 @@ class OnAdapterCreateClass(val cls: Class<out SingAdapter<*>>) : OnAdapterCreate
         cls.constructors.forEach {
             val typeParameters = it.typeParameters
             if (typeParameters.size == 2 && typeParameters[0] is Context) {
-                return it.newInstance(param.context, param.data) as SingAdapter<*>
+                return it.newInstance(param.context, param.data?.data) as SingAdapter<*>
             } else if (typeParameters.size == 1 && typeParameters[0] is Context) {
                 return it.newInstance(param.context) as SingAdapter<*>
             }
@@ -55,11 +54,6 @@ object AdapterBind {
      * Adapter创建的回调,由外部创建Adapter
      */
     private val adapterCreates = mutableMapOf<String, OnAdapterCreate>()
-
-    /**
-     * 类型对应Type
-     */
-    private val adapterType = mutableMapOf<KClass<*>, String>()
 
 
     fun addCreate(type: String, create: OnAdapterCreate) {
@@ -117,7 +111,7 @@ object AdapterBind {
                 val params = OnAdapterCreateParams(
                         context = context,
                         adapter = adapter,
-                        data = it.data,
+                        data = it,
                         //其他参数，先用data的，如果为null，再用方法的
                         bus = adaBus
                 )
@@ -127,15 +121,11 @@ object AdapterBind {
                 //设置事件管理
                 ada.bus = adaBus
                 //添加之前
-                ada.beforeAdd(adapter)
+                ada.beforeAdd(adapter, params)
                 //添加
                 adapter.addAdapter(ada)
                 //添加之后
-                ada.afterAdd(adapter)
-                //保存类型对应的映射关系
-                if (!adapterType.containsKey(ada::class)) {
-                    adapterType[ada::class] = it.type
-                }
+                ada.afterAdd(adapter, params)
             } else {
                 //数据丢失
                 Log.e(AdapterBind::class.java.name, "数据已经丢失->类型：${it.type}")
