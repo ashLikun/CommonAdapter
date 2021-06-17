@@ -29,7 +29,9 @@ data class OnAdapterCreateParams(
         val data: IAdapterBindData<*>?,
         //Adapter与外界交互的参数集合
         val bus: AdapterBus? = null
-)
+) {
+    fun <T> getData(): T = data as T
+}
 
 /**
  * 反射创建Adapter
@@ -38,10 +40,10 @@ data class OnAdapterCreateParams(
 class OnAdapterCreateClass(val cls: Class<out SingAdapter<*>>) : OnAdapterCreate {
     override fun invoke(param: OnAdapterCreateParams): SingAdapter<*> {
         cls.constructors.forEach {
-            val typeParameters = it.typeParameters
-            if (typeParameters.size == 2 && typeParameters[0] is Context) {
+            val parameterTypes = it.parameterTypes
+            if (parameterTypes.size == 2 && parameterTypes[0] is Context) {
                 return it.newInstance(param.context, param.data?.data) as SingAdapter<*>
-            } else if (typeParameters.size == 1 && typeParameters[0] is Context) {
+            } else if (parameterTypes.size== 1 && parameterTypes[0] is Context) {
                 return it.newInstance(param.context) as SingAdapter<*>
             }
         }
