@@ -27,24 +27,41 @@ data class OnAdapterCreateParams(
         val adapter: MultipleAdapter,
         //数据,就是数据层
         val data: IAdapterBindData<*>?,
+        //当前是第几个,对于外侧数据
+        val index: Int = 0,
+        //总共几个,对于外侧数据
+        val count: Int = 0,
         //Adapter与外界交互的参数集合
         val bus: AdapterBus? = null
 ) {
     fun <T> getData(): T = data as T
+    fun isLast() = index == count - 1
+    fun isFast() = index == 0
 }
 
 /**
  * 反射创建Adapter
- * @param cls 必须有双单参数或者双参数构造方法，并且第一个必须是Context,第二个必须是数据
+ * @param cls 构造函数必须是 (Context) 或者（Context,Data）或者（Context,AdapterBus），或者（Context,OnAdapterCreateParams）
+ *
  */
-class OnAdapterCreateClass(val cls: Class<out SingAdapter<*>>) : OnAdapterCreate {
+class OnAdapterCreateClass(private val cls: Class<out SingAdapter<*>>) : OnAdapterCreate {
     override fun invoke(param: OnAdapterCreateParams): SingAdapter<*> {
         cls.constructors.forEach {
             val parameterTypes = it.parameterTypes
-            if (parameterTypes.size == 2 && parameterTypes[0].isAssignableFrom(Context::class.java)) {
-                return it.newInstance(param.context, param.data?.data) as SingAdapter<*>
-            } else if (parameterTypes.size == 1 && parameterTypes[0].isAssignableFrom(Context::class.java)) {
-                return it.newInstance(param.context) as SingAdapter<*>
+            if (parameterTypes.isNotEmpty() && parameterTypes[0].isAssignableFrom(android.content.Context::class.java)) {
+                if (parameterTypes.size == 2) {
+                    return when {
+                        parameterTypes[1].isAssignableFrom(AdapterBus::class.java) -> {
+                            it.newInstance(param.context, param.bus) as SingAdapter<*>
+                        }
+                        parameterTypes[1].isAssignableFrom(OnAdapterCreateParams::class.java) -> {
+                            it.newInstance(param.context, param) as SingAdapter<*>
+                        }
+                        else -> it.newInstance(param.context, param.data?.data) as SingAdapter<*>
+                    }
+                } else if (parameterTypes.size == 1) {
+                    return it.newInstance(param.context) as SingAdapter<*>
+                }
             }
         }
         throw NullPointerException("这个Class：${cls},必须有双单参数或者双参数构造方法，并且第一个必须是Context,第二个必须是数据")
@@ -103,7 +120,7 @@ object AdapterBind {
             data: List<IAdapterBindData<*>>,
             busMap: Map<String, AdapterBus>? = null
     ) {
-        data.forEach {
+        data.forEachIndexed { index, it ->
             var adaCreate = adapterCreates[it.type]
             if (adaCreate != null) {
                 val dataBus = it.getBus()
@@ -114,6 +131,8 @@ object AdapterBind {
                         context = context,
                         adapter = adapter,
                         data = it,
+                        index = index,
+                        count = data.size,
                         //其他参数，先用data的，如果为null，再用方法的
                         bus = adaBus
                 )

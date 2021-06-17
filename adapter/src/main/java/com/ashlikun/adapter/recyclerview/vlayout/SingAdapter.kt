@@ -95,7 +95,6 @@ abstract class SingAdapter<T>
             super.getItemCount()
         }
     }
-
     /**
      * 添加到MultipleAdapter 之前的回调
      */
