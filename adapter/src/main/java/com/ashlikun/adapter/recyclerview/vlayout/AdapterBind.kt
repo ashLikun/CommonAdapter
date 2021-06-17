@@ -41,9 +41,9 @@ class OnAdapterCreateClass(val cls: Class<out SingAdapter<*>>) : OnAdapterCreate
     override fun invoke(param: OnAdapterCreateParams): SingAdapter<*> {
         cls.constructors.forEach {
             val parameterTypes = it.parameterTypes
-            if (parameterTypes.size == 2 && parameterTypes[0] is Context) {
+            if (parameterTypes.size == 2 && parameterTypes[0].isAssignableFrom(Context::class.java)) {
                 return it.newInstance(param.context, param.data?.data) as SingAdapter<*>
-            } else if (parameterTypes.size== 1 && parameterTypes[0] is Context) {
+            } else if (parameterTypes.size == 1 && parameterTypes[0].isAssignableFrom(Context::class.java)) {
                 return it.newInstance(param.context) as SingAdapter<*>
             }
         }
