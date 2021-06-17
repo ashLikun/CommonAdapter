@@ -29,7 +29,7 @@ abstract class SingAdapter<T>
         set(value) {
             //赋值MarginLayoutHelper
             if (value is MarginLayoutHelper) {
-                busStyle?.bindHelperUI(context, value)
+                style?.bindHelperUI(context, value)
             }
             field = value
         }

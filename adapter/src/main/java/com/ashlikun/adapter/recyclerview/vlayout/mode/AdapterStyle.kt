@@ -17,25 +17,48 @@ import java.io.Serializable
 /**
  * 样式
  */
-class AdapterStyle : Serializable {
-    //单位DP
-    var padding = 0f
-    var paddingLeft = 0f
-    var paddingRight = 0f
-    var paddingTop = 0f
-    var paddingBottom = 0f
+data class AdapterStyle(
+        //单位DP
+        var padding: Float = 0f,
+        var paddingLeft: Float = 0f,
+        var paddingRight: Float = 0f,
+        var paddingTop: Float = 0f,
+        var paddingBottom: Float = 0f,
 
-    //单位DP
-    var margin = 0f
-    var marginLeft = 0f
-    var marginRight = 0f
-    var marginTop = 0f
-    var marginBottom = 0f
+        //单位DP
+        var margin: Float = 0f,
+        var marginLeft: Float = 0f,
+        var marginRight: Float = 0f,
+        var marginTop: Float = 0f,
+        var marginBottom: Float = 0f,
 
-    //宫格的几个
-    var gap = 0
-    var vGap = 0
-    var hGap = 0
+        //宫格的几个
+        var gap: Int = 0,
+        var vGap: Int = 0,
+        var hGap: Int = 0,
+
+        //高度
+        var height: Int = 0,
+
+        //宽度
+        var width: Int = 0,
+
+        //颜色
+        var color: String = "",
+
+        //字体大小
+        var fontSize: Float = 0f,
+
+        //字体颜色
+        var fontColor: String = "",
+
+        //圆角,全部
+        var corner: Float = 0f,
+
+        //圆角 左上右下
+        var corners: List<Float>? = null
+
+) : Serializable {
 
 
     fun bindHelperUI(context: Context, helper: LayoutHelper) {
@@ -66,8 +89,3 @@ class AdapterStyle : Serializable {
         }
     }
 }
-//文字大小
-//文字颜色
-//图片大小
-//图片圆角
-//vGap hGap//一行几个

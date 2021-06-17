@@ -35,25 +35,25 @@ data class AdapterBus(
     /**
      * 获取AdapterBus.STYLE
      */
-    open val busStyle
+    open val style
         get() = get<AdapterStyle>(STYLE)
 
     /**
      * 获取AdapterBus.STYLE
      */
-    open fun busParams(key: String) = get<Any>(key)
+    open fun params(key: String) = get<Any>(key)
 
     /**
      * 获取Bus里面的Event
      */
-    open fun <T : OnAdapterEvent> busEvent(key: String) = get<OnAdapterEvent>(key) as T?
+    open fun <T : OnAdapterEvent> event(key: String) = get<OnAdapterEvent>(key) as T?
 
     /**
      * 处理adapter发出的事件,在创建adapter的时候会赋值
      * @param action 动作
      * @param event 事件回调
      */
-    fun addOnEvent(action: String, event: OnAdapterEvent) {
+    fun add(action: String, event: OnAdapterEvent) {
         this.event = if (this.event == null) mapOf(action to event) else this.event!! + mapOf(action to event)
     }
 

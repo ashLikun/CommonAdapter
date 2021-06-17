@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
-import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterStyle
 import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
 
 /**
@@ -63,22 +62,22 @@ abstract class CommonAdapter<T>
      * @return 是否处理，true：外部已经处理，内部就不处理了  ，，， false:未处理
      */
     open fun sendEvent(action: String, params: Map<String, Any> = emptyMap()): Boolean {
-        return busEvent<OnAdapterEvent>(action)?.invoke(params) ?: false
+        return event<OnAdapterEvent>(action)?.invoke(params) ?: false
     }
 
     /**
      * 获取Bus里面的key
      */
-    open fun <T : OnAdapterEvent> busEvent(key: String): T? = bus?.busEvent(key)
+    open fun <T : OnAdapterEvent> event(key: String): T? = bus?.event(key)
 
     /**
      * 获取AdapterBus.STYLE
      */
-    open val busStyle
-        get() = bus?.busStyle
+    open val style
+        get() = bus?.style
 
     /**
      * 获取AdapterBus.STYLE
      */
-    open fun busParams(key: String) = bus?.get<Any>(key)
+    open fun params(key: String) = bus?.get<Any>(key)
 }
