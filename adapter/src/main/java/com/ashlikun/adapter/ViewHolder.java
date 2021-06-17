@@ -22,6 +22,7 @@ import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.ashlikun.adapter.recyclerview.BaseAdapter;
 import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition;
 
 /**
@@ -329,5 +330,19 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 是否是最后一个
+     */
+    public boolean isLostPosition(BaseAdapter adapter) {
+        return getPositionInside() == adapter.getItemCount() - 1;
+    }
+
+    /**
+     * 是否是第一个
+     */
+    public boolean isFirstPosition() {
+        return getPositionInside() == 0;
     }
 }
