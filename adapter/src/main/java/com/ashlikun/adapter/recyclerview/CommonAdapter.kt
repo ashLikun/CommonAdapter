@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
+import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterStyle
 import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
 
 /**
@@ -29,19 +30,7 @@ abstract class CommonAdapter<T>
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         setListener(recyclerView, holder, holder.itemViewType)
-        val itemData = getItemData(position)
-        convert(holder, itemData)
-        //在View内部执行
-        holder.itemView?.run {
-            convertView(holder, itemData)
-        }
-    }
-
-    /**
-     * 在ItemView 环境下执行
-     */
-    fun convertView(holder: ViewHolder, t: T) {
-
+        convert(holder, getItemData(position))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
