@@ -26,6 +26,7 @@ dependencies {
     compileOnly('com.alibaba.android:vlayout:1.2.18@aar') {
         transitive = true
     }
+    compileOnly 'androidx.databinding:viewbinding:+'
 }
 
 apply from: '../maven.gradle'

@@ -25,19 +25,24 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.ashlikun.adapter.recyclerview.BaseAdapter;
 import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition;
 
+import kotlin.jvm.functions.Function1;
+
 /**
  * 作者　　: 李坤
  * 创建时间: 2017/4/20 0020 11:48a
  * <p>
  * 方法功能：
+ * 如果Adapter是由ViewBinding创建的View，那么可以这里获取ViewBinding，
+ * Kotlin 方法是{@link AdapterExtendKt#viewBinding(ViewHolder, Function1)}
+ * Java: getViewBinding
  */
-
-
 public class ViewHolder extends RecyclerView.ViewHolder {
     protected SparseArray<View> mViews;
     protected Context mContext;
     protected IStartPosition iStartPosition;
     protected int mLayoutId;
+    //实例是ViewBinding
+    protected Object viewBinding;
     /**
      * item点击颜色
      */
@@ -48,11 +53,12 @@ public class ViewHolder extends RecyclerView.ViewHolder {
      */
     private int isSetClickColor = -1;
 
-    public ViewHolder(Context context, View itemView, IStartPosition iStartPosition) {
-        super(itemView);
+    public ViewHolder(Context context, CreateView itemView, IStartPosition iStartPosition) {
+        super(itemView.view);
         mContext = context;
         this.iStartPosition = iStartPosition;
         mViews = new SparseArray();
+        viewBinding = itemView.viewBinding;
     }
 
     public void setStartPosition(IStartPosition iStartPosition) {
@@ -86,6 +92,13 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             mViews.put(viewId, view);
         }
         return (T) view;
+    }
+
+    /**
+     * 获取ViewBinding
+     */
+    public <T> T getViewBinding() {
+        return (T) viewBinding;
     }
 
     public ImageView getImageView(int viewId) {

@@ -49,7 +49,7 @@ public abstract class SectionSingAdapter<T extends SectionEntity> extends Simple
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_SECTION) {
-            ViewHolder holder = new ViewHolder(mContext, createLayout(parent, mSectionHeadResId, viewType), this);
+            ViewHolder holder = new ViewHolder(mContext, createRoot(parent, mSectionHeadResId, viewType), this);
             setListener(parent, holder, viewType);
             return holder;
         } else {

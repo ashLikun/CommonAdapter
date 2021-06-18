@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     MyAdapter.AdapterItem3 adapterItem3;
     MyAdapter.AdapterItem2 adapterItem2;
     ArrayList<Neibu2Data> neibu2Data = new ArrayList<>();
+    AdapterItemTest adapterItemTest;
+    ArrayList<Neibu2Data> adapterItemTestData = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +98,11 @@ public class MainActivity extends AppCompatActivity {
         }
         MyAdapter.AdapterItem4 adapterItem4 = new MyAdapter.AdapterItem4(this, neibu4Data);
         adapter.addAdapter(adapterItem4);
+        for (int i = 0; i < 5; i++) {
+            adapterItemTestData.add(new Neibu2Data("我是第五种" + (i + 100)));
+        }
+        adapter.addAdapter(new AdapterItemTest(this, adapterItemTestData));
+        recyclerView.setAdapter(adapter);
 
     }
 

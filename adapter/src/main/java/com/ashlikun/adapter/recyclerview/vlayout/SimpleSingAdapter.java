@@ -1,6 +1,7 @@
 package com.ashlikun.adapter.recyclerview.vlayout;
 
 import android.content.Context;
+import android.view.View;
 
 import com.alibaba.android.vlayout.LayoutHelper;
 
@@ -41,7 +42,7 @@ public abstract class SimpleSingAdapter<T> extends SingAdapter<T> {
      * 这里就必须重写 @{@link SingAdapter#getLayoutId}方法
      */
     public SimpleSingAdapter(Context context, List<T> datas) {
-        super(context, -1, datas);
+        super(context, View.NO_ID, datas);
     }
 
     /**

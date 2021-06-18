@@ -5,14 +5,16 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.animation.SlideInBottomAnimation;
-import com.ashlikun.adapter.recyclerview.vlayout.SimpleSingAdapter;
 import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter;
+import com.ashlikun.adapter.simple.databinding.ItemView1Binding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,12 +60,12 @@ public class MyAdapter {
     public static class AdapterItem2 extends SingAdapter<Neibu2Data> {
 
         public AdapterItem2(Context context, List<Neibu2Data> datas) {
-            super(context, datas);
+            super(context, R.layout.item_view1, datas);
         }
 
         @Override
-        public int getLayoutId() {
-            return R.layout.item_view1;
+        public Object createViewBinding(@NonNull ViewGroup parent, int viewType) {
+            return ItemView1Binding.inflate(getLayoutInflater(), parent, false);
         }
 
         @Override
@@ -75,7 +77,7 @@ public class MyAdapter {
 
         @Override
         public void convert(ViewHolder holder, Neibu2Data neibuData) {
-            holder.setText(R.id.textView, neibuData.name);
+            ((ItemView1Binding) holder.getViewBinding()).textView.setText(neibuData.name);
         }
 
         @Override

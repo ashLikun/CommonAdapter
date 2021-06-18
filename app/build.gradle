@@ -13,8 +13,8 @@ android {
         versionName rootProject.ext.versionName
         multiDexEnabled = true
     }
-    dataBinding {
-        enabled true
+    viewBinding {
+        enabled = true
     }
     buildTypes {
         release {

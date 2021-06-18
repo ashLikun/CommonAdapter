@@ -12,6 +12,7 @@ import androidx.lifecycle.LifecycleObserver;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ashlikun.adapter.AdapterUtils;
+import com.ashlikun.adapter.CreateView;
 import com.ashlikun.adapter.DataHandle;
 import com.ashlikun.adapter.ForegroundEffects;
 import com.ashlikun.adapter.ViewHolder;
@@ -47,9 +48,10 @@ import java.util.List;
  */
 public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<V>
         implements IHeaderAndFooter, LifecycleObserver, OnItemClickListener<T>, OnItemLongClickListener<T>, IStartPosition {
-    public static int DEFAULT_LAYOUT_ID = -1;
+    public static int DEFAULT_LAYOUT_ID = View.NO_ID;
     private int clickDelay = 500;
     protected int mLayoutId = DEFAULT_LAYOUT_ID;
+    @NonNull
     protected Context mContext;
     protected DataHandle<T> dataHandle;
     private int headerSize;
@@ -84,6 +86,16 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
 
     public BaseAdapter(@NonNull Context context, List<T> datas) {
         this(context, DEFAULT_LAYOUT_ID, datas);
+    }
+
+    @NonNull
+    public Context getContext() {
+        return mContext;
+    }
+
+    @NonNull
+    public LayoutInflater getLayoutInflater() {
+        return LayoutInflater.from(getContext());
     }
 
     public abstract void convert(@NonNull V holder, T t);
@@ -122,11 +134,37 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     }
 
     /**
+     * 只有都无法创建view的时候才会用这个方法
+     *
+     * @return
+     */
+    public Object createViewBinding(@NonNull ViewGroup parent, int viewType) {
+        return null;
+    }
+
+    /**
      * 可以重写这个方法，用java代码写布局,构造方法就不用传layoutID了
      */
-    public View createLayout(ViewGroup parent, int layoutId, int viewType) {
-        return LayoutInflater.from(mContext).inflate(layoutId, parent, false);
+    public View createLayout(@NonNull ViewGroup parent, int layoutId, int viewType) {
+        return null;
     }
+
+    /**
+     * 不可从写
+     */
+    public final CreateView createRoot(@NonNull ViewGroup parent, int layoutId, int viewType) {
+        View view = createLayout(parent, layoutId, viewType);
+        Object viewBinding = null;
+        if (view == null) {
+            if (layoutId == View.NO_ID) {
+                viewBinding = createViewBinding(parent, viewType);
+            } else {
+                view = LayoutInflater.from(mContext).inflate(layoutId, parent, false);
+            }
+        }
+        return new CreateView(view, viewBinding);
+    }
+
 
     @Override
     public long getItemId(int position) {
@@ -414,9 +452,6 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         return adapterAnimHelp;
     }
 
-    public Context getContext() {
-        return mContext;
-    }
 
     /**
      * 暴力点击的延时

@@ -1,6 +1,7 @@
 package com.ashlikun.adapter.recyclerview.vlayout
 
 import android.content.Context
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.vlayout.LayoutHelper
 import com.alibaba.android.vlayout.layout.MarginLayoutHelper
@@ -21,9 +22,9 @@ abstract class SingAdapter<T>
  * 要使用这个构造器
  * 这里就必须重写 @[SingAdapter.getLayoutId]方法
  */
-@JvmOverloads constructor(context: Context, layoutId: Int = -1, datas: List<T>? = null)
+@JvmOverloads constructor(context: Context, layoutId: Int = View.NO_ID, datas: List<T>? = null)
     : CommonAdapter<T>(context, layoutId, datas) {
-    constructor(context: Context, datas: List<T>? = null) : this(context, -1, datas)
+    constructor(context: Context, datas: List<T>? = null) : this(context, View.NO_ID, datas)
 
     var layoutHelper: LayoutHelper? = null
         set(value) {

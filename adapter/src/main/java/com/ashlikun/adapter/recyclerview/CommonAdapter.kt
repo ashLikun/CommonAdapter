@@ -3,6 +3,7 @@ package com.ashlikun.adapter.recyclerview
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.NonNull
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
@@ -17,12 +18,12 @@ import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
  * 在BaseAdapter基础上封装了 onCreateViewHolder,onBindViewHolder
  */
 abstract class CommonAdapter<T>
-@JvmOverloads constructor(context: Context, layoutId: Int = -1, datas: List<T>? = null)
+@JvmOverloads constructor(context: Context, layoutId: Int = View.NO_ID, datas: List<T>? = null)
     : BaseAdapter<T, ViewHolder?>(context, layoutId, datas) {
-    constructor(context: Context, datas: List<T>? = null) : this(context, -1, datas)
+    constructor(context: Context, datas: List<T>? = null) : this(context, View.NO_ID, datas)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val holder = ViewHolder(mContext, createLayout(parent, getLayoutId(viewType), viewType), this)
+    override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): ViewHolder {
+        val holder = ViewHolder(mContext, createRoot(parent, getLayoutId(viewType), viewType), this)
         setListener(parent, holder, viewType)
         return holder
     }

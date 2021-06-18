@@ -1,7 +1,10 @@
 package com.ashlikun.adapter.recyclerview.section;
 
 import android.content.Context;
+import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
 
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.recyclerview.CommonAdapter;
@@ -24,10 +27,10 @@ public abstract class SectionAdapter<T extends SectionEntity> extends CommonAdap
     /**
      * 头布局id
      */
-    protected int mSectionHeadResId = -2;
+    protected int mSectionHeadResId = View.NO_ID;
 
     public SectionAdapter(Context context, List<T> datas) {
-        this(context, DEFAULT_LAYOUT_ID, -2, datas);
+        this(context, DEFAULT_LAYOUT_ID, View.NO_ID, datas);
     }
 
     public SectionAdapter(Context context, int mSectionHeadResId, List<T> datas) {
@@ -47,9 +50,9 @@ public abstract class SectionAdapter<T extends SectionEntity> extends CommonAdap
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_SECTION) {
-            ViewHolder holder = new ViewHolder(mContext, createLayout(parent, mSectionHeadResId, viewType), this);
+            ViewHolder holder = new ViewHolder(mContext, createRoot(parent, mSectionHeadResId, viewType), this);
             setListener(parent, holder, viewType);
             return holder;
         } else {
