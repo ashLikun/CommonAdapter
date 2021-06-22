@@ -59,6 +59,8 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
     OnItemClickListener onItemClickListener;
     OnItemLongClickListener onItemLongClickListener;
     AdapterAnimHelp adapterAnimHelp;
+    //创建ViewBinding的Class
+    protected Class viewBindingClass;
     /**
      * item点击颜色
      */
@@ -139,6 +141,10 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * @return
      */
     public Object createViewBinding(@NonNull ViewGroup parent, int viewType) {
+        if (viewBindingClass != null) {
+            //反射获取
+            return AdapterUtils.getViewBindingToClass(viewBindingClass, getLayoutInflater(), parent,false);
+        }
         return null;
     }
 
@@ -146,6 +152,9 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
      * 可以重写这个方法，用java代码写布局,构造方法就不用传layoutID了
      */
     public View createLayout(@NonNull ViewGroup parent, int layoutId, int viewType) {
+        if (layoutId != View.NO_ID) {
+            return LayoutInflater.from(mContext).inflate(layoutId, parent, false);
+        }
         return null;
     }
 
@@ -156,11 +165,8 @@ public abstract class BaseAdapter<T, V extends RecyclerView.ViewHolder> extends 
         View view = createLayout(parent, layoutId, viewType);
         Object viewBinding = null;
         if (view == null) {
-            if (layoutId == View.NO_ID) {
-                viewBinding = createViewBinding(parent, viewType);
-            } else {
-                view = LayoutInflater.from(mContext).inflate(layoutId, parent, false);
-            }
+            //调用创建ViewBinding
+            viewBinding = createViewBinding(parent, viewType);
         }
         return new CreateView(view, viewBinding);
     }

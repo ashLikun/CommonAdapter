@@ -5,8 +5,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
@@ -60,12 +58,8 @@ public class MyAdapter {
     public static class AdapterItem2 extends SingAdapter<Neibu2Data> {
 
         public AdapterItem2(Context context, List<Neibu2Data> datas) {
-            super(context, R.layout.item_view1, datas);
-        }
-
-        @Override
-        public Object createViewBinding(@NonNull ViewGroup parent, int viewType) {
-            return ItemView1Binding.inflate(getLayoutInflater(), parent, false);
+            super(context,  datas);
+            viewBindingClass = ItemView1Binding.class;
         }
 
         @Override

@@ -3,6 +3,8 @@ package com.ashlikun.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -14,6 +16,7 @@ import androidx.viewbinding.ViewBinding;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
 /**
@@ -171,12 +174,13 @@ public class AdapterUtils {
         try {
             //检测是否有ViewBinding 库
             Class viewBindingCls = ViewBinding.class;
-            if (viewBindingGetMap == null) {
-                viewBindingGetMap = new HashMap<>();
-            }
+
             Class objCls = object.getClass();
             //查找缓存
-            AccessibleObject accessibleObject = viewBindingGetMap.get(objCls);
+            AccessibleObject accessibleObject = null;
+            if (viewBindingGetMap != null) {
+                accessibleObject = viewBindingGetMap.get(objCls);
+            }
             if (accessibleObject != null) {
                 accessibleObject.setAccessible(true);
                 if (accessibleObject instanceof Method) {
@@ -193,6 +197,9 @@ public class AdapterUtils {
                     if (viewBindingCls.isAssignableFrom(m.getReturnType())) {
                         m.setAccessible(true);
                         ViewBinding view = ((ViewBinding) m.invoke(object));
+                        if (viewBindingGetMap == null) {
+                            viewBindingGetMap = new HashMap<>();
+                        }
                         viewBindingGetMap.put(objCls, m);
                         return view;
                     }
@@ -204,6 +211,62 @@ public class AdapterUtils {
             return null;
         } catch (NoClassDefFoundError e) {
             return null;
+        }
+        return null;
+    }
+
+    /**
+     * 获取3个参数的静态方法
+     * @return ViewBinding
+     */
+    public static Object getViewBindingToClass(Class cls, LayoutInflater layoutInflater, ViewGroup parent, boolean attachToParent) {
+        if (cls == null || layoutInflater == null) {
+            return null;
+        }
+        boolean isCache = false;
+        //从缓存获取
+        try {
+            Method inflate = null;
+            if (viewBindingGetMap != null) {
+                AccessibleObject aa = viewBindingGetMap.get(cls);
+                if (aa instanceof Method) {
+                    isCache = true;
+                    inflate = (Method) aa;
+                }
+            }
+            if (inflate != null) {
+                inflate = cls.getDeclaredMethod("inflate", LayoutInflater.class, ViewGroup.class, boolean.class);
+            }
+            //这里循环全部方法是为了混淆的时候无影响
+            if (inflate == null) {
+                Method[] declaredMethods = cls.getDeclaredMethods();
+                for (Method declaredMethod : declaredMethods) {
+                    int modifiers = declaredMethod.getModifiers();
+                    if (Modifier.isStatic(modifiers)) {
+                        Class<?>[] parameterTypes = declaredMethod.getParameterTypes();
+                        if (parameterTypes != null && parameterTypes.length == 3) {
+                            if (LayoutInflater.class.isAssignableFrom(parameterTypes[0]) &&
+                                    ViewGroup.class.isAssignableFrom(parameterTypes[1]) &&
+                                    boolean.class.isAssignableFrom(parameterTypes[2])) {
+                                inflate = declaredMethod;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (inflate != null) {
+                //添加到缓存
+                if (isCache) {
+                    if (viewBindingGetMap == null) {
+                        viewBindingGetMap = new HashMap<>();
+                    }
+                    viewBindingGetMap.put(cls, inflate);
+                }
+                return inflate.invoke(null, layoutInflater, parent, attachToParent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
