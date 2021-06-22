@@ -67,6 +67,32 @@ abstract class CommonAdapter<T>
     }
 
     /**
+     * 注册事件，由外部处理,一般是由某个界面处理
+     * @param action 事件的类型
+     * @param eve 这个事件对应回调
+     */
+    open fun putEvent(action: String, eve: OnAdapterEvent): CommonAdapter<T> {
+        if (bus == null) {
+            bus = AdapterBus()
+        }
+        bus?.putEvent(action, eve)
+        return this
+    }
+
+    /**
+     * 添加参数，由外部处理,一般是由某个界面处理
+     * @param key 参数类型
+     * @param eve 这个数对应的参数
+     */
+    open fun putParam(key: String, eve: Any): CommonAdapter<T> {
+        if (bus == null) {
+            bus = AdapterBus()
+        }
+        bus?.putParam(key, eve)
+        return this
+    }
+
+    /**
      * 获取Bus里面的key
      */
     open fun <T : OnAdapterEvent> event(key: String): T? = bus?.event(key)

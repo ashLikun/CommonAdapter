@@ -33,7 +33,7 @@ import kotlin.jvm.functions.Function1;
  * <p>
  * 方法功能：
  * 如果Adapter是由ViewBinding创建的View，那么可以这里获取ViewBinding，
- * Kotlin 方法是{@link AdapterExtendKt#viewBinding(ViewHolder, Function1)}
+ * Kotlin 方法是{@link AdapterExtendKt#binding(ViewHolder, Function1)}
  * Java: getViewBinding
  */
 public class ViewHolder extends RecyclerView.ViewHolder {

@@ -44,6 +44,26 @@ data class AdapterBus(
     open fun params(key: String) = get<Any>(key)
 
     /**
+     * 添加事件
+     */
+    open fun putEvent(key: String, eve: OnAdapterEvent) {
+        if (event == null) {
+            event = hashMapOf()
+        }
+        event = event!! + mapOf(key to eve)
+    }
+
+    /**
+     * 添加事件
+     */
+    open fun putParam(key: String, par: Any) {
+        if (params == null) {
+            params = hashMapOf()
+        }
+        params = params!! + mapOf(key to par)
+    }
+
+    /**
      * 获取Bus里面的Event
      */
     open fun <T : OnAdapterEvent> event(key: String) = get<OnAdapterEvent>(key) as T?

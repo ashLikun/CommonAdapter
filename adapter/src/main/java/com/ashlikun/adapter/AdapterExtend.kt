@@ -10,6 +10,6 @@ package com.ashlikun.adapter
 /**
  * 从ViewHolder里面获取viewBinding
  */
-inline fun <T> ViewHolder.viewBinding(block: T.() -> Unit) {
+inline fun <T> ViewHolder.binding(block: T.() -> Unit) {
     block(getViewBinding())
 }
