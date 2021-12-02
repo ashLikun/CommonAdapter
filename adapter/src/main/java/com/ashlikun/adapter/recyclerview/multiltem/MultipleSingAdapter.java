@@ -43,7 +43,7 @@ public abstract class MultipleSingAdapter<T> extends SingAdapter<T> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         int layoutId = getLayoutId(viewType);
-        ViewHolder holder = new ViewHolder(mContext, createRoot(parent, layoutId, viewType), this);
+        ViewHolder holder = new ViewHolder(context, createRoot(parent, layoutId, viewType), this);
         setListener(parent, holder, viewType);
         return holder;
     }

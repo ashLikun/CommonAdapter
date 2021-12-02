@@ -52,7 +52,7 @@ public abstract class SectionAdapter<T extends SectionEntity> extends CommonAdap
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_SECTION) {
-            ViewHolder holder = new ViewHolder(mContext, createRoot(parent, mSectionHeadResId, viewType), this);
+            ViewHolder holder = new ViewHolder(context, createRoot(parent, mSectionHeadResId, viewType), this);
             setListener(parent, holder, viewType);
             return holder;
         } else {

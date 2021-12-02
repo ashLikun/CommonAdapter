@@ -1,11 +1,13 @@
 [![Release](https://jitpack.io/v/ashLikun/CommonAdapter.svg)](https://jitpack.io/#ashLikun/CommonAdapter)
 
-
 # **CommonAdapter**
+
 万能适配器
+
 ## 使用方法
 
 build.gradle文件中添加:
+
 ```gradle
 allprojects {
     repositories {
@@ -13,6 +15,7 @@ allprojects {
     }
 }
 ```
+
 并且:
 
 ```gradle
@@ -23,9 +26,13 @@ dependencies {
      compile ('com.alibaba.android:vlayout:1.2.13@aar') {
              transitive = true
          }
+     //使用viewbinding
+     implementation  androidx.databinding:viewbinding:+
 }
 ```
+
 ### 1.用法
+
     使用前，对于Android Studio的用户，可以选择添加:
 
             如果使用MultipleAdapter
@@ -149,7 +156,9 @@ dependencies {
                             });
 
 ### 混肴
+
 ####
+
     保证CommonAdapter的footerSize和headerSize字段不被混肴
     #某一变量不混淆
     -keepclasseswithmembers class com.ashlikun.adapter.recyclerview.BaseAdapter {

@@ -22,9 +22,12 @@ abstract class SingAdapter<T>
  * 要使用这个构造器
  * 这里就必须重写 @[SingAdapter.getLayoutId]方法
  */
-@JvmOverloads constructor(context: Context, layoutId: Int = View.NO_ID, datas: List<T>? = null)
-    : CommonAdapter<T>(context, layoutId, datas) {
-    constructor(context: Context, datas: List<T>? = null) : this(context, View.NO_ID, datas)
+constructor(
+    override var context: Context,
+    override var layoutId: Int = View.NO_ID,
+    //创建ViewBinding的Class,与layoutId 二选一
+    override var viewBindingClass: Class<*>? = null, data: MutableList<T>
+) : CommonAdapter<T>(context, layoutId, viewBindingClass, data) {
 
     var layoutHelper: LayoutHelper? = null
         set(value) {
@@ -76,14 +79,24 @@ abstract class SingAdapter<T>
     /**
      * 这2个方法是父Adapter onBindViewHolder回掉的
      */
-    open fun onBindViewHolderWithOffset(holder: RecyclerView.ViewHolder?, position: Int, offsetTotal: Int, payloads: List<Any?>?) {
+    open fun onBindViewHolderWithOffset(
+        holder: RecyclerView.ViewHolder?,
+        position: Int,
+        offsetTotal: Int,
+        payloads: List<Any?>?
+    ) {
         onBindViewHolderWithOffset(holder, position, offsetTotal)
     }
 
     /**
      * 这2个方法是父Adapter onBindViewHolder回掉的
      */
-    open protected fun onBindViewHolderWithOffset(holder: RecyclerView.ViewHolder?, position: Int, offsetTotal: Int) {}
+    open protected fun onBindViewHolderWithOffset(
+        holder: RecyclerView.ViewHolder?,
+        position: Int,
+        offsetTotal: Int
+    ) {
+    }
 
 
     override fun getItemViewType(position: Int) = abs(viewType.hashCode())
@@ -96,6 +109,7 @@ abstract class SingAdapter<T>
             super.getItemCount()
         }
     }
+
     /**
      * 添加到MultipleAdapter 之前的回调
      */

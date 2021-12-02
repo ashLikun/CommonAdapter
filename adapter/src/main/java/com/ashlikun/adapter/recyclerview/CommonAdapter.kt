@@ -17,19 +17,23 @@ import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
  * 功能介绍：公共的RecycleView的adapter
  * 在BaseAdapter基础上封装了 onCreateViewHolder,onBindViewHolder
  */
-abstract class CommonAdapter<T>
-@JvmOverloads constructor(context: Context, layoutId: Int = View.NO_ID, datas: List<T>? = null)
-    : BaseAdapter<T, ViewHolder?>(context, layoutId, datas) {
-    constructor(context: Context, datas: List<T>? = null) : this(context, View.NO_ID, datas)
+abstract class CommonAdapter<T>(
+    override var context: Context,
+    //布局文件
+    override var layoutId: Int = DEFAULT_LAYOUT_ID,
+    //创建ViewBinding的Class,与layoutId 二选一
+    override var viewBindingClass: Class<*>? = null,
+    datas: MutableList<T>
+) : BaseAdapter<T, ViewHolder>(context, layoutId, viewBindingClass, datas) {
 
     override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): ViewHolder {
-        val holder = ViewHolder(mContext, createRoot(parent, getLayoutId(viewType), viewType), this)
-        setListener(parent, holder, viewType)
+        val holder = ViewHolder(context, createRoot(parent, getLayoutId(viewType), viewType), this)
+        setListener(holder, viewType)
         return holder
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        setListener(recyclerView, holder, holder.itemViewType)
+        setListener(holder, holder.itemViewType)
         convert(holder, getItemData(position))
     }
 
@@ -43,15 +47,15 @@ abstract class CommonAdapter<T>
         }
     }
 
-    override fun dispatchClick(parent: ViewGroup, v: View, viewHolder: ViewHolder, viewType: Int) {
+    override fun dispatchClick(v: View, viewHolder: ViewHolder, viewType: Int) {
         if (!sendEvent(AdapterBus.ITEM_CLICK)) {
-            super.dispatchClick(parent, v, viewHolder, viewType)
+            super.dispatchClick(v, viewHolder, viewType)
         }
     }
 
-    override fun dispatchLongClick(parent: ViewGroup, v: View, viewHolder: ViewHolder, viewType: Int): Boolean {
+    override fun dispatchLongClick(v: View, viewHolder: ViewHolder, viewType: Int): Boolean {
         if (!sendEvent(AdapterBus.ITEM_LONG_CLICK)) {
-            return super.dispatchLongClick(parent, v, viewHolder, viewType)
+            return super.dispatchLongClick(v, viewHolder, viewType)
         }
         return true
     }
