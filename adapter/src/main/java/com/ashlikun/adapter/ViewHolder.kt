@@ -39,20 +39,25 @@ import com.ashlikun.adapter.recyclerview.BaseAdapter
  */
 
 class ViewHolder(
-    var mContext: Context,
-    var createView: CreateView,
-    var iStartPosition: IStartPosition
+        var mContext: Context,
+        var createView: CreateView,
+        var iStartPosition: IStartPosition
 ) : RecyclerView.ViewHolder(createView.view) {
     protected var mViews = SparseArray<View>()
 
     //实例是ViewBinding
-    var viewBinding: Any? = null
+    var binding: Any? = null
         protected set
         get() = createView.viewBinding
 
-    fun <T : Any> viewBinding(): T {
-        return viewBinding as T
+    fun <T : Any> binding(): T {
+        return binding as T
     }
+
+    inline fun <T : Any> binding(block: T.() -> Unit) {
+        block(binding())
+    }
+
     /**
      * 设置item点击颜色,就当前Holder   item
      *
@@ -258,8 +263,8 @@ class ViewHolder(
         var params = view.layoutParams
         if (params == null) {
             params = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
             )
         }
         params.height = size
@@ -273,8 +278,8 @@ class ViewHolder(
      * 关于事件的
      */
     fun setOnClickListener(
-        viewId: Int,
-        listener: View.OnClickListener?
+            viewId: Int,
+            listener: View.OnClickListener?
     ): ViewHolder {
         val view = getView<View>(viewId)!!
         view.setOnClickListener(listener)
@@ -282,8 +287,8 @@ class ViewHolder(
     }
 
     fun setOnTouchListener(
-        viewId: Int,
-        listener: OnTouchListener?
+            viewId: Int,
+            listener: OnTouchListener?
     ): ViewHolder {
         val view = getView<View>(viewId)!!
         view.setOnTouchListener(listener)
@@ -291,8 +296,8 @@ class ViewHolder(
     }
 
     fun setOnLongClickListener(
-        viewId: Int,
-        listener: OnLongClickListener?
+            viewId: Int,
+            listener: OnLongClickListener?
     ): ViewHolder {
         val view = getView<View>(viewId)!!
         view.setOnLongClickListener(listener)
@@ -310,11 +315,7 @@ class ViewHolder(
     val positionInside: Int
         get() = layoutPosition - startPosition
     val startPosition: Int
-        get() = if (iStartPosition != null) {
-            iStartPosition!!.startPosition
-        } else {
-            0
-        }
+        get() = iStartPosition.getStartPosition()
 
     /**
      * 是否是瀑布流

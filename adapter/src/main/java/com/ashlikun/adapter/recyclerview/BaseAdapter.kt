@@ -43,14 +43,16 @@ typealias OnItemClickListener<T> = (viewType: Int, parent: ViewGroup, view: View
 typealias OnItemLongClickListener<T> = (viewType: Int, parent: ViewGroup, view: View, data: T, position: Int) -> Boolean
 typealias OnSimpleItemClickListener<T> = (data: T) -> Unit
 typealias OnSimpleItemLongClickListener<T> = (data: T) -> Boolean
+typealias AdapterConvert<T> = (holder: ViewHolder, t: T?) -> Unit
 
 abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
-    open var context: Context,
-    //布局文件
-    open var layoutId: Int = DEFAULT_LAYOUT_ID,
-    //创建ViewBinding的Class,与layoutId 二选一
-    open var viewBindingClass: Class<*>? = null,
-    data: MutableList<T>
+        open var context: Context,
+        initDatas: MutableList<T>,
+        //创建ViewBinding的Class,与layoutId 二选一
+        open var bindingClass: Class<*>? = null,
+        //布局文件
+        open var layoutId: Int = DEFAULT_LAYOUT_ID
+
 ) : RecyclerView.Adapter<V>(), IHeaderAndFooter, LifecycleObserver, IStartPosition {
 
     companion object {
@@ -58,11 +60,12 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
         var DEFAULT_LAYOUT_ID = View.NO_ID
     }
 
+
     //暴力点击的延迟
     open var clickDelay = 500
 
     //数据处理
-    open var dataHandle = DataHandle(data, this)
+    open var dataHandle = DataHandle(initDatas, this)
 
     //点击事件
     open var onItemClickListener: OnItemClickListener<T>? = null
@@ -86,12 +89,6 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     open var recyclerView: RecyclerView? = null
         protected set
 
-    /**
-     * 1:创建Adapter回调的其他参数，一般用于改变UI
-     * 2:事件的回调
-     */
-    var bus: AdapterBus? = null
-
 
     init {
         setHasStableIds(true)
@@ -109,7 +106,21 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     val isEmpty: Boolean
         get() = dataHandle.isEmpty
 
+    /**
+     * 绑定数据
+     */
     abstract fun convert(holder: V, t: T?)
+
+    /**
+     * 获取布局
+     */
+    open fun getLayoutId(viewType: Int) = layoutId
+
+
+    /**
+     * 获取布局 ViewBindClass
+     */
+    open fun getBindClass(viewType: Int) = bindingClass
 
     /**
      * recycleView的局部刷新
@@ -132,25 +143,20 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
         return headerSize
     }
 
-    open fun getLayoutId(viewType: Int): Int {
-        return if (layoutId == DEFAULT_LAYOUT_ID) {
-            layoutId
-        } else layoutId
-    }
 
     /**
      * 只有都无法创建view的时候才会用这个方法
      *
      * @return
      */
-    open fun createViewBinding(parent: ViewGroup, viewType: Int): Any? {
-        return if (viewBindingClass != null) {
+    open fun createViewBinding(parent: ViewGroup, bindingClass: Class<*>?, viewType: Int): Any? {
+        return if (bindingClass != null) {
             //反射获取
             AdapterUtils.getViewBindingToClass(
-                viewBindingClass,
-                LayoutInflater.from(context),
-                parent,
-                false
+                    bindingClass,
+                    LayoutInflater.from(context),
+                    parent,
+                    false
             )
         } else null
     }
@@ -169,19 +175,19 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * 创建跟布局
      * 不可从写
      */
-    fun createRoot(parent: ViewGroup, layoutId: Int, viewType: Int): CreateView {
-        val view = createLayout(parent, layoutId, viewType)
+    fun createRoot(parent: ViewGroup, viewType: Int): CreateView {
+        val view = createLayout(parent, getLayoutId(viewType), viewType)
         var viewBinding: Any? = null
         if (view == null) {
             //调用创建ViewBinding
-            viewBinding = createViewBinding(parent, viewType)
+            viewBinding = createViewBinding(parent, getBindClass(viewType), viewType)
         }
         return CreateView.create(view, viewBinding)
     }
 
     override fun getItemId(position: Int): Long {
         val d = getItemData(position)
-        return d?.hashCode()?.toLong() ?: (startPosition + position).toLong()
+        return d?.hashCode()?.toLong() ?: (getStartPosition() + position).toLong()
     }
 
     override fun getItemCount(): Int {
@@ -231,7 +237,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
 
     protected fun setListener(viewHolder: ViewHolder, viewType: Int) {
         if (!isEnabled(viewType)
-            || !viewHolder.itemView.isEnabled
+                || !viewHolder.itemView.isEnabled
         ) {
             return
         }
@@ -254,7 +260,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * 分发点击事件
      */
     protected open fun dispatchClick(
-        v: View, viewHolder: ViewHolder, viewType: Int
+            v: View, viewHolder: ViewHolder, viewType: Int
     ) {
         val position = getPosition(viewHolder)
         val d = getItemData(position)
@@ -275,7 +281,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * @param viewType
      */
     protected open fun dispatchLongClick(
-        v: View, viewHolder: ViewHolder, viewType: Int
+            v: View, viewHolder: ViewHolder, viewType: Int
     ): Boolean {
         val position = getPosition(viewHolder)
         val d = getItemData(position)
@@ -283,7 +289,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
             return if (onItemLongClick(viewType, recyclerView!!, v, d, position)) true
             else {
                 onItemLongClickListener?.invoke(viewType, recyclerView!!, v, d, position)
-                    ?: (onSimpleItemLongClickListener?.invoke(d) ?: false)
+                        ?: (onSimpleItemLongClickListener?.invoke(d) ?: false)
             }
         }
         return false
@@ -337,7 +343,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      */
     val lastPosition: Int
         get() = if (recyclerView?.layoutManager == null) RecyclerView.NO_POSITION else AdapterUtils.findLastVisiblePosition(
-            recyclerView!!.layoutManager
+                recyclerView!!.layoutManager
         )
 
     /**
@@ -345,7 +351,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      */
     val firstPosition: Int
         get() = if (recyclerView?.layoutManager == null) RecyclerView.NO_POSITION else AdapterUtils.findFirstVisibleItemPosition(
-            recyclerView!!.layoutManager
+                recyclerView!!.layoutManager
         )
 
     /**
@@ -357,34 +363,34 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
 
 
     open fun onItemLongClick(
-        viewType: Int,
-        parent: ViewGroup,
-        view: View,
-        data: T,
-        position: Int
+            viewType: Int,
+            parent: ViewGroup,
+            view: View,
+            data: T,
+            position: Int
     ): Boolean {
         return onItemLongClick(data)
     }
 
     open fun onItemLongClick(
-        data: T
+            data: T
     ): Boolean {
         return false
     }
 
     open fun onItemClick(
-        viewType: Int,
-        parent: ViewGroup,
-        view: View,
-        data: T,
-        position: Int
+            viewType: Int,
+            parent: ViewGroup,
+            view: View,
+            data: T,
+            position: Int
     ) {
         onItemClick(data)
     }
 
 
     open fun onItemClick(
-        data: T
+            data: T
     ) {
     }
 }

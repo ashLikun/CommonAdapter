@@ -18,16 +18,32 @@ import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
  * 在BaseAdapter基础上封装了 onCreateViewHolder,onBindViewHolder
  */
 abstract class CommonAdapter<T>(
-    override var context: Context,
-    //布局文件
-    override var layoutId: Int = DEFAULT_LAYOUT_ID,
-    //创建ViewBinding的Class,与layoutId 二选一
-    override var viewBindingClass: Class<*>? = null,
-    datas: MutableList<T>
-) : BaseAdapter<T, ViewHolder>(context, layoutId, viewBindingClass, datas) {
+        override var context: Context,
+        datas: MutableList<T>,
+        //创建ViewBinding的Class,与layoutId 二选一
+        override var bindingClass: Class<*>? = null,
+        //布局文件
+        override var layoutId: Int = DEFAULT_LAYOUT_ID,
+        /**
+         * 1:创建Adapter回调的其他参数，一般用于改变UI
+         * 2:事件的回调
+         */
+        open var bus: AdapterBus? = null,
+        //转换
+        open var convert: AdapterConvert<T>? = null
+) : BaseAdapter<T, ViewHolder>(context, datas, bindingClass, layoutId) {
+    /**
+     * 获取AdapterBus.STYLE
+     */
+    open val style
+        get() = bus?.style
+
+    override fun convert(holder: ViewHolder, t: T?) {
+        convert?.invoke(holder, t)
+    }
 
     override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): ViewHolder {
-        val holder = ViewHolder(context, createRoot(parent, getLayoutId(viewType), viewType), this)
+        val holder = ViewHolder(context, createRoot(parent, viewType), this)
         setListener(holder, viewType)
         return holder
     }
@@ -101,11 +117,6 @@ abstract class CommonAdapter<T>(
      */
     open fun <T : OnAdapterEvent> event(key: String): T? = bus?.event(key)
 
-    /**
-     * 获取AdapterBus.STYLE
-     */
-    open val style
-        get() = bus?.style
 
     /**
      * 获取AdapterBus.STYLE

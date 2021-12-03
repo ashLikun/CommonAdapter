@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.IAdapterBindData
+import kotlin.reflect.KClass
 
 /**
  * 作者　　: 李坤
@@ -44,26 +45,27 @@ data class OnAdapterCreateParams(
  * @param cls 构造函数必须是 (Context) 或者（Context,Data）或者（Context,AdapterBus），或者（Context,OnAdapterCreateParams）
  *
  */
-class OnAdapterCreateClass(private val cls: Class<out SingAdapter<*>>) : OnAdapterCreate {
+class OnAdapterCreateClass(private val cls: KClass<out SingAdapter<*>>) : OnAdapterCreate {
     override fun invoke(param: OnAdapterCreateParams): SingAdapter<*> {
-        cls.constructors.forEach {
-            val parameterTypes = it.parameterTypes
-            if (parameterTypes.isNotEmpty() && parameterTypes[0].isAssignableFrom(android.content.Context::class.java)) {
-                if (parameterTypes.size == 2) {
-                    return when {
-                        parameterTypes[1].isAssignableFrom(AdapterBus::class.java) -> {
-                            it.newInstance(param.context, param.bus) as SingAdapter<*>
-                        }
-                        parameterTypes[1].isAssignableFrom(OnAdapterCreateParams::class.java) -> {
-                            it.newInstance(param.context, param) as SingAdapter<*>
-                        }
-                        else -> it.newInstance(param.context, param.data?.data) as SingAdapter<*>
-                    }
-                } else if (parameterTypes.size == 1) {
-                    return it.newInstance(param.context) as SingAdapter<*>
-                }
-            }
-        }
+//        cls.constructors.new
+//        cls.constructors.forEach {
+//            val parameterTypes = it.typeParameters
+//            if (parameterTypes.isNotEmpty() && parameterTypes[0].isAssignableFrom(android.content.Context::class.java)) {
+//                if (parameterTypes.size == 2) {
+//                    return when {
+//                        parameterTypes[1].isAssignableFrom(AdapterBus::class.java) -> {
+//                            it.newInstance(param.context, param.bus) as SingAdapter<*>
+//                        }
+//                        parameterTypes[1].isAssignableFrom(OnAdapterCreateParams::class.java) -> {
+//                            it.newInstance(param.context, param) as SingAdapter<*>
+//                        }
+//                        else -> it.newInstance(param.context, param.data?.data) as SingAdapter<*>
+//                    }
+//                } else if (parameterTypes.size == 1) {
+//                    return it.newInstance(param.context) as SingAdapter<*>
+//                }
+//            }
+//        }
         throw NullPointerException("这个Class：${cls},必须有双单参数或者双参数构造方法，并且第一个必须是Context,第二个必须是数据")
     }
 }
@@ -83,11 +85,11 @@ object AdapterBind {
         adapterCreates.putAll(creates)
     }
 
-    fun addCreateClass(type: String, create: Class<out SingAdapter<*>>) {
+    fun addCreateClass(type: String, create: KClass<out SingAdapter<*>>) {
         adapterCreates[type] = OnAdapterCreateClass(create)
     }
 
-    fun addCreatesClass(creates: Map<String, Class<SingAdapter<*>>>) {
+    fun addCreatesClass(creates: Map<String, KClass<SingAdapter<*>>>) {
         creates.forEach {
             addCreateClass(it.key, it.value)
         }

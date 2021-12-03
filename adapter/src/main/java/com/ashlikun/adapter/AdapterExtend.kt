@@ -7,9 +7,3 @@ package com.ashlikun.adapter
  *
  * 功能介绍：
  */
-/**
- * 从ViewHolder里面获取viewBinding
- */
-inline fun <T> ViewHolder.binding(block: T.() -> Unit) {
-    block(getViewBinding())
-}

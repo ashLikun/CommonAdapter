@@ -2,7 +2,6 @@ package com.ashlikun.adapter.simple
 
 import android.content.Context
 import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter
-import com.ashlikun.adapter.simple.R
 import com.alibaba.android.vlayout.LayoutHelper
 import com.alibaba.android.vlayout.layout.GridLayoutHelper
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper
@@ -71,7 +70,7 @@ class MyAdapter {
         }
 
         init {
-            viewBindingClass = ItemView1Binding::class.java
+            bindingClass = ItemView1Binding::class.java
         }
     }
 

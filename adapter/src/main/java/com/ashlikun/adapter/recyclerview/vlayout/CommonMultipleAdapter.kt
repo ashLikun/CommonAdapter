@@ -13,8 +13,8 @@ import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter
  */
 open class CommonMultipleAdapter(recyclerView: RecyclerView)
     : MultipleAdapterHelp(recyclerView) {
-    fun bindUi(vararg aa: SingAdapter<*>): CommonMultipleAdapter {
-        adapter.addAdapters(aa.toMutableList())
+    fun bindUi(vararg adapters: SingAdapter<*>): CommonMultipleAdapter {
+        adapter.addAdapters(adapters.toMutableList())
         return this
     }
 }

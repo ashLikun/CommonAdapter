@@ -1,12 +1,13 @@
 package com.ashlikun.adapter.recyclerview.vlayout
 
 import android.content.Context
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.vlayout.LayoutHelper
 import com.alibaba.android.vlayout.layout.MarginLayoutHelper
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper
+import com.ashlikun.adapter.recyclerview.AdapterConvert
 import com.ashlikun.adapter.recyclerview.CommonAdapter
+import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import kotlin.math.abs
 
 /**
@@ -17,34 +18,32 @@ import kotlin.math.abs
  *
  * 功能介绍：VLayout的ItemAdapter
  */
-abstract class SingAdapter<T>
-/**
- * 要使用这个构造器
- * 这里就必须重写 @[SingAdapter.getLayoutId]方法
- */
-constructor(
-    override var context: Context,
-    override var layoutId: Int = View.NO_ID,
-    //创建ViewBinding的Class,与layoutId 二选一
-    override var viewBindingClass: Class<*>? = null, data: MutableList<T>
-) : CommonAdapter<T>(context, layoutId, viewBindingClass, data) {
+abstract class SingAdapter<T>(
+        override var context: Context,
+        datas: MutableList<T>,
+        //创建ViewBinding的Class,与layoutId 二选一
+        override var bindingClass: Class<*>? = null,
+        //布局文件
+        override var layoutId: Int = DEFAULT_LAYOUT_ID,
+        //事件
+        override var bus: AdapterBus? = null,
+        //布局
+        open var layoutHelper: LayoutHelper,
+        //ViewType
+        open var viewType: Any = this::class,
+        //转换
+        override var convert: AdapterConvert<T>? = null
+) : CommonAdapter<T>(context, datas, bindingClass, layoutId, bus, convert) {
 
-    var layoutHelper: LayoutHelper? = null
-        set(value) {
-            //赋值MarginLayoutHelper
-            if (value is MarginLayoutHelper) {
-                style?.bindHelperUI(context, value)
-            }
-            field = value
+    init {
+        //赋值MarginLayoutHelper
+        if (layoutHelper is MarginLayoutHelper) {
+            style?.bindHelperUI(context, layoutHelper!!)
         }
+    }
 
-    /**
-     * 内部的adapter建议只用一个type
-     */
-    var viewType: Any = this.javaClass
+
     private var observer: MultipleAdapter.AdapterDataObserver? = null
-
-    open fun onCreateLayoutHelper() = layoutHelper
 
 
     override fun registerAdapterDataObserver(observer: RecyclerView.AdapterDataObserver) {
@@ -68,7 +67,7 @@ constructor(
      *
      * @return
      */
-    override fun getStartPosition() = observer?.mStartPosition ?: super.getStartPosition()
+    override fun getStartPosition() = observer?.startPosition ?: super.getStartPosition()
 
     /**
      * 在Vlayout里面第几个
@@ -80,10 +79,10 @@ constructor(
      * 这2个方法是父Adapter onBindViewHolder回掉的
      */
     open fun onBindViewHolderWithOffset(
-        holder: RecyclerView.ViewHolder?,
-        position: Int,
-        offsetTotal: Int,
-        payloads: List<Any?>?
+            holder: RecyclerView.ViewHolder?,
+            position: Int,
+            offsetTotal: Int,
+            payloads: List<Any?>?
     ) {
         onBindViewHolderWithOffset(holder, position, offsetTotal)
     }
@@ -92,9 +91,9 @@ constructor(
      * 这2个方法是父Adapter onBindViewHolder回掉的
      */
     open protected fun onBindViewHolderWithOffset(
-        holder: RecyclerView.ViewHolder?,
-        position: Int,
-        offsetTotal: Int
+            holder: RecyclerView.ViewHolder?,
+            position: Int,
+            offsetTotal: Int
     ) {
     }
 
