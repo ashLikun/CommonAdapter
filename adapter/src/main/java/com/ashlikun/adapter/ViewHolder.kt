@@ -38,7 +38,7 @@ import com.ashlikun.adapter.recyclerview.BaseAdapter
  * Java: getViewBinding
  */
 
-class ViewHolder(
+open class ViewHolder(
         var mContext: Context,
         var createView: CreateView,
         var iStartPosition: IStartPosition
@@ -325,9 +325,7 @@ class ViewHolder(
     val isStaggeredGridLayout: Boolean
         get() {
             val layoutParams = itemView.layoutParams
-            return if (layoutParams is StaggeredGridLayoutManager.LayoutParams) {
-                true
-            } else false
+            return layoutParams is StaggeredGridLayoutManager.LayoutParams
         }
 
     /**
