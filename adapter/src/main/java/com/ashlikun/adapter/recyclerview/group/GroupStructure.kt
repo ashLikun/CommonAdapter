@@ -45,6 +45,10 @@ class GroupStructure(
         private set
 
     init {
+        init(hasHeader, hasFooter, childrenStart, childrenCount)
+    }
+
+    fun init(hasHeader: Boolean, hasFooter: Boolean, childrenStart: Int, childrenCount: Int) {
         this.hasHeader = hasHeader
         this.hasFooter = hasFooter
         if (hasHeader) {

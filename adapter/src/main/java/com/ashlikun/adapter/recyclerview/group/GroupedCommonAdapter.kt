@@ -41,6 +41,8 @@ abstract class GroupedCommonAdapter<T>(
     open var onHeaderClick: OnHeaderFooterClick? = null,
     open var onFooterClick: OnHeaderFooterClick? = null,
     open var onChildClick: OnChildClick? = null,
+    //获取子的大小
+    open var getChildrenCount: ((groupPosition: Int, t: T?) -> Int)? = null,
     //转换
     open var convertHeader: GroupAdapterConvert<T>? = null,
     open var convertFoot: GroupAdapterConvert<T>? = null,
@@ -67,9 +69,8 @@ abstract class GroupedCommonAdapter<T>(
 
     init {
         this.convert = { holder, t ->
-            val viewTypeZhenshi = judgeType(holder.itemViewType)
             val groupPosition = getGroupPositionForPosition(holder.positionInside)
-            when (viewTypeZhenshi) {
+            when (holder.itemViewType) {
                 TYPE_HEADER -> convertHeader?.invoke(holder, t, groupPosition)
                 TYPE_FOOTER -> convertFoot?.invoke(holder, t, groupPosition)
                 TYPE_CHILD ->
@@ -124,9 +125,8 @@ abstract class GroupedCommonAdapter<T>(
 
     override fun onItemClick(viewType: Int, parent: ViewGroup, view: View, data: T, position: Int) {
         super.onItemClick(viewType, parent, view, data, position)
-        val viewTypeZhenshi = judgeType(viewType)
         val groupPosition = getGroupPositionForPosition(position)
-        if (viewTypeZhenshi == TYPE_HEADER) {
+        if (viewType == TYPE_HEADER) {
             onHeaderClick?.apply {
                 val gPosition =
                     if (parent is FrameLayout) groupPosition else getGroupPositionForPosition(
@@ -136,7 +136,7 @@ abstract class GroupedCommonAdapter<T>(
                     invoke(this@GroupedCommonAdapter, gPosition)
                 }
             }
-        } else if (viewTypeZhenshi == TYPE_FOOTER) {
+        } else if (viewType == TYPE_FOOTER) {
             onFooterClick?.apply {
                 if (onFooterClick != null) {
                     val gPosition = getGroupPositionForPosition(position)
@@ -146,7 +146,7 @@ abstract class GroupedCommonAdapter<T>(
                 }
             }
 
-        } else if (viewTypeZhenshi == TYPE_CHILD) {
+        } else if (viewType == TYPE_CHILD) {
             onChildClick?.apply {
                 val gPosition = getGroupPositionForPosition(position)
                 val cPosition = getChildPositionForPosition(gPosition, position)
@@ -174,22 +174,6 @@ abstract class GroupedCommonAdapter<T>(
         return if (mStructures.isEmpty()) 0 else mStructures[mStructures.size - 1].end + 1
     }
 
-    /**
-     * 判断item的type 头部 尾部 和 子项
-     *
-     * @param viewType
-     * @return
-     */
-    fun judgeType(viewType: Int): Int {
-        if (headerViewTypes.contains(viewType)) {
-            return TYPE_HEADER
-        } else if (footerViewTypes.contains(viewType)) {
-            return TYPE_FOOTER
-        } else if (childViewTypes.contains(viewType)) {
-            return TYPE_CHILD
-        }
-        return -1
-    }
 
     /**
      * 判断item的type 头部 尾部 和 子项
@@ -209,26 +193,6 @@ abstract class GroupedCommonAdapter<T>(
         return -1
     }
 
-    fun addItemTypeHeader(viewType: Int, @LayoutRes layoutResId: Int) {
-        if (!headerViewTypes.contains(viewType)) {
-            headerViewTypes.add(viewType)
-        }
-        addItemType(viewType, layoutResId)
-    }
-
-    fun addItemTypeFooter(viewType: Int, @LayoutRes layoutResId: Int) {
-        if (!footerViewTypes.contains(viewType)) {
-            footerViewTypes.add(viewType)
-        }
-        addItemType(viewType, layoutResId)
-    }
-
-    fun addItemTypeChild(viewType: Int, @LayoutRes layoutResId: Int) {
-        if (!childViewTypes.contains(viewType)) {
-            childViewTypes.add(viewType)
-        }
-        addItemType(viewType, layoutResId)
-    }
 
     /**
      * 重置组结构列表
@@ -237,7 +201,7 @@ abstract class GroupedCommonAdapter<T>(
         val structures = ArrayList<GroupStructure>()
         structures.addAll(mStructures)
         mStructures.clear()
-        val groupCount: Int = groupCount
+        val groupCount: Int = itemCount
         var startPosition = 0
         for (i in 0 until groupCount) {
             var structure: GroupStructure
@@ -313,7 +277,7 @@ abstract class GroupedCommonAdapter<T>(
     fun getPositionForGroupHeader(groupPosition: Int): Int {
         val structure = getGroupItem(groupPosition)
         return if (structure != null) {
-            if (!structure.hasHeader()) {
+            if (!structure.hasHeader) {
                 -1
             } else structure.start
         } else -1
@@ -328,7 +292,7 @@ abstract class GroupedCommonAdapter<T>(
     fun getPositionForGroupFooter(groupPosition: Int): Int {
         val structure = getGroupItem(groupPosition)
         return if (structure != null) {
-            if (!structure.hasFooter()) {
+            if (!structure.hasFooter) {
                 -1
             } else structure.end
         } else -1
@@ -696,43 +660,13 @@ abstract class GroupedCommonAdapter<T>(
             }
         }
     }
-    //****** 设置点击事件 *****//
-    /**
-     * 设置组头点击事件
-     *
-     * @param listener
-     */
-    fun setOnHeaderClickListener(listener: OnHeaderClickListener?) {
-        mOnHeaderClickListener = listener
-    }
 
-    /**
-     * 设置组尾点击事件
-     *
-     * @param listener
-     */
-    fun setOnFooterClickListener(listener: OnFooterClickListener?) {
-        mOnFooterClickListener = listener
-    }
+    open fun hasHeader(groupPosition: Int, itemData: T?) = true
 
-    /**
-     * 设置子项点击事件
-     *
-     * @param listener
-     */
-    fun setOnChildClickListener(listener: OnChildClickListener?) {
-        mOnChildClickListener = listener
-    }
+    open fun hasFooter(groupPosition: Int, itemData: T?) = false
 
-    open fun hasHeader(groupPosition: Int, itemData: T?): Boolean {
-        return true
-    }
-
-    open fun hasFooter(groupPosition: Int, itemData: T?): Boolean {
-        return false
-    }
-
-    abstract fun getChildrenCount(groupPosition: Int, t: T?): Int
+    open fun getChildrenCount(groupPosition: Int, t: T?) =
+        getChildrenCount?.invoke(groupPosition, t) ?: throw RuntimeException("必须提供子项数量")
 
 
     internal inner class GroupDataObserver : RecyclerView.AdapterDataObserver() {

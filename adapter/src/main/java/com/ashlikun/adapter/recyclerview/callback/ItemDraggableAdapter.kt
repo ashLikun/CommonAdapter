@@ -21,7 +21,7 @@ abstract class ItemDraggableAdapter<T>(
     override var context: Context,
     override var layoutId: Int = View.NO_ID,
     //创建ViewBinding的Class,与layoutId 二选一
-    override var bindingClass: Class<ViewBinding>? = null, datas: MutableList<T>
+    override var bindingClass: Class<out ViewBinding>? = null, datas: MutableList<T>
 ) : CommonAdapter<T>(
     context = context,
     layoutId = layoutId,
