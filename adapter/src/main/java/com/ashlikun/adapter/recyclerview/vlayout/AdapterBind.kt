@@ -16,24 +16,24 @@ import kotlin.reflect.KClass
 /**
  * 创建Adapter的回调
  */
-typealias OnAdapterCreate = (OnAdapterCreateParams) -> SingAdapter<*>
+typealias OnAdapterCreate = (OnAdapterCreateParams) -> SingAdapter<Any>
 
 
 /**
  * 创建适配器的参数
  */
 data class OnAdapterCreateParams(
-        val context: Context,
-        //总的适配器
-        val adapter: MultipleAdapter,
-        //数据,就是数据层
-        val data: IAdapterBindData<*>?,
-        //当前是第几个,对于外侧数据
-        val index: Int = 0,
-        //总共几个,对于外侧数据
-        val count: Int = 0,
-        //Adapter与外界交互的参数集合
-        val bus: AdapterBus? = null
+    val context: Context,
+    //总的适配器
+    val adapter: MultipleAdapter,
+    //数据,就是数据层
+    val data: IAdapterBindData<*>?,
+    //当前是第几个,对于外侧数据
+    val index: Int = 0,
+    //总共几个,对于外侧数据
+    val count: Int = 0,
+    //Adapter与外界交互的参数集合
+    val bus: AdapterBus? = null
 ) {
     fun <T> getData(): T = data as T
     fun isLast() = index == count - 1
@@ -45,8 +45,8 @@ data class OnAdapterCreateParams(
  * @param cls 构造函数必须是 (Context) 或者（Context,Data）或者（Context,AdapterBus），或者（Context,OnAdapterCreateParams）
  *
  */
-class OnAdapterCreateClass(private val cls: KClass<out SingAdapter<*>>) : OnAdapterCreate {
-    override fun invoke(param: OnAdapterCreateParams): SingAdapter<*> {
+class OnAdapterCreateClass(private val cls: KClass<out SingAdapter<Any>>) : OnAdapterCreate {
+    override fun invoke(param: OnAdapterCreateParams): SingAdapter<Any> {
 //        cls.constructors.new
 //        cls.constructors.forEach {
 //            val parameterTypes = it.typeParameters
@@ -85,11 +85,11 @@ object AdapterBind {
         adapterCreates.putAll(creates)
     }
 
-    fun addCreateClass(type: String, create: KClass<out SingAdapter<*>>) {
+    fun addCreateClass(type: String, create: KClass<out SingAdapter<Any>>) {
         adapterCreates[type] = OnAdapterCreateClass(create)
     }
 
-    fun addCreatesClass(creates: Map<String, KClass<SingAdapter<*>>>) {
+    fun addCreatesClass(creates: Map<String, KClass<SingAdapter<Any>>>) {
         creates.forEach {
             addCreateClass(it.key, it.value)
         }
@@ -117,10 +117,10 @@ object AdapterBind {
      * 绑定数据
      */
     fun bindUi(
-            context: Context,
-            adapter: MultipleAdapter,
-            data: List<IAdapterBindData<*>>,
-            busMap: Map<String, AdapterBus>? = null
+        context: Context,
+        adapter: MultipleAdapter,
+        data: List<IAdapterBindData<*>>,
+        busMap: Map<String, AdapterBus>? = null
     ) {
         data.forEachIndexed { index, it ->
             var adaCreate = adapterCreates[it.type]
@@ -130,13 +130,13 @@ object AdapterBind {
                 val adaBus = busMap?.get(it.type)?.plus(dataBus)
                 //数据内部的
                 val params = OnAdapterCreateParams(
-                        context = context,
-                        adapter = adapter,
-                        data = it,
-                        index = index,
-                        count = data.size,
-                        //其他参数，先用data的，如果为null，再用方法的
-                        bus = adaBus
+                    context = context,
+                    adapter = adapter,
+                    data = it,
+                    index = index,
+                    count = data.size,
+                    //其他参数，先用data的，如果为null，再用方法的
+                    bus = adaBus
                 )
                 val ada = adaCreate.invoke(params)
                 //赋值Type

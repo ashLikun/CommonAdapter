@@ -2,6 +2,7 @@ package com.ashlikun.adapter.recyclerview.vlayout
 
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.alibaba.android.vlayout.LayoutHelper
 import com.alibaba.android.vlayout.layout.MarginLayoutHelper
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper
@@ -19,21 +20,28 @@ import kotlin.math.abs
  * 功能介绍：VLayout的ItemAdapter
  */
 abstract class SingAdapter<T>(
-        override var context: Context,
-        datas: MutableList<T>,
-        //创建ViewBinding的Class,与layoutId 二选一
-        override var bindingClass: Class<*>? = null,
-        //布局文件
-        override var layoutId: Int = DEFAULT_LAYOUT_ID,
-        //事件
-        override var bus: AdapterBus? = null,
-        //布局
-        open var layoutHelper: LayoutHelper,
-        //ViewType
-        open var viewType: Any = this::class,
-        //转换
-        override var convert: AdapterConvert<T>? = null
-) : CommonAdapter<T>(context, datas, bindingClass, layoutId, bus, convert) {
+    override var context: Context,
+    datas: MutableList<T>,
+    //创建ViewBinding的Class,与layoutId 二选一
+    override var bindingClass: Class<out ViewBinding>? = null,
+    //布局文件
+    override var layoutId: Int = DEFAULT_LAYOUT_ID,
+    //事件
+    override var bus: AdapterBus? = null,
+    //布局
+    open var layoutHelper: LayoutHelper,
+    //ViewType
+    open var viewType: Any = this::class,
+    //转换
+    override var convert: AdapterConvert<T>? = null
+) : CommonAdapter<T>(
+    context = context,
+    datas = datas,
+    bindingClass = bindingClass,
+    layoutId = layoutId,
+    bus = bus,
+    convert = convert
+) {
 
     init {
         //赋值MarginLayoutHelper
@@ -79,10 +87,10 @@ abstract class SingAdapter<T>(
      * 这2个方法是父Adapter onBindViewHolder回掉的
      */
     open fun onBindViewHolderWithOffset(
-            holder: RecyclerView.ViewHolder?,
-            position: Int,
-            offsetTotal: Int,
-            payloads: List<Any?>?
+        holder: RecyclerView.ViewHolder?,
+        position: Int,
+        offsetTotal: Int,
+        payloads: List<Any?>?
     ) {
         onBindViewHolderWithOffset(holder, position, offsetTotal)
     }
@@ -91,9 +99,9 @@ abstract class SingAdapter<T>(
      * 这2个方法是父Adapter onBindViewHolder回掉的
      */
     open protected fun onBindViewHolderWithOffset(
-            holder: RecyclerView.ViewHolder?,
-            position: Int,
-            offsetTotal: Int
+        holder: RecyclerView.ViewHolder?,
+        position: Int,
+        offsetTotal: Int
     ) {
     }
 

@@ -11,9 +11,8 @@ import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter
  *
  * 功能介绍：[MultipleAdapterHelp]的简化版
  */
-open class CommonMultipleAdapter(recyclerView: RecyclerView)
-    : MultipleAdapterHelp(recyclerView) {
-    fun bindUi(vararg adapters: SingAdapter<*>): CommonMultipleAdapter {
+open class CommonMultipleAdapter(recyclerView: RecyclerView) : MultipleAdapterHelp(recyclerView) {
+    fun bindUi(vararg adapters: SingAdapter<Any>): CommonMultipleAdapter {
         adapter.addAdapters(adapters.toMutableList())
         return this
     }

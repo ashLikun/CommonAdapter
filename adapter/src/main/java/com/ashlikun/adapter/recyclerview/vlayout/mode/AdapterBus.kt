@@ -7,25 +7,28 @@ import android.view.View
  * 创建时间: 2021/6/11　15:33
  * 邮箱　　：496546144@qq.com
  *
- * 功能介绍：
+ * 功能介绍：适配器的各种事件与存储数据，如样式，ui数据，发送事件
  */
+typealias OnAdapterEvent = (Map<String, Any>) -> Boolean
+
 /**
  * Adapter与外界交互的参数集合
  */
 data class AdapterBus(
-        //对应数据层的type
-        var type: String = "",
-        //处理adapter发出的事件,在创建adapter的时候会赋值
-        var event: Map<String, OnAdapterEvent>? = null,
-        //创建Adapter回调的其他参数，一般用于改变UI,如果data里面也有设置那么就是合并
-        var params: Map<String, Any>? = null
+    //对应数据层的type
+    var type: String = "",
+    //处理adapter发出的事件,在创建adapter的时候会赋值
+    var event: Map<String, OnAdapterEvent>? = null,
+    //创建Adapter回调的其他参数，一般用于改变UI,如果data里面也有设置那么就是合并
+    var params: Map<String, Any>? = null
 ) {
     /**
      * 不要设置type
      */
     constructor(
-            event: Map<String, OnAdapterEvent>? = null,
-            params: Map<String, Any>? = null) : this("", event, params)
+        event: Map<String, OnAdapterEvent>? = null,
+        params: Map<String, Any>? = null
+    ) : this("", event, params)
 
     /**
      * 获取key对应的event或者params,优先event
@@ -74,7 +77,8 @@ data class AdapterBus(
      * @param event 事件回调
      */
     fun add(action: String, event: OnAdapterEvent) {
-        this.event = if (this.event == null) mapOf(action to event) else this.event!! + mapOf(action to event)
+        this.event =
+            if (this.event == null) mapOf(action to event) else this.event!! + mapOf(action to event)
     }
 
     /**
@@ -82,8 +86,10 @@ data class AdapterBus(
      */
     operator fun plus(data: AdapterBus?): AdapterBus {
         return if (type == data?.type) {
-            AdapterBus(type, (event ?: emptyMap()) + (data.event ?: emptyMap()),
-                    (params ?: emptyMap()) + (data.params ?: emptyMap()))
+            AdapterBus(
+                type, (event ?: emptyMap()) + (data.event ?: emptyMap()),
+                (params ?: emptyMap()) + (data.params ?: emptyMap())
+            )
         } else {
             val a: View
             this

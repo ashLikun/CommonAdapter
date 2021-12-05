@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.NonNull
+import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
@@ -18,20 +19,25 @@ import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
  * 在BaseAdapter基础上封装了 onCreateViewHolder,onBindViewHolder
  */
 abstract class CommonAdapter<T>(
-        override var context: Context,
-        datas: MutableList<T>,
-        //创建ViewBinding的Class,与layoutId 二选一
-        override var bindingClass: Class<*>? = null,
-        //布局文件
-        override var layoutId: Int = DEFAULT_LAYOUT_ID,
-        /**
-         * 1:创建Adapter回调的其他参数，一般用于改变UI
-         * 2:事件的回调
-         */
-        open var bus: AdapterBus? = null,
-        //转换
-        open var convert: AdapterConvert<T>? = null
-) : BaseAdapter<T, ViewHolder>(context, datas, bindingClass, layoutId) {
+    override var context: Context,
+    datas: MutableList<T>,
+    //创建ViewBinding的Class,与layoutId 二选一
+    override var bindingClass: Class<out ViewBinding>? = null,
+    //布局文件
+    override var layoutId: Int = DEFAULT_LAYOUT_ID,
+    /**
+     * 1:创建Adapter回调的其他参数，一般用于改变UI
+     * 2:事件的回调
+     */
+    open var bus: AdapterBus? = null,
+    //转换
+    open var convert: AdapterConvert<T>? = null
+) : BaseAdapter<T, ViewHolder>(
+    context = context,
+    initDatas = datas,
+    bindingClass = bindingClass,
+    layoutId = layoutId
+) {
     /**
      * 获取AdapterBus.STYLE
      */

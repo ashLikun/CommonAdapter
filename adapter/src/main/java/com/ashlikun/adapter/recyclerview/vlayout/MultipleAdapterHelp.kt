@@ -18,15 +18,16 @@ import com.ashlikun.adapter.recyclerview.vlayout.mode.IAdapterBindData
  *
  * 功能介绍：MultipleAdapter 的帮助类
  * @param hasConsistItemType 子适配器项类型是否一致,可以复用相同的viewtype
- * @param onEvent 处理adapter发出的事件,在创建adapter的时候会赋值  key:数据层的type，value：这个type对应的事件（key/value）
- * @param otherParams 创建Adapter回调的其他参数，一般用于改变UI,   key:数据层的type，value：这个type对应的参数（key/value）
+ * @param bus.onEvent 处理adapter发出的事件,在创建adapter的时候会赋值  key:数据层的type，value：这个type对应的事件（key/value）
+ * @param bus.otherParams 创建Adapter回调的其他参数，一般用于改变UI,   key:数据层的type，value：这个type对应的参数（key/value）
  */
 open class MultipleAdapterHelp
-@JvmOverloads
-constructor(var recyclerView: RecyclerView,
-            var hasConsistItemType: Boolean = true,
-        //监听事件和ui参数的总线
-            bus: List<AdapterBus>? = null) : LifecycleObserver {
+constructor(
+    var recyclerView: RecyclerView,
+    var hasConsistItemType: Boolean = true,
+    //监听事件和ui参数的总线
+    bus: List<AdapterBus>? = null
+) : LifecycleObserver {
     //event 处理adapter发出的事件,在创建adapter的时候会赋值  key:数据层的type，value：这个type对应的事件（key/value）
     //params 创建Adapter回调的其他参数，一般用于改变UI,   key:数据层的type，value：这个type对应的参数（key/value）
     var busMap: MutableMap<String, AdapterBus>? = null

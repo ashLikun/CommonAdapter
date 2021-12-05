@@ -14,6 +14,7 @@ import android.view.View
 import com.ashlikun.adapter.recyclerview.click.SingleClickListener
 import com.ashlikun.adapter.animation.BaseAnimation
 import androidx.lifecycle.Lifecycle
+import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.*
 
 /**
@@ -46,12 +47,12 @@ typealias OnSimpleItemLongClickListener<T> = (data: T) -> Boolean
 typealias AdapterConvert<T> = (holder: ViewHolder, t: T?) -> Unit
 
 abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
-        open var context: Context,
-        initDatas: MutableList<T>,
-        //创建ViewBinding的Class,与layoutId 二选一
-        open var bindingClass: Class<*>? = null,
-        //布局文件
-        open var layoutId: Int = DEFAULT_LAYOUT_ID
+    open var context: Context,
+    initDatas: MutableList<T>,
+    //创建ViewBinding的Class,与layoutId 二选一
+    open var bindingClass: Class<out ViewBinding>? = null,
+    //布局文件
+    open var layoutId: Int = DEFAULT_LAYOUT_ID
 
 ) : RecyclerView.Adapter<V>(), IHeaderAndFooter, LifecycleObserver, IStartPosition {
 
@@ -60,6 +61,8 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
         var DEFAULT_LAYOUT_ID = View.NO_ID
     }
 
+    override var footerSize = 0
+    override var headerSize = 0
 
     //暴力点击的延迟
     open var clickDelay = 500
@@ -153,10 +156,10 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
         return if (bindingClass != null) {
             //反射获取
             AdapterUtils.getViewBindingToClass(
-                    bindingClass,
-                    LayoutInflater.from(context),
-                    parent,
-                    false
+                bindingClass,
+                LayoutInflater.from(context),
+                parent,
+                false
             )
         } else null
     }
@@ -237,7 +240,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
 
     protected fun setListener(viewHolder: ViewHolder, viewType: Int) {
         if (!isEnabled(viewType)
-                || !viewHolder.itemView.isEnabled
+            || !viewHolder.itemView.isEnabled
         ) {
             return
         }
@@ -260,7 +263,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * 分发点击事件
      */
     protected open fun dispatchClick(
-            v: View, viewHolder: ViewHolder, viewType: Int
+        v: View, viewHolder: ViewHolder, viewType: Int
     ) {
         val position = getPosition(viewHolder)
         val d = getItemData(position)
@@ -281,7 +284,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * @param viewType
      */
     protected open fun dispatchLongClick(
-            v: View, viewHolder: ViewHolder, viewType: Int
+        v: View, viewHolder: ViewHolder, viewType: Int
     ): Boolean {
         val position = getPosition(viewHolder)
         val d = getItemData(position)
@@ -289,7 +292,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
             return if (onItemLongClick(viewType, recyclerView!!, v, d, position)) true
             else {
                 onItemLongClickListener?.invoke(viewType, recyclerView!!, v, d, position)
-                        ?: (onSimpleItemLongClickListener?.invoke(d) ?: false)
+                    ?: (onSimpleItemLongClickListener?.invoke(d) ?: false)
             }
         }
         return false
@@ -343,7 +346,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      */
     val lastPosition: Int
         get() = if (recyclerView?.layoutManager == null) RecyclerView.NO_POSITION else AdapterUtils.findLastVisiblePosition(
-                recyclerView!!.layoutManager
+            recyclerView!!.layoutManager
         )
 
     /**
@@ -351,7 +354,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      */
     val firstPosition: Int
         get() = if (recyclerView?.layoutManager == null) RecyclerView.NO_POSITION else AdapterUtils.findFirstVisibleItemPosition(
-                recyclerView!!.layoutManager
+            recyclerView!!.layoutManager
         )
 
     /**
@@ -363,34 +366,34 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
 
 
     open fun onItemLongClick(
-            viewType: Int,
-            parent: ViewGroup,
-            view: View,
-            data: T,
-            position: Int
+        viewType: Int,
+        parent: ViewGroup,
+        view: View,
+        data: T,
+        position: Int
     ): Boolean {
         return onItemLongClick(data)
     }
 
     open fun onItemLongClick(
-            data: T
+        data: T
     ): Boolean {
         return false
     }
 
     open fun onItemClick(
-            viewType: Int,
-            parent: ViewGroup,
-            view: View,
-            data: T,
-            position: Int
+        viewType: Int,
+        parent: ViewGroup,
+        view: View,
+        data: T,
+        position: Int
     ) {
         onItemClick(data)
     }
 
 
     open fun onItemClick(
-            data: T
+        data: T
     ) {
     }
 }

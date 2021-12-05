@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.view.View
 import com.ashlikun.adapter.recyclerview.CommonAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.ViewHolder
 import java.util.*
 
@@ -17,11 +18,16 @@ import java.util.*
  */
 
 abstract class ItemDraggableAdapter<T>(
-        override var context: Context,
-        override var layoutId: Int = View.NO_ID,
-        //创建ViewBinding的Class,与layoutId 二选一
-        override var bindingClass: Class<*>? = null, data: MutableList<T>)
-    : CommonAdapter<T>(context, layoutId, bindingClass, data), ItemTouchHelperAdapter {
+    override var context: Context,
+    override var layoutId: Int = View.NO_ID,
+    //创建ViewBinding的Class,与layoutId 二选一
+    override var bindingClass: Class<ViewBinding>? = null, datas: MutableList<T>
+) : CommonAdapter<T>(
+    context = context,
+    layoutId = layoutId,
+    bindingClass = bindingClass,
+    datas = datas
+), ItemTouchHelperAdapter {
 
     var onItemDragListener: OnItemDragListener? = null
     var onItemSwipeListener: OnItemSwipeListener? = null
@@ -49,7 +55,10 @@ abstract class ItemDraggableAdapter<T>(
         return d?.hashCode()?.toLong() ?: 0
     }
 
-    override fun onItemDragMoving(source: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+    override fun onItemDragMoving(
+        source: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ): Boolean {
         val from = getViewHolderPosition(source)
         val to = getViewHolderPosition(target)
         if (inRange(from) && inRange(to)) {
@@ -99,7 +108,13 @@ abstract class ItemDraggableAdapter<T>(
         }
     }
 
-    override fun onItemSwiping(canvas: Canvas, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, isCurrentlyActive: Boolean) {
+    override fun onItemSwiping(
+        canvas: Canvas,
+        viewHolder: RecyclerView.ViewHolder,
+        dX: Float,
+        dY: Float,
+        isCurrentlyActive: Boolean
+    ) {
         if (isItemSwipeEnable) {
             onItemSwipeListener?.onItemSwipeMoving(canvas, viewHolder, dX, dY, isCurrentlyActive)
         }
