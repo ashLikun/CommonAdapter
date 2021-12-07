@@ -1,6 +1,7 @@
 package com.ashlikun.adapter.recyclerview.multiltem
 
 import android.content.Context
+import android.view.View
 import com.ashlikun.adapter.recyclerview.CommonAdapter
 import androidx.annotation.LayoutRes
 import androidx.viewbinding.ViewBinding
@@ -18,24 +19,31 @@ import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
  */
 
 open class MultiItemCommonAdapter<T>(
-    override var context: Context,
-    datas: MutableList<T>,
-    //ItemType对应的binding 多个
-    open var bindingClasss: MutableMap<Int, Class<out ViewBinding>> = hashMapOf(),
-    //ItemType对应的LayoutId
-    open var layouts: MutableMap<Int, Int> = hashMapOf(),
-    //事件
-    override var bus: AdapterBus? = null,
-    //data对应的type
-    open var itemType: ((position: Int, data: T) -> Int)? = null,
-    //转换
-    override var convert: AdapterConvert<T>? = null
+        context: Context,
+        initDatas: List<T>? = null,
+        //事件
+        override var bus: AdapterBus? = null,
+        //data对应的type
+        open var itemType2: ((position: Int, data: T) -> Int)? = null,
+        open var itemType: ((data: T) -> Int)? = null,
+        //初始化的apply 便于执行其他代码
+        apply: (MultiItemCommonAdapter<T>.() -> Unit)? = null,
+        //转换
+        override var convert: AdapterConvert<T>? = null
 ) : CommonAdapter<T>(
-    context = context, datas = datas, bus = bus, convert = convert
+        context = context,
+        initDatas = initDatas,
+        apply = apply as (CommonAdapter<T>.() -> Unit)?
 ) {
+    //ItemType对应的binding 多个
+    open var bindingClasss: MutableMap<Int, Class<out ViewBinding>> = mutableMapOf()
+
+    //ItemType对应的LayoutId
+    open var layouts: MutableMap<Int, Int> = mutableMapOf()
+
 
     override fun getItemViewType(position: Int): Int {
-        var data: T = getItemData(position) ?: return super.getItemViewType(position)
+        var data = getItemData(position) ?: return super.getItemViewType(position)
         return getItemViewType(position, data)
     }
 
@@ -59,8 +67,8 @@ open class MultiItemCommonAdapter<T>(
         bindingClasss[viewType] = viewBindClass
     }
 
-    override fun getLayoutId(viewType: Int): Int {
-        return layouts[viewType] ?: TYPE_NOT_FOUND
+    override fun getLayoutId(viewType: Int): Int? {
+        return layouts[viewType]
     }
 
     override fun getBindClass(viewType: Int): Class<out ViewBinding>? {
@@ -86,10 +94,10 @@ open class MultiItemCommonAdapter<T>(
     }
 
     open fun getItemViewType(position: Int, data: T) =
-        itemType?.invoke(position, data) ?: throw RuntimeException("必须提供itemtype")
+            itemType2?.invoke(position, data) ?: itemType?.invoke(data)
+            ?: throw RuntimeException("必须提供itemtype")
 
     companion object {
-        const val TYPE_NOT_FOUND = -404
         const val DEFAULT_VIEW_TYPE = -0xff
     }
 }

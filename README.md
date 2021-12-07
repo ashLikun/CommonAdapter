@@ -39,11 +39,16 @@ dependencies {
             需要使用阿里巴巴的库com.alibaba.android:vlayout:版本
 
             //普通padater
-             recyclerView.setAdapter(new CommonAdapter<String>(this, R.layout.item_view, listDatas) {
-                 @Override
-                 public void convert(ViewHolder holder, String o) {
-                 }
-             });
+            binding.recyclerView.adapter = CommonAdapter(this, neibuData,
+                           bindingClass = ItemViewBinding::class.java) { holder, t ->
+                       holder.binding<ItemViewBinding>().run {
+                           textView.text = t?.name
+                       }
+                   }.apply {
+                       onItemClickListener = { viewType, parent, view, data, position ->
+                           Log.e("onItemClickListener", data.name)
+                       }
+                   }
              //普通的多种布局
               recyclerView.setAdapter(new MultiItemCommonAdapter<String>(this, listDatas) {
                          @Override
@@ -90,6 +95,34 @@ dependencies {
                               holder.setText(R.id.textView, title);
                           }
                       });
+              //Vlayout
+               data.forEach {
+                          if (it.type == "type3") {
+                              help.adapter.addAdapter(SingAdapter(this, it.datas,
+                                      layoutHelper = GridLayoutHelper(3).apply { setAutoExpand(false) },
+                                      bindingClass = ItemViewBinding::class.java) { holder, t ->
+                                  holder.binding<ItemViewBinding>().run {
+                                      textView.text = t?.name
+                                  }
+                              }.apply {
+                                  onItemClickListener = { viewType, parent, view, data, position ->
+                                      Toast.makeText(this@VLayoutActivity, data.name, Toast.LENGTH_LONG).show()
+                                  }
+                              })
+                          } else {
+                              help.adapter.addAdapter(SingAdapter(this, it.datas,
+                                      layoutHelper = LinearLayoutHelper().apply { },
+                                      bindingClass = ItemViewBinding::class.java) { holder, t ->
+                                  holder.binding<ItemViewBinding>().run {
+                                      textView.text = t?.name
+                                  }
+                              }.apply {
+                                  onItemClickListener = { viewType, parent, view, data, position ->
+                                      Toast.makeText(this@VLayoutActivity, data.name, Toast.LENGTH_LONG).show()
+                                  }
+                              })
+                          }
+                      }
 
             //使用数据绑定
                    //普通的

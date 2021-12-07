@@ -23,6 +23,7 @@
  */
 package com.ashlikun.adapter.recyclerview.vlayout
 
+import android.util.Log
 import android.util.Pair
 import com.alibaba.android.vlayout.VirtualLayoutManager
 import com.alibaba.android.vlayout.VirtualLayoutAdapter
@@ -33,6 +34,7 @@ import com.alibaba.android.vlayout.Cantor
 import com.alibaba.android.vlayout.LayoutHelper
 import com.ashlikun.adapter.AdapterUtils
 import com.ashlikun.adapter.ViewHolder
+import com.ashlikun.adapter.recyclerview.IHeaderAndFooter
 import java.lang.UnsupportedOperationException
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
@@ -51,16 +53,18 @@ import kotlin.math.min
  * transitive = true
  * }
  */
-class MultipleAdapter constructor(layoutManager: VirtualLayoutManager, hasConsistItemType: Boolean = false, threadSafe: Boolean = false)
-    : VirtualLayoutAdapter<RecyclerView.ViewHolder?>(layoutManager) {
+open class MultipleAdapter(layoutManager: VirtualLayoutManager, hasConsistItemType: Boolean = false, threadSafe: Boolean = false)
+    : VirtualLayoutAdapter<RecyclerView.ViewHolder?>(layoutManager), IHeaderAndFooter {
+    override var footerSize = 0
+    override var headerSize = 0
     var recyclerView: RecyclerView? = null
     private var mIndexGen: AtomicInteger? = null
     private var mIndex = 0
     private val mHasConsistItemType: Boolean
-    private val mItemTypeAry = SparseArray<SingAdapter<Any>>()
-    private val mAdapters: MutableList<Pair<AdapterDataObserver, SingAdapter<Any>>> = ArrayList()
+    private val mItemTypeAry = SparseArray<SingAdapter<*>>()
+    private val mAdapters = mutableListOf<Pair<AdapterDataObserver, SingAdapter<*>>>()
     private var mTotal = 0
-    private val mIndexAry = SparseArray<Pair<AdapterDataObserver, SingAdapter<Any>>>()
+    private val mIndexAry = SparseArray<Pair<AdapterDataObserver, SingAdapter<*>>>()
 
     /**
      * 防止Cantor(康托)算法溢出int和long最大值
@@ -100,10 +104,7 @@ class MultipleAdapter constructor(layoutManager: VirtualLayoutManager, hasConsis
     override fun getItemCount() = mTotal
 
     /**
-     * Big integer of itemType returned by delegated adapter may lead to failed
-     *
-     * @param position item position
-     * @return integer represent item view type
+     * 委托适配器返回的itemType的大整数可能导致失败
      */
     override fun getItemViewType(position: Int): Int {
         val p = findAdapter(position) ?: return RecyclerView.INVALID_TYPE
@@ -125,9 +126,6 @@ class MultipleAdapter constructor(layoutManager: VirtualLayoutManager, hasConsis
     /**
      * 获取adapter转换成对应真实的ViewType
      * 需要在addadapter后才能调用
-     *
-     * @param adapter
-     * @return
      */
     fun getAdapterItemViewType(adapter: SingAdapter<*>?): Int {
         if (adapter == null) {
@@ -150,9 +148,6 @@ class MultipleAdapter constructor(layoutManager: VirtualLayoutManager, hasConsis
     /**
      * 防止Cantor(康托)算法溢出int和long最大值
      * 这里从新从1开始赋值
-     *
-     * @param cantor
-     * @return
      */
     private fun getCantorToViewType(cantor: Long): Int {
         if (mCantorTemp.contains(cantor)) {
@@ -206,14 +201,14 @@ class MultipleAdapter constructor(layoutManager: VirtualLayoutManager, hasConsis
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         this.recyclerView = recyclerView
-        for (p in mAdapters) {
-            p.second?.onAttachedToRecyclerView(recyclerView)
+        mAdapters.forEach {
+            it.second?.onAttachedToRecyclerView(recyclerView)
         }
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        for (p in mAdapters) {
-            p.second?.onDetachedFromRecyclerView(recyclerView)
+        mAdapters.forEach {
+            it.second?.onDetachedFromRecyclerView(recyclerView)
         }
         this.recyclerView = null
     }
@@ -226,27 +221,28 @@ class MultipleAdapter constructor(layoutManager: VirtualLayoutManager, hasConsis
         throw UnsupportedOperationException("DelegateAdapter doesn't support setLayoutHelpers directly")
     }
 
-    fun setAdapters(adapters: List<SingAdapter<Any>>) {
+    fun setAdapters(adapters: List<SingAdapter<*>>) {
         clear()
-        val helpers: MutableList<LayoutHelper> = LinkedList()
+        val helpers = mutableListOf<LayoutHelper>()
         var hasStableIds = true
         mTotal = 0
-        var pair: Pair<AdapterDataObserver, SingAdapter<Any>>
+        var pair: Pair<AdapterDataObserver, SingAdapter<*>>
         for (adapter in adapters) {
             // every adapter has an unique index id
-            val observer = AdapterDataObserver(mTotal, if (mIndexGen == null) mIndex++ else mIndexGen!!.incrementAndGet())
+            val observer = AdapterDataObserver(mTotal, mIndexGen?.incrementAndGet() ?: mIndex++)
             adapter.registerAdapterDataObserver(observer)
             hasStableIds = hasStableIds && adapter.hasStableIds()
-            val helper = adapter.layoutHelper
-            helper.itemCount = adapter.itemCount
-            mTotal += helper.itemCount
-            helpers.add(helper)
+            adapter.layoutHelper.itemCount = adapter.itemCount
+            //这里一定得获取layouHelper的
+            mTotal += adapter.layoutHelper.itemCount
+            helpers.add(adapter.layoutHelper)
             pair = Pair.create(observer, adapter)
             mIndexAry.put(observer.index, pair)
-            //设置附属到recycle
+            //设置附属到recyclerView
             if (recyclerView != null && adapter.recyclerView == null) {
                 adapter.onAttachedToRecyclerView(recyclerView!!)
             }
+            adapter.getStartPosition()
             mAdapters.add(pair)
         }
         if (!hasObservers()) {
@@ -255,18 +251,12 @@ class MultipleAdapter constructor(layoutManager: VirtualLayoutManager, hasConsis
         super.setLayoutHelpers(helpers)
     }
 
-    /**
-     * Add adapters in `position`
-     *
-     * @param position the index where adapters added
-     * @param adapters adapters
-     */
-    fun addAdapters(adapters: List<SingAdapter<Any>>, position: Int = mAdapters.size) {
+    fun addAdapters(adapters: List<SingAdapter<*>>, position: Int = mAdapters.size) {
         if (adapters.isEmpty()) {
             return
         }
         var position = min(max(position, 0), mAdapters.size)
-        val newAdapter: MutableList<SingAdapter<Any>> = ArrayList()
+        val newAdapter: MutableList<SingAdapter<*>> = ArrayList()
         mAdapters.forEach {
             newAdapter.add(it.second)
         }
@@ -278,7 +268,7 @@ class MultipleAdapter constructor(layoutManager: VirtualLayoutManager, hasConsis
     }
 
 
-    fun addAdapter(adapter: SingAdapter<Any>, position: Int = mAdapters.size) {
+    fun addAdapter(adapter: SingAdapter<*>, position: Int = mAdapters.size) {
         addAdapters(listOf(adapter), position)
     }
 
@@ -288,19 +278,19 @@ class MultipleAdapter constructor(layoutManager: VirtualLayoutManager, hasConsis
 
     fun removeAdapter(adapterIndex: Int) = removeAdapter(mAdapters.getOrNull(adapterIndex)?.second)
 
-    fun removeAdapter(targetAdapter: SingAdapter<Any>?) {
+    fun removeAdapter(targetAdapter: SingAdapter<*>?) {
         if (targetAdapter == null) {
             return
         }
         removeAdapters(listOf(targetAdapter))
     }
 
-    fun removeAdapters(targetAdapters: List<SingAdapter<Any>>) {
+    fun removeAdapters(targetAdapters: List<SingAdapter<*>>) {
         if (targetAdapters.isEmpty()) {
             return
         }
         val helpers = LinkedList(super.getLayoutHelpers())
-        val newAdapter = mutableListOf<Pair<AdapterDataObserver, SingAdapter<Any>>>()
+        val newAdapter = mutableListOf<Pair<AdapterDataObserver, SingAdapter<*>>>()
         mAdapters.filterTo(newAdapter) { pair ->
             val theOther = pair.second
             val contains = targetAdapters.contains(theOther)
@@ -345,7 +335,7 @@ class MultipleAdapter constructor(layoutManager: VirtualLayoutManager, hasConsis
         return absoultePosition - p.first.startPosition
     }
 
-    private fun findAdapter(position: Int): Pair<AdapterDataObserver, SingAdapter<Any>>? {
+    private fun findAdapter(position: Int): Pair<AdapterDataObserver, SingAdapter<*>>? {
         val count = mAdapters.size
         if (count == 0) {
             return null
@@ -353,7 +343,7 @@ class MultipleAdapter constructor(layoutManager: VirtualLayoutManager, hasConsis
         var s = 0
         var e = count - 1
         var m: Int
-        var rs: Pair<AdapterDataObserver, SingAdapter<Any>>? = null
+        var rs: Pair<AdapterDataObserver, SingAdapter<*>>? = null
 
         // binary search range
         while (s <= e) {
@@ -377,7 +367,7 @@ class MultipleAdapter constructor(layoutManager: VirtualLayoutManager, hasConsis
         return if (rs == null) -1 else mAdapters.indexOf(rs)
     }
 
-    fun findAdapterByIndex(index: Int): SingAdapter<Any>? {
+    fun findAdapterByIndex(index: Int): SingAdapter<*>? {
         return mIndexAry[index]?.second
     }
 
@@ -412,7 +402,7 @@ class MultipleAdapter constructor(layoutManager: VirtualLayoutManager, hasConsis
      * @param position
      * @return
      */
-    fun findAdapterByPosition(position: Int): SingAdapter<Any>? {
+    fun findAdapterByPosition(position: Int): SingAdapter<*>? {
         val a = findAdapter(position)
         return a?.second
     }
@@ -420,7 +410,7 @@ class MultipleAdapter constructor(layoutManager: VirtualLayoutManager, hasConsis
     /**
      * 获取这种类型的adapter
      */
-    fun findAdapterByViewType(viewType: Any?): SingAdapter<Any>? {
+    fun findAdapterByViewType(viewType: Any?): SingAdapter<*>? {
         if (viewType == null) {
             return null
         }
@@ -456,6 +446,11 @@ class MultipleAdapter constructor(layoutManager: VirtualLayoutManager, hasConsis
 
     inner class AdapterDataObserver(var startPosition: Int, index: Int) : RecyclerView.AdapterDataObserver() {
         var index = -1
+
+        //加上头的位置
+        val startPositionInside
+            get() = startPosition + headerSize
+
         fun updateStartPositionAndIndex(startPosition: Int, index: Int) {
             this.startPosition = startPosition
             this.index = index

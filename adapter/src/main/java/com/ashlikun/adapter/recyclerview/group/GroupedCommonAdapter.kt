@@ -9,9 +9,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import android.view.ViewGroup
 import android.view.View
 import android.widget.FrameLayout
-import androidx.annotation.LayoutRes
-import androidx.viewbinding.ViewBinding
-import com.ashlikun.adapter.R
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.AdapterConvert
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
@@ -30,30 +27,28 @@ typealias GroupChildAdapterConvert<T> = (holder: ViewHolder?, t: T?, groupPositi
  * 因为当分组列表发生变化时，需要及时更新分组列表的组结构[GroupedCommonAdapter.mStructures]
  */
 abstract class GroupedCommonAdapter<T>(
-    override var context: Context,
-    datas: MutableList<T>,
-    //ItemType对应的binding 多个
-    override var bindingClasss: MutableMap<Int, Class<out ViewBinding>> = hashMapOf(),
-    //ItemType对应的LayoutId
-    override var layouts: MutableMap<Int, Int> = hashMapOf(),
-    //事件
-    override var bus: AdapterBus? = null,
-    open var onHeaderClick: OnHeaderFooterClick? = null,
-    open var onFooterClick: OnHeaderFooterClick? = null,
-    open var onChildClick: OnChildClick? = null,
-    //获取子的大小
-    open var getChildrenCount: ((groupPosition: Int, t: T?) -> Int)? = null,
-    //转换
-    open var convertHeader: GroupAdapterConvert<T>? = null,
-    open var convertFoot: GroupAdapterConvert<T>? = null,
-    open var convertChild: GroupChildAdapterConvert<T>? = null
+        context: Context,
+        initDatas: List<T>? = null,
+        //事件
+        override var bus: AdapterBus? = null,
+        open var onHeaderClick: OnHeaderFooterClick? = null,
+        open var onFooterClick: OnHeaderFooterClick? = null,
+        open var onChildClick: OnChildClick? = null,
+        //获取子的大小
+        open var getChildrenCount: ((groupPosition: Int, t: T?) -> Int)? = null,
+        //转换
+        open var convertHeader: GroupAdapterConvert<T>? = null,
+        open var convertFoot: GroupAdapterConvert<T>? = null,
+        open var convertChild: GroupChildAdapterConvert<T>? = null,
+        //初始化的apply 便于执行其他代码
+        apply: (GroupedCommonAdapter<T>.() -> Unit)? = null,
+        //转换
+        override var convert: AdapterConvert<T>? = null
 ) : MultiItemCommonAdapter<T>(
-    context = context,
-    datas = datas,
-    bindingClasss = bindingClasss,
-    layouts = layouts,
-    bus = bus,
-    itemType = { position, data -> 0 }
+        context = context,
+        initDatas = initDatas,
+        itemType = { data -> 0 },
+        apply = apply as (MultiItemCommonAdapter<T>.() -> Unit)?
 ) {
     //保存分组列表的组结构
     protected var mStructures = ArrayList<GroupStructure>()
@@ -75,10 +70,10 @@ abstract class GroupedCommonAdapter<T>(
                 TYPE_FOOTER -> convertFoot?.invoke(holder, t, groupPosition)
                 TYPE_CHILD ->
                     convertChild?.invoke(
-                        holder,
-                        t,
-                        groupPosition,
-                        getChildPositionForPosition(groupPosition, holder.positionInside)
+                            holder,
+                            t,
+                            groupPosition,
+                            getChildPositionForPosition(groupPosition, holder.positionInside)
                     )
             }
         }
@@ -99,8 +94,8 @@ abstract class GroupedCommonAdapter<T>(
         //处理StaggeredGridLayout，保证组头和组尾占满一行。
         if (holder.isStaggeredGridLayout) {
             if (judgePositionToType(holder.positionInside) == TYPE_HEADER || judgePositionToType(
-                    holder.positionInside
-                ) == TYPE_FOOTER
+                            holder.positionInside
+                    ) == TYPE_FOOTER
             ) {
                 val p = holder.itemView.layoutParams as StaggeredGridLayoutManager.LayoutParams
                 p.isFullSpan = true
@@ -129,9 +124,9 @@ abstract class GroupedCommonAdapter<T>(
         if (viewType == TYPE_HEADER) {
             onHeaderClick?.apply {
                 val gPosition =
-                    if (parent is FrameLayout) groupPosition else getGroupPositionForPosition(
-                        position
-                    )
+                        if (parent is FrameLayout) groupPosition else getGroupPositionForPosition(
+                                position
+                        )
                 if (gPosition >= 0 && gPosition < mStructures.size) {
                     invoke(this@GroupedCommonAdapter, gPosition)
                 }
@@ -209,17 +204,17 @@ abstract class GroupedCommonAdapter<T>(
             if (i < structures.size) {
                 structure = structures[i]
                 structure.init(
-                    hasHeader(i, itemData),
-                    hasFooter(i, itemData),
-                    startPosition,
-                    getChildrenCount(i, itemData)
+                        hasHeader(i, itemData),
+                        hasFooter(i, itemData),
+                        startPosition,
+                        getChildrenCount(i, itemData)
                 )
             } else {
                 structure = GroupStructure(
-                    hasHeader(i, itemData),
-                    hasFooter(i, itemData),
-                    startPosition,
-                    getChildrenCount(i, itemData)
+                        hasHeader(i, itemData),
+                        hasFooter(i, itemData),
+                        startPosition,
+                        getChildrenCount(i, itemData)
                 )
             }
             mStructures.add(structure)
@@ -666,7 +661,7 @@ abstract class GroupedCommonAdapter<T>(
     open fun hasFooter(groupPosition: Int, itemData: T?) = false
 
     open fun getChildrenCount(groupPosition: Int, t: T?) =
-        getChildrenCount?.invoke(groupPosition, t) ?: throw RuntimeException("必须提供子项数量")
+            getChildrenCount?.invoke(groupPosition, t) ?: throw RuntimeException("必须提供子项数量")
 
 
     internal inner class GroupDataObserver : RecyclerView.AdapterDataObserver() {

@@ -22,10 +22,5 @@ interface ItemTouchHelperAdapter {
     fun onItemSwiped(viewHolder: RecyclerView.ViewHolder)
     fun onItemSwiping(canvas: Canvas, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, isCurrentlyActive: Boolean)
 
-    /**
-     * 这个holder是不是内部自己创建的，
-     *
-     * @return true 没有任何触摸事件
-     */
     fun isViewCreateByAdapter(viewHolder: RecyclerView.ViewHolder): Boolean
 }

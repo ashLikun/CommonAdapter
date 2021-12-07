@@ -1,15 +1,20 @@
 package com.ashlikun.adapter.recyclerview.vlayout
 
 import android.content.Context
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.alibaba.android.vlayout.LayoutHelper
+import com.alibaba.android.vlayout.layout.LinearLayoutHelper
 import com.alibaba.android.vlayout.layout.MarginLayoutHelper
 import com.alibaba.android.vlayout.layout.SingleLayoutHelper
 import com.ashlikun.adapter.recyclerview.AdapterConvert
 import com.ashlikun.adapter.recyclerview.CommonAdapter
+import com.ashlikun.adapter.recyclerview.multiltem.MultipleSingAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
+import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterStyle
 import kotlin.math.abs
+import kotlin.reflect.KClass
 
 /**
  * 作者　　: 李坤
@@ -19,34 +24,38 @@ import kotlin.math.abs
  *
  * 功能介绍：VLayout的ItemAdapter
  */
-abstract class SingAdapter<T>(
-    override var context: Context,
-    datas: MutableList<T>,
-    //创建ViewBinding的Class,与layoutId 二选一
-    override var bindingClass: Class<out ViewBinding>? = null,
-    //布局文件
-    override var layoutId: Int = DEFAULT_LAYOUT_ID,
-    //事件
-    override var bus: AdapterBus? = null,
-    //布局
-    open var layoutHelper: LayoutHelper,
-    //ViewType
-    open var viewType: Any = this::class,
-    //转换
-    override var convert: AdapterConvert<T>? = null
+open class SingAdapter<T>(
+        context: Context,
+        initDatas: List<T>? = null,
+        //创建ViewBinding的Class,与layoutId 二选一
+        override val bindingClass: Class<out ViewBinding>? = null,
+        //布局文件
+        override val layoutId: Int = DEFAULT_LAYOUT_ID,
+        //事件
+        override var bus: AdapterBus? = null,
+        //布局
+        var layoutHelper: LayoutHelper = LinearLayoutHelper(),
+        //布局，优先
+        var layoutStyle: AdapterStyle? = null,
+        //ViewType
+        open var viewType: Any = this::class,
+        //初始化的apply 便于执行其他代码
+        apply: (SingAdapter<T>.() -> Unit)? = null,
+        //转换
+        override var convert: AdapterConvert<T>? = null
 ) : CommonAdapter<T>(
-    context = context,
-    datas = datas,
-    bindingClass = bindingClass,
-    layoutId = layoutId,
-    bus = bus,
-    convert = convert
+        context = context,
+        initDatas = initDatas,
+        apply = apply as (CommonAdapter<T>.() -> Unit)?
 ) {
 
     init {
+        layoutStyle?.run {
+            layoutHelper = createHelper()
+        }
         //赋值MarginLayoutHelper
         if (layoutHelper is MarginLayoutHelper) {
-            style?.bindHelperUI(context, layoutHelper!!)
+            style?.bindHelperUI(layoutHelper!!)
         }
     }
 
@@ -75,7 +84,7 @@ abstract class SingAdapter<T>(
      *
      * @return
      */
-    override fun getStartPosition() = observer?.startPosition ?: super.getStartPosition()
+    override fun getStartPosition() = observer?.startPositionInside ?: super.getStartPosition()
 
     /**
      * 在Vlayout里面第几个
@@ -87,10 +96,10 @@ abstract class SingAdapter<T>(
      * 这2个方法是父Adapter onBindViewHolder回掉的
      */
     open fun onBindViewHolderWithOffset(
-        holder: RecyclerView.ViewHolder?,
-        position: Int,
-        offsetTotal: Int,
-        payloads: List<Any?>?
+            holder: RecyclerView.ViewHolder?,
+            position: Int,
+            offsetTotal: Int,
+            payloads: List<Any?>?
     ) {
         onBindViewHolderWithOffset(holder, position, offsetTotal)
     }
@@ -99,9 +108,9 @@ abstract class SingAdapter<T>(
      * 这2个方法是父Adapter onBindViewHolder回掉的
      */
     open protected fun onBindViewHolderWithOffset(
-        holder: RecyclerView.ViewHolder?,
-        position: Int,
-        offsetTotal: Int
+            holder: RecyclerView.ViewHolder?,
+            position: Int,
+            offsetTotal: Int
     ) {
     }
 
@@ -110,8 +119,8 @@ abstract class SingAdapter<T>(
 
 
     override fun getItemCount(): Int {
-        return if (layoutHelper != null && layoutHelper is SingleLayoutHelper) {
-            layoutHelper!!.itemCount
+        return if (layoutHelper.itemCount != 0) {
+            layoutHelper.itemCount
         } else {
             super.getItemCount()
         }

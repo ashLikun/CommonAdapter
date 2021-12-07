@@ -16,6 +16,7 @@ import com.ashlikun.adapter.animation.BaseAnimation
 import androidx.lifecycle.Lifecycle
 import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.*
+import kotlin.reflect.KClass
 
 /**
  * 作者　　: 李坤
@@ -35,26 +36,30 @@ import com.ashlikun.adapter.*
  *
  *
  * 3：动画[BaseAdapter.getAdapterAnimHelp][BaseAdapter.setCustomAnimation]  -> [AdapterAnimHelp]
- * 4:[OnItemClickListener],[OnItemLongClickListener]
+ * 4:[OnItemClick],[OnItemLongClick]
  * 5:前景点击效果水波纹
  * 6:灵活操作数据[DataHandle]
  * 7:布局可用XML，也可实现[BaseAdapter.createLayout]代码生成
  */
-typealias OnItemClickListener<T> = (viewType: Int, parent: ViewGroup, view: View, data: T, position: Int) -> Unit
-typealias OnItemLongClickListener<T> = (viewType: Int, parent: ViewGroup, view: View, data: T, position: Int) -> Boolean
-typealias OnSimpleItemClickListener<T> = (data: T) -> Unit
-typealias OnSimpleItemLongClickListener<T> = (data: T) -> Boolean
+typealias OnItemClickX<T> = (viewType: Int, parent: ViewGroup, view: View, data: T, position: Int) -> Unit
+typealias OnItemLongClickX<T> = (viewType: Int, parent: ViewGroup, view: View, data: T, position: Int) -> Boolean
+typealias OnItemClick<T> = (data: T) -> Unit
+typealias OnItemLongClick<T> = (data: T) -> Boolean
 typealias AdapterConvert<T> = (holder: ViewHolder, t: T?) -> Unit
 
+/**
+ * 设计一个基类时，应该避免在构造函数、属性初始化器以及 init 块中使用 open 成员。
+ */
 abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
-    open var context: Context,
-    initDatas: MutableList<T>,
-    //创建ViewBinding的Class,与layoutId 二选一
-    open var bindingClass: Class<out ViewBinding>? = null,
-    //布局文件
-    open var layoutId: Int = DEFAULT_LAYOUT_ID
+        context: Context,
+        initDatas: List<T>? = null,
+        //创建ViewBinding的Class,与layoutId 二选一
+        open val bindingClass: Class<out ViewBinding>? = null,
+        //布局文件
+        open val layoutId: Int = DEFAULT_LAYOUT_ID
 
 ) : RecyclerView.Adapter<V>(), IHeaderAndFooter, LifecycleObserver, IStartPosition {
+    var context: Context = context
 
     companion object {
         @JvmField
@@ -68,15 +73,15 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     open var clickDelay = 500
 
     //数据处理
-    open var dataHandle = DataHandle(initDatas, this)
+    open var dataHandle = DataHandle(initDatas?.toMutableList() ?: mutableListOf(), this)
 
     //点击事件
-    open var onItemClickListener: OnItemClickListener<T>? = null
-    open var onSimpleItemClickListener: OnSimpleItemClickListener<T>? = null
+    open var onItemClick: OnItemClick<T>? = null
+    open var onItemClickX: OnItemClickX<T>? = null
 
     //长按事件
-    open var onItemLongClickListener: OnItemLongClickListener<T>? = null
-    open var onSimpleItemLongClickListener: OnSimpleItemLongClickListener<T>? = null
+    open var onItemLongClick: OnItemLongClick<T>? = null
+    open var onItemLongClickX: OnItemLongClickX<T>? = null
 
     //获取动画帮助类
     open var adapterAnimHelp = AdapterAnimHelp(this)
@@ -115,17 +120,6 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     abstract fun convert(holder: V, t: T?)
 
     /**
-     * 获取布局
-     */
-    open fun getLayoutId(viewType: Int) = layoutId
-
-
-    /**
-     * 获取布局 ViewBindClass
-     */
-    open fun getBindClass(viewType: Int) = bindingClass
-
-    /**
      * recycleView的局部刷新
      *
      * @param payloads 一定不为null
@@ -134,6 +128,18 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     fun convert(holder: V, t: T?, payloads: List<Any?>?): Boolean {
         return false
     }
+
+    /**
+     * 获取布局
+     */
+    open fun getLayoutId(viewType: Int): Int? = layoutId
+
+
+    /**
+     * 获取布局 ViewBindClass
+     */
+    open fun getBindClass(viewType: Int) = bindingClass
+
 
     /**
      * 获取开始的position
@@ -152,14 +158,14 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      *
      * @return
      */
-    open fun createViewBinding(parent: ViewGroup, bindingClass: Class<*>?, viewType: Int): Any? {
+    open fun createViewBinding(parent: ViewGroup, bindingClass: Class<out ViewBinding>?, viewType: Int): Any? {
         return if (bindingClass != null) {
             //反射获取
             AdapterUtils.getViewBindingToClass(
-                bindingClass,
-                LayoutInflater.from(context),
-                parent,
-                false
+                    bindingClass,
+                    LayoutInflater.from(context),
+                    parent,
+                    false
             )
         } else null
     }
@@ -179,7 +185,8 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * 不可从写
      */
     fun createRoot(parent: ViewGroup, viewType: Int): CreateView {
-        val view = createLayout(parent, getLayoutId(viewType), viewType)
+        val vId = getLayoutId(viewType)
+        val view = if (vId != null) createLayout(parent, vId, viewType) else null
         var viewBinding: Any? = null
         if (view == null) {
             //调用创建ViewBinding
@@ -197,10 +204,6 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
         return dataHandle.itemCount
     }
 
-
-    protected fun getPosition(viewHolder: ViewHolder): Int {
-        return viewHolder.positionInside
-    }
 
     /**
      * 是否可以点击
@@ -239,8 +242,10 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     open fun getItemData(position: Int) = dataHandle.getItemData(position)
 
     protected fun setListener(viewHolder: ViewHolder, viewType: Int) {
+        //更新监听
+        viewHolder.iStartPosition = this
         if (!isEnabled(viewType)
-            || !viewHolder.itemView.isEnabled
+                || !viewHolder.itemView.isEnabled
         ) {
             return
         }
@@ -263,15 +268,15 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * 分发点击事件
      */
     protected open fun dispatchClick(
-        v: View, viewHolder: ViewHolder, viewType: Int
+            v: View, viewHolder: ViewHolder, viewType: Int
     ) {
-        val position = getPosition(viewHolder)
+        val position = viewHolder.positionInside
         val d = getItemData(position)
         if (d != null && recyclerView != null) {
             //事件之前判断是否有事件总线
             onItemClick(viewType, recyclerView!!, v, d, position)
-            onItemClickListener?.invoke(viewType, recyclerView!!, v, d, position)
-            onSimpleItemClickListener?.invoke(d)
+            onItemClick?.invoke(d)
+            onItemClickX?.invoke(viewType, recyclerView!!, v, d, position)
         }
     }
 
@@ -284,15 +289,16 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * @param viewType
      */
     protected open fun dispatchLongClick(
-        v: View, viewHolder: ViewHolder, viewType: Int
+            v: View, viewHolder: ViewHolder, viewType: Int
     ): Boolean {
-        val position = getPosition(viewHolder)
+        val position = viewHolder.positionInside
         val d = getItemData(position)
         if (d != null && recyclerView != null) {
             return if (onItemLongClick(viewType, recyclerView!!, v, d, position)) true
             else {
-                onItemLongClickListener?.invoke(viewType, recyclerView!!, v, d, position)
-                    ?: (onSimpleItemLongClickListener?.invoke(d) ?: false)
+                onItemLongClick?.invoke(d)
+                        ?: (onItemLongClickX?.invoke(viewType, recyclerView!!, v, d, position)
+                                ?: false)
             }
         }
         return false
@@ -346,7 +352,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      */
     val lastPosition: Int
         get() = if (recyclerView?.layoutManager == null) RecyclerView.NO_POSITION else AdapterUtils.findLastVisiblePosition(
-            recyclerView!!.layoutManager
+                recyclerView?.layoutManager!!
         )
 
     /**
@@ -354,7 +360,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      */
     val firstPosition: Int
         get() = if (recyclerView?.layoutManager == null) RecyclerView.NO_POSITION else AdapterUtils.findFirstVisibleItemPosition(
-            recyclerView!!.layoutManager
+                recyclerView!!.layoutManager
         )
 
     /**
@@ -366,34 +372,34 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
 
 
     open fun onItemLongClick(
-        viewType: Int,
-        parent: ViewGroup,
-        view: View,
-        data: T,
-        position: Int
+            viewType: Int,
+            parent: ViewGroup,
+            view: View,
+            data: T,
+            position: Int
     ): Boolean {
         return onItemLongClick(data)
     }
 
     open fun onItemLongClick(
-        data: T
+            data: T
     ): Boolean {
         return false
     }
 
     open fun onItemClick(
-        viewType: Int,
-        parent: ViewGroup,
-        view: View,
-        data: T,
-        position: Int
+            viewType: Int,
+            parent: ViewGroup,
+            view: View,
+            data: T,
+            position: Int
     ) {
         onItemClick(data)
     }
 
 
     open fun onItemClick(
-        data: T
+            data: T
     ) {
     }
 }

@@ -7,7 +7,9 @@ import com.ashlikun.adapter.recyclerview.CommonAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.ViewHolder
+import com.ashlikun.adapter.recyclerview.AdapterConvert
 import java.util.*
+import kotlin.reflect.KClass
 
 /**
  * @author　　: 李坤
@@ -17,25 +19,32 @@ import java.util.*
  * 功能介绍：实现拖拽功能的adapter
  */
 
-abstract class ItemDraggableAdapter<T>(
-    override var context: Context,
-    override var layoutId: Int = View.NO_ID,
-    //创建ViewBinding的Class,与layoutId 二选一
-    override var bindingClass: Class<out ViewBinding>? = null, datas: MutableList<T>
+open class ItemDraggableAdapter<T>(
+        context: Context,
+        initDatas: List<T>? = null,
+        //创建ViewBinding的Class,与layoutId 二选一
+        override var bindingClass: Class<out ViewBinding>? = null,
+        override var layoutId: Int = View.NO_ID,
+        //初始化的apply 便于执行其他代码
+        apply: (ItemDraggableAdapter<T>.() -> Unit)? = null,
+        /**
+         * 这个holder是不是内部自己创建的，
+         * @return true 没有任何触摸事件
+         */
+        open var isViewCreateByAdapter: Boolean = false,
+        //转换
+        override var convert: AdapterConvert<T>? = null
 ) : CommonAdapter<T>(
-    context = context,
-    layoutId = layoutId,
-    bindingClass = bindingClass,
-    datas = datas
+        context = context,
+        initDatas = initDatas,
+        apply = apply as (CommonAdapter<T>.() -> Unit)?
 ), ItemTouchHelperAdapter {
 
     var onItemDragListener: OnItemDragListener? = null
     var onItemSwipeListener: OnItemSwipeListener? = null
+    override var isItemSwipeEnable = false;
+    override var isItemDraggable = false;
 
-    init {
-        isItemDraggable = false
-        isItemDraggable = false
-    }
 
     fun getViewHolderPosition(viewHolder: RecyclerView.ViewHolder): Int {
         return if (viewHolder is ViewHolder) {
@@ -56,8 +65,8 @@ abstract class ItemDraggableAdapter<T>(
     }
 
     override fun onItemDragMoving(
-        source: RecyclerView.ViewHolder,
-        target: RecyclerView.ViewHolder
+            source: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
     ): Boolean {
         val from = getViewHolderPosition(source)
         val to = getViewHolderPosition(target)
@@ -109,16 +118,18 @@ abstract class ItemDraggableAdapter<T>(
     }
 
     override fun onItemSwiping(
-        canvas: Canvas,
-        viewHolder: RecyclerView.ViewHolder,
-        dX: Float,
-        dY: Float,
-        isCurrentlyActive: Boolean
+            canvas: Canvas,
+            viewHolder: RecyclerView.ViewHolder,
+            dX: Float,
+            dY: Float,
+            isCurrentlyActive: Boolean
     ) {
         if (isItemSwipeEnable) {
             onItemSwipeListener?.onItemSwipeMoving(canvas, viewHolder, dX, dY, isCurrentlyActive)
         }
     }
+
+    override fun isViewCreateByAdapter(viewHolder: RecyclerView.ViewHolder) = isViewCreateByAdapter
 
     private fun inRange(position: Int): Boolean {
         return position >= 0 && position < dataHandle.itemCount

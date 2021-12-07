@@ -13,7 +13,7 @@ import java.util.ArrayList
  */
 
 class DataHandle<T>(
-    var data: MutableList<T>, var adapter: BaseAdapter<*, *>
+        var data: MutableList<T>, var adapter: BaseAdapter<*, *>
 ) {
     val itemCount: Int
         get() = data.size
@@ -53,6 +53,15 @@ class DataHandle<T>(
      */
     fun addDatas(datas: List<T>?, isNotify: Boolean = false) {
         addDatas(datas, true, isNotify)
+    }
+
+    /**
+     * 添加数据
+     *
+     * @param isNotify 是否通知适配器刷新
+     */
+    fun addDatas(data: T, isNotify: Boolean = false) {
+        addDatas(listOf(data), true, isNotify)
     }
 
     /**

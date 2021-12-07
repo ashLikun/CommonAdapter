@@ -1,6 +1,7 @@
 package com.ashlikun.adapter.recyclerview
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.NonNull
@@ -8,6 +9,7 @@ import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
+import kotlin.reflect.KClass
 
 /**
  * 作者　　: 李坤
@@ -15,34 +17,50 @@ import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
  * 邮箱　　：496546144@qq.com
  *
  *
- * 功能介绍：公共的RecycleView的adapter
+ * 功能介绍：
+ * 设计一个基类时，应该避免在构造函数、属性初始化器以及 init 块中使用 open 成员。
+ * 公共的RecycleView的adapter
  * 在BaseAdapter基础上封装了 onCreateViewHolder,onBindViewHolder
+ *
+ * 简单使用
+ *   binding.recyclerView.adapter = CommonAdapter(this, neibuData,
+ *          bindingClass = ItemViewBinding::class.java) { holder, t ->
+ *      holder.binding<ItemViewBinding>().run {
+ *          textView.text = t?.name
+ *      }
+ *  }.apply {
+ *      onItemClickListener = { viewType, parent, view, data, position ->
+ *          Log.e("onItemClickListener", data.name)
+ *      }
+ *  }
  */
-abstract class CommonAdapter<T>(
-    override var context: Context,
-    datas: MutableList<T>,
-    //创建ViewBinding的Class,与layoutId 二选一
-    override var bindingClass: Class<out ViewBinding>? = null,
-    //布局文件
-    override var layoutId: Int = DEFAULT_LAYOUT_ID,
-    /**
-     * 1:创建Adapter回调的其他参数，一般用于改变UI
-     * 2:事件的回调
-     */
-    open var bus: AdapterBus? = null,
-    //转换
-    open var convert: AdapterConvert<T>? = null
+open class CommonAdapter<T>(
+        context: Context,
+        initDatas: List<T>? = null,
+        //创建ViewBinding的Class,与layoutId 二选一
+        override val bindingClass: Class<out ViewBinding>? = null,
+        //布局文件
+        override val layoutId: Int = DEFAULT_LAYOUT_ID,
+        //1:创建Adapter回调的其他参数，一般用于改变UI , 2:事件的回调
+        open var bus: AdapterBus? = null,
+        //初始化的apply 便于执行其他代码,子类需要自己实现
+        apply: (CommonAdapter<T>.() -> Unit)? = null,
+        //转换
+        open val convert: AdapterConvert<T>? = null
 ) : BaseAdapter<T, ViewHolder>(
-    context = context,
-    initDatas = datas,
-    bindingClass = bindingClass,
-    layoutId = layoutId
+        context = context,
+        initDatas = initDatas
 ) {
     /**
      * 获取AdapterBus.STYLE
      */
     open val style
         get() = bus?.style
+
+    init {
+        apply?.invoke(this)
+    }
+
 
     override fun convert(holder: ViewHolder, t: T?) {
         convert?.invoke(holder, t)
