@@ -2,10 +2,13 @@ package com.ashlikun.adapter.recyclerview.section
 
 import android.content.Context
 import android.view.View
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.recyclerview.CommonAdapter
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.AdapterConvert
+import com.ashlikun.adapter.recyclerview.group.SpanSizeLookupGroup
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import kotlin.math.abs
 import kotlin.reflect.KClass
@@ -71,7 +74,13 @@ open class SectionAdapter<T : SectionEntity>(
     protected fun isViewTypeHeader(viewType: Int): Boolean {
         return viewType == TYPE_SECTION
     }
-
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        if (recyclerView.layoutManager is GridLayoutManager) {
+            val gridLayoutManager = recyclerView.layoutManager as GridLayoutManager
+            gridLayoutManager.spanSizeLookup = SpanSizeLookupGroup(gridLayoutManager, this)
+        }
+    }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (holder.itemViewType == TYPE_SECTION) {
             setListener(holder, holder.itemViewType)
