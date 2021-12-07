@@ -19,28 +19,28 @@ import kotlin.reflect.KClass
  * 功能介绍：分组adapter
  */
 open class SectionAdapter<T : SectionEntity>(
-        context: Context,
-        initDatas: List<T>? = null,
-        //创建ViewBinding的Class,与layoutId 二选一
-        override var bindingClass: Class<out ViewBinding>? = null,
-        //头布局 ViewBinding
-        open var headBinding: Class<out ViewBinding>? = null,
-        //布局文件
-        override var layoutId: Int = DEFAULT_LAYOUT_ID,
-        //事件
-        override var bus: AdapterBus? = null,
-        //头布局id
-        open var headLayoutId: Int = View.NO_ID,
-        //转换头
-        open var convertHeader: AdapterConvert<T>? = null,
-        //初始化的apply 便于执行其他代码
-        apply: (SectionAdapter<T>.() -> Unit)? = null,
-        //转换
-        override var convert: AdapterConvert<T>? = null
+    context: Context,
+    initDatas: List<T>? = null,
+    //创建ViewBinding的Class,与layoutId 二选一
+    override var bindingClass: Class<out ViewBinding>? = null,
+    //头布局 ViewBinding
+    open var headBinding: Class<out ViewBinding>? = null,
+    //布局文件
+    override var layoutId: Int? = null,
+    //事件
+    override var bus: AdapterBus? = null,
+    //头布局id
+    open var headLayoutId: Int? = null,
+    //转换头
+    open var convertHeader: AdapterConvert<T>? = null,
+    //初始化的apply 便于执行其他代码
+    apply: (SectionAdapter<T>.() -> Unit)? = null,
+    //转换
+    override var convert: AdapterConvert<T>? = null
 ) : CommonAdapter<T>(
-        context = context,
-        initDatas = initDatas,
-        apply = apply as (CommonAdapter<T>.() -> Unit)?) {
+    context = context,
+    initDatas = initDatas
+) {
 
 
     companion object {
@@ -50,10 +50,13 @@ open class SectionAdapter<T : SectionEntity>(
         val TYPE_SECTION = abs("SectionAdapter.TYPE_SECTION".hashCode())
     }
 
+    init {
+        apply?.invoke(this)
+    }
 
     override fun getItemViewType(position: Int): Int {
         return if (getItemData(position)?.isHeader == true) TYPE_SECTION else super.getItemViewType(
-                position
+            position
         )
     }
 

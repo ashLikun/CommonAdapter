@@ -1,25 +1,21 @@
 package com.ashlikun.adapter.simple
 
 import androidx.appcompat.app.AppCompatActivity
-import com.ashlikun.adapter.recyclerview.CommonAdapter
 import com.ashlikun.adapter.simple.data.NeibuData
 import java.util.ArrayList
 import android.os.Bundle
 import android.util.Log
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.alibaba.android.vlayout.layout.GridLayoutHelper
-import com.alibaba.android.vlayout.layout.LinearLayoutHelper
 import com.ashlikun.adapter.recyclerview.vlayout.MultipleAdapterHelp
 import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterStyle
 import com.ashlikun.adapter.simple.data.Data
 import com.ashlikun.adapter.simple.databinding.ActivityCommentBinding
+import com.ashlikun.adapter.simple.databinding.ItemView1Binding
 import com.ashlikun.adapter.simple.databinding.ItemViewBinding
-import kotlin.reflect.full.declaredFunctions
 
 /**
  * 作者　　: 李坤
@@ -52,37 +48,38 @@ class VLayoutActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        addHeard()
+
         data.forEach {
             if (it.type == "type3") {
                 help.adapter.addAdapter(SingAdapter(this, it.datas,
-                        layoutStyle = AdapterStyle(spanCount = 3),
-                        bindingClass = ItemViewBinding::class.java,
-                        apply = {
-                            onItemClick = {
-                                Toast.makeText(context, it.name, Toast.LENGTH_LONG).show()
-                            }
-                        }) { holder, t ->
-                    holder.binding<ItemViewBinding>().run {
+                    layoutStyle = AdapterStyle(spanCount = 3),
+                    bindingClass = ItemView1Binding::class.java,
+                    apply = {
+                        onItemClick = {
+                            Toast.makeText(context, it.name, Toast.LENGTH_LONG).show()
+                        }
+                    }) { holder, t ->
+                    holder.binding<ItemView1Binding>().run {
+                        textView.setTextColor(0xffffff00.toInt())
                         textView.text = t?.name
                     }
                 })
             } else {
                 help.adapter.addAdapter(SingAdapter(this, it.datas,
-                        layoutStyle = AdapterStyle(),
-                        bindingClass = ItemViewBinding::class.java,
-                        apply = {
-                            onItemClick = {
-                                Toast.makeText(context, it.name, Toast.LENGTH_LONG).show()
-                            }
-                        }) { holder, t ->
+                    layoutStyle = AdapterStyle(),
+                    bindingClass = ItemViewBinding::class.java,
+                    apply = {
+                        onItemClick = {
+                            Toast.makeText(context, it.name, Toast.LENGTH_LONG).show()
+                        }
+                    }) { holder, t ->
                     holder.binding<ItemViewBinding>().run {
                         textView.text = t?.name
                     }
                 })
             }
         }
-
+//        addHeard()
     }
 
     private fun addHeard() {

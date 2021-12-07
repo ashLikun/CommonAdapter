@@ -23,36 +23,35 @@ import kotlin.reflect.KClass
  * 功能介绍：分组adapter 给Vlayout的
  */
 open class SectionSingAdapter<T : SectionEntity>(
-        context: Context,
-        initDatas: List<T>? = null,
-        //创建ViewBinding的Class,与layoutId 二选一
-        override val bindingClass: Class<out ViewBinding>? = null,
-        //头布局 ViewBinding
-        open val headBinding: Class<out ViewBinding>? = null,
-        //布局文件
-        override val layoutId: Int = DEFAULT_LAYOUT_ID,
-        //事件
-        override var bus: AdapterBus? = null,
-        //头布局id
-        open var headLayoutId: Int = View.NO_ID,
-        //布局
-        layoutHelper: LayoutHelper = LinearLayoutHelper(),
-        //布局，优先
-        layoutStyle: AdapterStyle? = null,
-        //ViewType
-        override var viewType: Any = this::class,
-        //转换头
-        open var convertHeader: AdapterConvert<T>? = null,
-        //初始化的apply 便于执行其他代码
-        apply: (SectionSingAdapter<T>.() -> Unit)? = null,
-        //转换
-        override var convert: AdapterConvert<T>? = null
+    context: Context,
+    initDatas: List<T>? = null,
+    //创建ViewBinding的Class,与layoutId 二选一
+    override val bindingClass: Class<out ViewBinding>? = null,
+    //头布局 ViewBinding
+    open val headBinding: Class<out ViewBinding>? = null,
+    //布局文件
+    override val layoutId: Int? = null,
+    //事件
+    override var bus: AdapterBus? = null,
+    //头布局id
+    open var headLayoutId: Int = View.NO_ID,
+    //布局
+    layoutHelper: LayoutHelper = LinearLayoutHelper(),
+    //布局，优先
+    layoutStyle: AdapterStyle? = null,
+    //ViewType
+    override var viewType: Any = this::class,
+    //转换头
+    open var convertHeader: AdapterConvert<T>? = null,
+    //初始化的apply 便于执行其他代码
+    apply: (SectionSingAdapter<T>.() -> Unit)? = null,
+    //转换
+    override var convert: AdapterConvert<T>? = null
 ) : SingAdapter<T>(
-        context = context,
-        initDatas = initDatas,
-        layoutHelper = layoutHelper,
-        layoutStyle = layoutStyle,
-        apply = apply as (SingAdapter<T>.() -> Unit)?
+    context = context,
+    initDatas = initDatas,
+    layoutHelper = layoutHelper,
+    layoutStyle = layoutStyle
 ) {
 
     companion object {
@@ -68,19 +67,19 @@ open class SectionSingAdapter<T : SectionEntity>(
 
     override fun getItemViewType(position: Int): Int {
         return if (getItemData(position)?.isHeader == true) SectionAdapter.TYPE_SECTION else super.getItemViewType(
-                position
+            position
         )
     }
 
     override fun getLayoutId(viewType: Int): Int? {
         return if (viewType == SectionAdapter.TYPE_SECTION) return headLayoutId else super.getLayoutId(
-                viewType
+            viewType
         )
     }
 
     override fun getBindClass(viewType: Int): Class<out ViewBinding>? {
         return if (viewType == SectionAdapter.TYPE_SECTION) return headBinding else super.getBindClass(
-                viewType
+            viewType
         )
     }
 

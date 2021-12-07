@@ -47,14 +47,19 @@ import kotlin.math.min
  * 邮箱　　：496546144@qq.com
  *
  *
- * 功能介绍：alibaba的VLayout库的adapter
+ * 功能介绍：
+ * 不能添加头尾
+ * alibaba的VLayout库的adapter
  * 要想使用必须使用这个库
  * implementation ('com.alibaba.android:vlayout:1.2.16@aar') {
  * transitive = true
  * }
  */
-open class MultipleAdapter(layoutManager: VirtualLayoutManager, hasConsistItemType: Boolean = false, threadSafe: Boolean = false)
-    : VirtualLayoutAdapter<RecyclerView.ViewHolder?>(layoutManager), IHeaderAndFooter {
+open class MultipleAdapter(
+    layoutManager: VirtualLayoutManager,
+    hasConsistItemType: Boolean = false,
+    threadSafe: Boolean = false
+) : VirtualLayoutAdapter<RecyclerView.ViewHolder?>(layoutManager), IHeaderAndFooter {
     override var footerSize = 0
     override var headerSize = 0
     var recyclerView: RecyclerView? = null
@@ -94,11 +99,24 @@ open class MultipleAdapter(layoutManager: VirtualLayoutManager, hasConsistItemTy
 
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
         super.onBindViewHolder(holder, position, payloads)
         val pair = findAdapter(position) ?: return
-        pair.second?.onBindViewHolder((holder as ViewHolder), position - pair.first.startPosition, payloads)
-        pair.second?.onBindViewHolderWithOffset(holder, position - pair.first.startPosition, position, payloads)
+        pair.second?.onBindViewHolder(
+            (holder as ViewHolder),
+            position - pair.first.startPosition,
+            payloads
+        )
+        pair.second?.onBindViewHolderWithOffset(
+            holder,
+            position - pair.first.startPosition,
+            position,
+            payloads
+        )
     }
 
     override fun getItemCount() = mTotal
@@ -389,7 +407,10 @@ open class MultipleAdapter(layoutManager: VirtualLayoutManager, hasConsistItemTy
             return -1
         }
         for (adapter in mAdapters) {
-            if (adapter.second != null && adapter.second?.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(viewType)) {
+            if (adapter.second != null && adapter.second?.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(
+                    viewType
+                )
+            ) {
                 return adapter.first.startPosition
             }
         }
@@ -415,7 +436,10 @@ open class MultipleAdapter(layoutManager: VirtualLayoutManager, hasConsistItemTy
             return null
         }
         for (adapter in mAdapters) {
-            if (adapter.second != null && adapter.second?.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(viewType)) {
+            if (adapter.second != null && adapter.second?.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(
+                    viewType
+                )
+            ) {
                 return adapter.second
             }
         }
@@ -430,7 +454,10 @@ open class MultipleAdapter(layoutManager: VirtualLayoutManager, hasConsistItemTy
             return false
         }
         for (adapter in mAdapters) {
-            if (adapter.second != null && adapter.second?.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(viewType)) {
+            if (adapter.second != null && adapter.second?.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(
+                    viewType
+                )
+            ) {
                 return true
             }
         }
@@ -444,7 +471,8 @@ open class MultipleAdapter(layoutManager: VirtualLayoutManager, hasConsistItemTy
         }
     }
 
-    inner class AdapterDataObserver(var startPosition: Int, index: Int) : RecyclerView.AdapterDataObserver() {
+    inner class AdapterDataObserver(var startPosition: Int, index: Int) :
+        RecyclerView.AdapterDataObserver() {
         var index = -1
 
         //加上头的位置

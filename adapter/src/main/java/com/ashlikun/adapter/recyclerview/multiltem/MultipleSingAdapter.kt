@@ -22,34 +22,37 @@ import kotlin.reflect.KClass
  */
 
 open class MultipleSingAdapter<T>(
-        context: Context,
-        initDatas: List<T>? = null,
-        //事件
-        override var bus: AdapterBus? = null,
-        //data对应的type
-        open var itemType: ((position: Int, data: T) -> Int)? = null,
-        //布局
-        layoutHelper: LayoutHelper = LinearLayoutHelper(),
-        //布局，优先
-        layoutStyle: AdapterStyle? = null,
-        //ViewType
-        override var viewType: Any = this::class,
-        //初始化的apply 便于执行其他代码
-        apply: (MultipleSingAdapter<T>.() -> Unit)? = null,
-        //转换
-        override var convert: AdapterConvert<T>? = null
+    context: Context,
+    initDatas: List<T>? = null,
+    //事件
+    override var bus: AdapterBus? = null,
+    //data对应的type
+    open var itemType: ((position: Int, data: T) -> Int)? = null,
+    //布局
+    layoutHelper: LayoutHelper = LinearLayoutHelper(),
+    //布局，优先
+    layoutStyle: AdapterStyle? = null,
+    //ViewType
+    override var viewType: Any = this::class,
+    //初始化的apply 便于执行其他代码
+    apply: (MultipleSingAdapter<T>.() -> Unit)? = null,
+    //转换
+    override var convert: AdapterConvert<T>? = null
 ) : SingAdapter<T>(
-        context = context,
-        initDatas = initDatas,
-        apply = apply as (SingAdapter<T>.() -> Unit)?,
-        layoutHelper = layoutHelper,
-        layoutStyle = layoutStyle
+    context = context,
+    initDatas = initDatas,
+    layoutHelper = layoutHelper,
+    layoutStyle = layoutStyle
 ) {
     //ItemType对应的binding 多个
     open var bindingClasss: MutableMap<Int, Class<out ViewBinding>> = mutableMapOf()
 
     //ItemType对应的LayoutId
     open var layouts: MutableMap<Int, Int> = mutableMapOf()
+
+    init {
+        apply?.invoke(this)
+    }
 
     override fun getItemViewType(position: Int): Int {
         var data: T = getItemData(position) ?: return super.getItemViewType(position)
@@ -102,7 +105,7 @@ open class MultipleSingAdapter<T>(
     }
 
     open fun getItemViewType(position: Int, data: T) =
-            itemType?.invoke(position, data) ?: throw RuntimeException("必须提供itemtype")
+        itemType?.invoke(position, data) ?: throw RuntimeException("必须提供itemtype")
 
     companion object {
         const val TYPE_NOT_FOUND = -404

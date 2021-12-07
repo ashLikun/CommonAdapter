@@ -35,21 +35,21 @@ import kotlin.reflect.KClass
  *  }
  */
 open class CommonAdapter<T>(
-        context: Context,
-        initDatas: List<T>? = null,
-        //创建ViewBinding的Class,与layoutId 二选一
-        override val bindingClass: Class<out ViewBinding>? = null,
-        //布局文件
-        override val layoutId: Int = DEFAULT_LAYOUT_ID,
-        //1:创建Adapter回调的其他参数，一般用于改变UI , 2:事件的回调
-        open var bus: AdapterBus? = null,
-        //初始化的apply 便于执行其他代码,子类需要自己实现
-        apply: (CommonAdapter<T>.() -> Unit)? = null,
-        //转换
-        open val convert: AdapterConvert<T>? = null
+    context: Context,
+    initDatas: List<T>? = null,
+    //创建ViewBinding的Class,与layoutId 二选一
+    override val bindingClass: Class<out ViewBinding>? = null,
+    //布局文件
+    override val layoutId: Int? = null,
+    //1:创建Adapter回调的其他参数，一般用于改变UI , 2:事件的回调
+    open var bus: AdapterBus? = null,
+    //初始化的apply 便于执行其他代码,子类一定需要自己实现
+    apply: (CommonAdapter<T>.() -> Unit)? = null,
+    //转换
+    open val convert: AdapterConvert<T>? = null
 ) : BaseAdapter<T, ViewHolder>(
-        context = context,
-        initDatas = initDatas
+    context = context,
+    initDatas = initDatas
 ) {
     /**
      * 获取AdapterBus.STYLE

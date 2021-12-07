@@ -21,8 +21,7 @@ import com.ashlikun.adapter.recyclerview.vlayout.mode.IAdapterBindData
  * @param bus.onEvent 处理adapter发出的事件,在创建adapter的时候会赋值  key:数据层的type，value：这个type对应的事件（key/value）
  * @param bus.otherParams 创建Adapter回调的其他参数，一般用于改变UI,   key:数据层的type，value：这个type对应的参数（key/value）
  */
-open class MultipleAdapterHelp
-constructor(
+open class MultipleAdapterHelp(
     var recyclerView: RecyclerView,
     var hasConsistItemType: Boolean = true,
     //监听事件和ui参数的总线
@@ -50,7 +49,7 @@ constructor(
             }
         }
 
-        layoutManager = VirtualLayoutManager(context)
+        layoutManager = MultipleLayoutManage(context)
         this.adapter = MultipleAdapter(layoutManager, hasConsistItemType)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
