@@ -24,7 +24,7 @@ import kotlin.reflect.KClass
  *
  * 简单使用
  *   binding.recyclerView.adapter = CommonAdapter(this, neibuData,
- *          bindingClass = ItemViewBinding::class.java) { holder, t ->
+ *          binding = ItemViewBinding::class.java) { holder, t ->
  *      holder.binding<ItemViewBinding>().run {
  *          textView.text = t?.name
  *      }
@@ -38,7 +38,7 @@ open class CommonAdapter<T>(
     context: Context,
     initDatas: List<T>? = null,
     //创建ViewBinding的Class,与layoutId 二选一
-    override val bindingClass: Class<out ViewBinding>? = null,
+    override val binding: Class<out ViewBinding>? = null,
     //布局文件
     override val layoutId: Int? = null,
     //1:创建Adapter回调的其他参数，一般用于改变UI , 2:事件的回调

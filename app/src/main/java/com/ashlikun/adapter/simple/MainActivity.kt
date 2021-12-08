@@ -22,6 +22,9 @@ class MainActivity : AppCompatActivity() {
         binding.multiItem.setOnClickListener {
             startActivity(Intent(this, MultiItemActivity::class.java))
         }
+        binding.sectionAdapter.setOnClickListener {
+            startActivity(Intent(this, SectionActivity::class.java))
+        }
     }
 
 

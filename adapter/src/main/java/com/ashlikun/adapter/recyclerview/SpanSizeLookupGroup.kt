@@ -1,4 +1,4 @@
-package com.ashlikun.adapter.recyclerview.group
+package com.ashlikun.adapter.recyclerview
 
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ashlikun.adapter.recyclerview.group.GroupedCommonAdapter
@@ -11,13 +11,15 @@ import com.ashlikun.adapter.recyclerview.group.GroupedCommonAdapter
  * 功能介绍：头部沾满一行
  */
 
-class SpanSizeLookupGroup(var manager: GridLayoutManager, var adapter: GroupedCommonAdapter<*>) :
+open class SpanSizeLookupGroup(
+    var manager: GridLayoutManager,
+    var isOne: (position: Int) -> Boolean
+) :
     GridLayoutManager.SpanSizeLookup() {
     var old: GridLayoutManager.SpanSizeLookup = manager.spanSizeLookup
 
     override fun getSpanSize(position: Int): Int {
-        val type = adapter.judgePositionToType(position)
-        return if (type == GroupedCommonAdapter.TYPE_HEADER || type == GroupedCommonAdapter.TYPE_FOOTER) {
+        return if (isOne(position)) {
             //占满全行
             manager.spanCount
         } else {

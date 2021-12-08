@@ -1,17 +1,15 @@
 package com.ashlikun.adapter.recyclerview.section
 
 import android.content.Context
-import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.recyclerview.CommonAdapter
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.AdapterConvert
-import com.ashlikun.adapter.recyclerview.group.SpanSizeLookupGroup
+import com.ashlikun.adapter.recyclerview.SpanSizeLookupGroup
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import kotlin.math.abs
-import kotlin.reflect.KClass
 
 /**
  * 作者　　: 李坤
@@ -25,9 +23,9 @@ open class SectionAdapter<T : SectionEntity>(
     context: Context,
     initDatas: List<T>? = null,
     //创建ViewBinding的Class,与layoutId 二选一
-    override var bindingClass: Class<out ViewBinding>? = null,
+    override var binding: Class<out ViewBinding>? = null,
     //头布局 ViewBinding
-    open var headBinding: Class<out ViewBinding>? = null,
+    open var bndingHead: Class<out ViewBinding>? = null,
     //布局文件
     override var layoutId: Int? = null,
     //事件
@@ -68,19 +66,23 @@ open class SectionAdapter<T : SectionEntity>(
     }
 
     override fun getBindClass(viewType: Int): Class<out ViewBinding>? {
-        return if (viewType == TYPE_SECTION) return headBinding else super.getBindClass(viewType)
+        return if (viewType == TYPE_SECTION) return bndingHead else super.getBindClass(viewType)
     }
 
-    protected fun isViewTypeHeader(viewType: Int): Boolean {
-        return viewType == TYPE_SECTION
+    protected fun isPositionHeader(position: Int): Boolean {
+        return getItemViewType(position) == TYPE_SECTION
     }
+
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         if (recyclerView.layoutManager is GridLayoutManager) {
             val gridLayoutManager = recyclerView.layoutManager as GridLayoutManager
-            gridLayoutManager.spanSizeLookup = SpanSizeLookupGroup(gridLayoutManager, this)
+            gridLayoutManager.spanSizeLookup = SpanSizeLookupGroup(gridLayoutManager) {
+                isPositionHeader(it)
+            }
         }
     }
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (holder.itemViewType == TYPE_SECTION) {
             setListener(holder, holder.itemViewType)

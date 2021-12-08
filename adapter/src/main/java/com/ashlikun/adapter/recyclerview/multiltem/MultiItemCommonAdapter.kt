@@ -35,7 +35,7 @@ open class MultiItemCommonAdapter<T>(
     initDatas = initDatas
 ) {
     //ItemType对应的binding 多个
-    open var bindingClasss: MutableMap<Int, Class<out ViewBinding>> = mutableMapOf()
+    open var bindings: MutableMap<Int, Class<out ViewBinding>> = mutableMapOf()
 
     //ItemType对应的LayoutId
     open var layouts: MutableMap<Int, Int> = mutableMapOf()
@@ -66,7 +66,7 @@ open class MultiItemCommonAdapter<T>(
      * @param layoutResId
      */
     fun addItemType(viewType: Int, viewBindClass: Class<out ViewBinding>) {
-        bindingClasss[viewType] = viewBindClass
+        bindings[viewType] = viewBindClass
     }
 
     override fun getLayoutId(viewType: Int): Int? {
@@ -74,7 +74,7 @@ open class MultiItemCommonAdapter<T>(
     }
 
     override fun getBindClass(viewType: Int): Class<out ViewBinding>? {
-        return bindingClasss[viewType]
+        return bindings[viewType]
     }
 
     /**

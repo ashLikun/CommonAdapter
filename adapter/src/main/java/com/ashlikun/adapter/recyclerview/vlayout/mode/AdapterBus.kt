@@ -39,7 +39,7 @@ data class AdapterBus(
      * 获取AdapterBus.STYLE
      */
     open val style
-        get() = get<AdapterStyle>(STYLE)
+        get() = get<LayoutStyle>(STYLE)
 
     /**
      * 获取AdapterBus.STYLE

@@ -5,19 +5,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.ashlikun.adapter.simple.data.NeibuData
 import java.util.ArrayList
 import android.os.Bundle
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.alibaba.android.vlayout.layout.LinearLayoutHelper
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.CommonAdapter
-import com.ashlikun.adapter.recyclerview.vlayout.MultipleAdapterHelp
-import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter
-import com.ashlikun.adapter.simple.data.Data
+import com.ashlikun.adapter.recyclerview.section.SectionAdapter
 import com.ashlikun.adapter.simple.databinding.ActivityCommentBinding
+import com.ashlikun.adapter.simple.databinding.ItemHeaderBinding
 import com.ashlikun.adapter.simple.databinding.ItemViewBinding
 
 /**
@@ -26,9 +24,9 @@ import com.ashlikun.adapter.simple.databinding.ItemViewBinding
  * 邮箱　　：496546144@qq.com
  *
  *
- * 功能介绍：commonAdapterTest
+ * 功能介绍：SectionAdapter 的测试
  */
-class CommonActivity : AppCompatActivity() {
+class SectionActivity : AppCompatActivity() {
     val binding by lazy {
         ActivityCommentBinding.inflate(layoutInflater)
     }
@@ -37,21 +35,29 @@ class CommonActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         for (i in 0..99) {
-            neibuData.add(NeibuData("我是第一种$i"))
+            val isHeader = i % 10 == 0
+            val headerPosi = i / 10
+            neibuData.add(NeibuData(if (isHeader) "我是头：${headerPosi}" else "我是第一种$i", isHeader))
         }
         initView()
     }
 
     private fun initView() {
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = CommonAdapter(
+        binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
+        binding.recyclerView.adapter = SectionAdapter(
             this, neibuData,
             apply = {
                 onItemClick = {
                     Toast.makeText(context, it.name, Toast.LENGTH_LONG).show()
                 }
             },
-            binding = ItemViewBinding::class.java
+            binding = ItemViewBinding::class.java,
+            bndingHead = ItemHeaderBinding::class.java,
+            convertHeader = { holder, t ->
+                holder.binding<ItemHeaderBinding>().run {
+                    tvHeader.text = t?.name
+                }
+            }
         ) { holder, t ->
             holder.binding<ItemViewBinding>().run {
                 textView.text = t?.name
@@ -69,7 +75,7 @@ class CommonActivity : AppCompatActivity() {
     }
 }
 
-class MyCommonAdapter(context: Context) : CommonAdapter<NeibuData>(context) {
+class MySectionAdapter(context: Context) : CommonAdapter<NeibuData>(context) {
     override fun convert(holder: ViewHolder, t: NeibuData?) {
     }
 }

@@ -1,20 +1,16 @@
 package com.ashlikun.adapter.recyclerview.vlayout
 
 import android.content.Context
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.alibaba.android.vlayout.LayoutHelper
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper
 import com.alibaba.android.vlayout.layout.MarginLayoutHelper
-import com.alibaba.android.vlayout.layout.SingleLayoutHelper
 import com.ashlikun.adapter.recyclerview.AdapterConvert
 import com.ashlikun.adapter.recyclerview.CommonAdapter
-import com.ashlikun.adapter.recyclerview.multiltem.MultipleSingAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
-import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterStyle
+import com.ashlikun.adapter.recyclerview.vlayout.mode.LayoutStyle
 import kotlin.math.abs
-import kotlin.reflect.KClass
 
 /**
  * 作者　　: 李坤
@@ -28,19 +24,15 @@ open class SingAdapter<T>(
     context: Context,
     initDatas: List<T>? = null,
     //创建ViewBinding的Class,与layoutId 二选一
-    override val bindingClass: Class<out ViewBinding>? = null,
+    override val binding: Class<out ViewBinding>? = null,
     //布局文件
     override val layoutId: Int? = null,
     //事件
     override var bus: AdapterBus? = null,
-    //布局
-    var layoutHelper: LayoutHelper = LinearLayoutHelper(),
     //布局，优先
-    var layoutStyle: AdapterStyle? = null,
+    var layoutStyle: LayoutStyle? = null,
     //ViewType
-    open var viewType: Any = abs(bindingClass?.hashCode() ?: 0) + abs(
-        layoutId?.hashCode() ?: 0
-    ) + abs(this::class.hashCode()),
+    open var viewType: Any? = null,
     //初始化的apply 便于执行其他代码
     apply: (SingAdapter<T>.() -> Unit)? = null,
     //转换
@@ -49,6 +41,7 @@ open class SingAdapter<T>(
     context = context,
     initDatas = initDatas
 ) {
+    var layoutHelper: LayoutHelper = LinearLayoutHelper()
 
     init {
         apply?.invoke(this)
@@ -117,7 +110,10 @@ open class SingAdapter<T>(
     }
 
 
-    override fun getItemViewType(position: Int) = abs(viewType.hashCode())
+    override fun getItemViewType(position: Int) =
+        if (viewType == null) abs(binding?.hashCode() ?: 0) + abs(
+            layoutId?.hashCode() ?: 0
+        ) + abs(this::class.hashCode()) else abs(viewType.hashCode())
 
 
     override fun getItemCount(): Int {

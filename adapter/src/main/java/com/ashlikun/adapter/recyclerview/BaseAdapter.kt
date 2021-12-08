@@ -54,7 +54,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     context: Context,
     initDatas: List<T>? = null,
     //创建ViewBinding的Class,与layoutId 二选一
-    open val bindingClass: Class<out ViewBinding>? = null,
+    open val binding: Class<out ViewBinding>? = null,
     //布局文件
     open val layoutId: Int? = null
 
@@ -133,7 +133,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     /**
      * 获取布局 ViewBindClass
      */
-    open fun getBindClass(viewType: Int) = bindingClass
+    open fun getBindClass(viewType: Int) = binding
 
 
     /**
@@ -155,13 +155,13 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      */
     open fun createViewBinding(
         parent: ViewGroup,
-        bindingClass: Class<out ViewBinding>?,
+        binding: Class<out ViewBinding>?,
         viewType: Int
     ): Any? {
-        return if (bindingClass != null) {
+        return if (binding != null) {
             //反射获取
             AdapterUtils.getViewBindingToClass(
-                bindingClass,
+                binding,
                 LayoutInflater.from(context),
                 parent,
                 false

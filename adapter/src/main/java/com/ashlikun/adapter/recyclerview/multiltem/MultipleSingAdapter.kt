@@ -8,8 +8,7 @@ import com.alibaba.android.vlayout.LayoutHelper
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper
 import com.ashlikun.adapter.recyclerview.AdapterConvert
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
-import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterStyle
-import kotlin.reflect.KClass
+import com.ashlikun.adapter.recyclerview.vlayout.mode.LayoutStyle
 
 /**
  * @author　　: 李坤
@@ -28,12 +27,10 @@ open class MultipleSingAdapter<T>(
     override var bus: AdapterBus? = null,
     //data对应的type
     open var itemType: ((position: Int, data: T) -> Int)? = null,
-    //布局
-    layoutHelper: LayoutHelper = LinearLayoutHelper(),
     //布局，优先
-    layoutStyle: AdapterStyle? = null,
+    layoutStyle: LayoutStyle? = null,
     //ViewType
-    override var viewType: Any = this::class,
+    override var viewType: Any? = null,
     //初始化的apply 便于执行其他代码
     apply: (MultipleSingAdapter<T>.() -> Unit)? = null,
     //转换
@@ -41,11 +38,10 @@ open class MultipleSingAdapter<T>(
 ) : SingAdapter<T>(
     context = context,
     initDatas = initDatas,
-    layoutHelper = layoutHelper,
     layoutStyle = layoutStyle
 ) {
     //ItemType对应的binding 多个
-    open var bindingClasss: MutableMap<Int, Class<out ViewBinding>> = mutableMapOf()
+    open var bindings: MutableMap<Int, Class<out ViewBinding>> = mutableMapOf()
 
     //ItemType对应的LayoutId
     open var layouts: MutableMap<Int, Int> = mutableMapOf()
@@ -75,7 +71,7 @@ open class MultipleSingAdapter<T>(
      * @param layoutResId
      */
     fun addItemType(viewType: Int, viewBindClass: Class<out ViewBinding>) {
-        bindingClasss[viewType] = viewBindClass
+        bindings[viewType] = viewBindClass
     }
 
     override fun getLayoutId(viewType: Int): Int {
@@ -83,7 +79,7 @@ open class MultipleSingAdapter<T>(
     }
 
     override fun getBindClass(viewType: Int): Class<out ViewBinding>? {
-        return bindingClasss[viewType]
+        return bindings[viewType]
     }
 
     /**

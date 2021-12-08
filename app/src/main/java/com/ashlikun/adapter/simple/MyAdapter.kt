@@ -73,7 +73,7 @@
 //        }
 //
 //        init {
-//            bindingClass = ItemView1Binding::class.java
+//            binding = ItemView1Binding::class.java
 //        }
 //    }
 //

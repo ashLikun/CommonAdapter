@@ -40,7 +40,7 @@ dependencies {
 
             //普通padater
             binding.recyclerView.adapter = CommonAdapter(this, neibuData,
-                           bindingClass = ItemViewBinding::class.java) { holder, t ->
+                           binding = ItemViewBinding::class.java) { holder, t ->
                        holder.binding<ItemViewBinding>().run {
                            textView.text = t?.name
                        }
@@ -100,7 +100,7 @@ dependencies {
                           if (it.type == "type3") {
                               help.adapter.addAdapter(SingAdapter(this, it.datas,
                                       layoutHelper = GridLayoutHelper(3).apply { setAutoExpand(false) },
-                                      bindingClass = ItemViewBinding::class.java) { holder, t ->
+                                      binding = ItemViewBinding::class.java) { holder, t ->
                                   holder.binding<ItemViewBinding>().run {
                                       textView.text = t?.name
                                   }
@@ -112,7 +112,7 @@ dependencies {
                           } else {
                               help.adapter.addAdapter(SingAdapter(this, it.datas,
                                       layoutHelper = LinearLayoutHelper().apply { },
-                                      bindingClass = ItemViewBinding::class.java) { holder, t ->
+                                      binding = ItemViewBinding::class.java) { holder, t ->
                                   holder.binding<ItemViewBinding>().run {
                                       textView.text = t?.name
                                   }

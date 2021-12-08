@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.FrameLayout
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.AdapterConvert
+import com.ashlikun.adapter.recyclerview.SpanSizeLookupGroup
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import kotlin.math.abs
 import kotlin.math.max
@@ -84,7 +85,10 @@ abstract class GroupedCommonAdapter<T>(
         super.onAttachedToRecyclerView(recyclerView)
         if (recyclerView.layoutManager is GridLayoutManager) {
             val gridLayoutManager = recyclerView.layoutManager as GridLayoutManager
-            gridLayoutManager.spanSizeLookup = SpanSizeLookupGroup(gridLayoutManager, this)
+            gridLayoutManager.spanSizeLookup = SpanSizeLookupGroup(gridLayoutManager) {
+                val type = judgePositionToType(it)
+                type == TYPE_HEADER || type == TYPE_FOOTER
+            }
         }
         structureChanged()
     }

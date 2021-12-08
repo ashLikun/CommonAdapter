@@ -23,7 +23,7 @@ open class ItemDraggableAdapter<T>(
     context: Context,
     initDatas: List<T>? = null,
     //创建ViewBinding的Class,与layoutId 二选一
-    override var bindingClass: Class<out ViewBinding>? = null,
+    override var binding: Class<out ViewBinding>? = null,
     override var layoutId: Int? = null,
     //初始化的apply 便于执行其他代码
     apply: (ItemDraggableAdapter<T>.() -> Unit)? = null,

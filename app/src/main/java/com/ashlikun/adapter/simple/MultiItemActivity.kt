@@ -29,8 +29,8 @@ class MultiItemActivity : AppCompatActivity() {
     val adapter by lazy {
         MultiItemCommonAdapter<MultiItemData>(this,
                 apply = {
-                    bindingClasss["type1".hashCode()] = ItemViewBinding::class.java
-                    bindingClasss["type2".hashCode()] = ItemView1Binding::class.java
+                    bindings["type1".hashCode()] = ItemViewBinding::class.java
+                    bindings["type2".hashCode()] = ItemView1Binding::class.java
                     onItemClick = {
                         Toast.makeText(context, it?.type + "  " + it?.data?.name, Toast.LENGTH_LONG).show()
                     }
