@@ -2,7 +2,6 @@ package com.ashlikun.adapter
 
 import android.view.View
 import androidx.viewbinding.ViewBinding
-import java.lang.NoClassDefFoundError
 
 /**
  * @author　　: 李坤

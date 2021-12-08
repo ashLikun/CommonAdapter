@@ -1,31 +1,25 @@
 package com.ashlikun.adapter
 
 import android.content.Context
-import com.ashlikun.adapter.CreateView
-import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition
-import androidx.recyclerview.widget.RecyclerView
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Typeface
+import android.graphics.drawable.Drawable
+import android.os.Build
+import android.text.util.Linkify
 import android.util.SparseArray
 import android.view.View
-import android.graphics.Color
-import android.widget.ImageView
-import android.widget.TextView
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
-import androidx.core.view.ViewCompat
-import android.os.Build
-import android.view.animation.AlphaAnimation
-import android.text.util.Linkify
-import android.graphics.Typeface
-import android.graphics.Paint
-import android.widget.ProgressBar
-import android.widget.RatingBar
-import android.widget.Checkable
-import android.view.ViewGroup
-import android.view.View.OnTouchListener
 import android.view.View.OnLongClickListener
+import android.view.View.OnTouchListener
+import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.widget.*
+import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.recyclerview.BaseAdapter
+import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition
 
 /**
  * @author　　: 李坤

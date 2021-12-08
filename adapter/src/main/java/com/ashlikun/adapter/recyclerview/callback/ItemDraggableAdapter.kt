@@ -2,14 +2,11 @@ package com.ashlikun.adapter.recyclerview.callback
 
 import android.content.Context
 import android.graphics.Canvas
-import android.view.View
-import com.ashlikun.adapter.recyclerview.CommonAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.ViewHolder
-import com.ashlikun.adapter.recyclerview.AdapterConvert
+import com.ashlikun.adapter.recyclerview.*
 import java.util.*
-import kotlin.reflect.KClass
 
 /**
  * @author　　: 李坤
@@ -25,6 +22,12 @@ open class ItemDraggableAdapter<T>(
     //创建ViewBinding的Class,与layoutId 二选一
     override var binding: Class<out ViewBinding>? = null,
     override var layoutId: Int? = null,
+    //点击事件
+    override var onItemClick: OnItemClick<T>? = null,
+    override var onItemClickX: OnItemClickX<T>? = null,
+    //长按事件
+    override var onItemLongClick: OnItemLongClick<T>? = null,
+    override var onItemLongClickX: OnItemLongClickX<T>? = null,
     //初始化的apply 便于执行其他代码
     apply: (ItemDraggableAdapter<T>.() -> Unit)? = null,
     /**

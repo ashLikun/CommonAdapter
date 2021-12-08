@@ -1,8 +1,8 @@
 package com.ashlikun.adapter.simple
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.content.Intent
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.ashlikun.adapter.simple.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

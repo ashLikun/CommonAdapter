@@ -1,7 +1,8 @@
 package com.ashlikun.adapter.recyclerview
 
+import android.util.Log
 import androidx.recyclerview.widget.GridLayoutManager
-import com.ashlikun.adapter.recyclerview.group.GroupedCommonAdapter
+import com.alibaba.android.vlayout.layout.GridLayoutHelper
 
 /**
  * @author　　: 李坤
@@ -16,21 +17,43 @@ open class SpanSizeLookupGroup(
     var isOne: (position: Int) -> Boolean
 ) :
     GridLayoutManager.SpanSizeLookup() {
-    var old: GridLayoutManager.SpanSizeLookup = manager.spanSizeLookup
+    var old: GridLayoutManager.SpanSizeLookup? = manager.spanSizeLookup
 
     override fun getSpanSize(position: Int): Int {
         return if (isOne(position)) {
             //占满全行
             manager.spanCount
         } else {
-            if (old != null) {
-                //使用之前设置过的 并且positions是去除头部后的位置
-                old.getSpanSize(position)
-            } else {
-                1
-            }
+            //使用之前设置过的 并且positions是去除头部后的位置
+            old?.getSpanSize(position) ?: 1
+        }
+    }
+}
+
+open class SpanSizeLookupGroupLayoutHelper(
+    var manager: GridLayoutHelper,
+    var isOne: (position: Int) -> Boolean
+) : GridLayoutHelper.SpanSizeLookup() {
+    var old: GridLayoutHelper.SpanSizeLookup? = null
+
+    init {
+        try {
+            val mSpanSizeLookup = GridLayoutHelper::class.java.getDeclaredField("mSpanSizeLookup")
+            mSpanSizeLookup.isAccessible = true
+            old = mSpanSizeLookup.get(manager) as GridLayoutHelper.SpanSizeLookup
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
-
+    override fun getSpanSize(position: Int): Int {
+        Log.e("111111111", "ddddddddd")
+        return if (isOne(position)) {
+            //占满全行
+            manager.spanCount
+        } else {
+            //使用之前设置过的 并且positions是去除头部后的位置
+            old?.getSpanSize(position) ?: 1
+        }
+    }
 }

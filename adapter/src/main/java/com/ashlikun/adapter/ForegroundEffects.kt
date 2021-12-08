@@ -1,13 +1,12 @@
 package com.ashlikun.adapter
 
 import android.R
-import android.view.View
-import android.os.Build
-import android.content.res.ColorStateList
-import com.ashlikun.adapter.ForegroundEffects
-import android.graphics.Color
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.drawable.*
+import android.os.Build
+import android.view.View
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 

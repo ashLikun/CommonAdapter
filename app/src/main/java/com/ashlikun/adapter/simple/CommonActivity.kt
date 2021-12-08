@@ -1,24 +1,20 @@
 package com.ashlikun.adapter.simple
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
-import com.ashlikun.adapter.simple.data.NeibuData
-import java.util.ArrayList
 import android.os.Bundle
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.alibaba.android.vlayout.layout.LinearLayoutHelper
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.CommonAdapter
-import com.ashlikun.adapter.recyclerview.vlayout.MultipleAdapterHelp
-import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter
-import com.ashlikun.adapter.simple.data.Data
+import com.ashlikun.adapter.simple.data.NeibuData
 import com.ashlikun.adapter.simple.databinding.ActivityCommentBinding
 import com.ashlikun.adapter.simple.databinding.ItemViewBinding
+import java.util.*
 
 /**
  * 作者　　: 李坤
@@ -37,7 +33,7 @@ class CommonActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         for (i in 0..99) {
-            neibuData.add(NeibuData("我是第一种$i"))
+            neibuData.add(NeibuData("我是第一种$i"))CoroutineScope
         }
         initView()
     }
@@ -46,18 +42,16 @@ class CommonActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = CommonAdapter(
             this, neibuData,
-            apply = {
-                onItemClick = {
-                    Toast.makeText(context, it.name, Toast.LENGTH_LONG).show()
-                }
+            onItemClick = {
+                Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
             },
             binding = ItemViewBinding::class.java
         ) { holder, t ->
-            holder.binding<ItemViewBinding>().run {
+            holder.binding<ItemViewBinding>().apply {
                 textView.text = t?.name
             }
         }
-        addHeard();
+        addHeard()
     }
 
     private fun addHeard() {

@@ -1,22 +1,22 @@
 package com.ashlikun.adapter.simple
 
-import androidx.appcompat.app.AppCompatActivity
-import com.ashlikun.adapter.simple.data.NeibuData
-import java.util.ArrayList
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.ashlikun.adapter.recyclerview.section.SectionSingAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.MultipleAdapterHelp
 import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.mode.LayoutStyle
 import com.ashlikun.adapter.simple.data.Data
+import com.ashlikun.adapter.simple.data.NeibuData
 import com.ashlikun.adapter.simple.databinding.ActivityCommentBinding
 import com.ashlikun.adapter.simple.databinding.ItemHeaderBinding
 import com.ashlikun.adapter.simple.databinding.ItemView1Binding
 import com.ashlikun.adapter.simple.databinding.ItemViewBinding
+import java.util.*
 
 /**
  * 作者　　: 李坤
@@ -51,6 +51,10 @@ class VLayoutActivity : AppCompatActivity() {
                         )
                     )
                 }
+            } else if (type == "type1") {
+                for (j in 0..10) {
+                    neibu.add(NeibuData("我是${type},数据是$j"))
+                }
             } else {
                 for (j in 0..10) {
                     neibu.add(NeibuData("我是${type},数据是$j"))
@@ -62,57 +66,63 @@ class VLayoutActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-
-        data.forEach {
-            if (it.type == "type2") {
-                help.adapter.addAdapter(SingAdapter(this, it.datas,
-                    layoutStyle = LayoutStyle(spanCount = 3),
-                    binding = ItemView1Binding::class.java,
-                    apply = {
+        help.adapter.addAdapters(data.map {
+            when (it.type) {
+                "type1" ->
+                    SingAdapter(this, it.datas,
+                        layoutStyle = LayoutStyle(single = true),
+                        binding = ItemView1Binding::class.java,
                         onItemClick = {
-                            Toast.makeText(context, it.name, Toast.LENGTH_LONG).show()
+                            Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
+                        }) { holder, t ->
+                        holder.binding<ItemView1Binding>().run {
+                            textView.setTextColor(0xffff3300.toInt())
+                            textView.text = t?.name
                         }
-                    }) { holder, t ->
-                    holder.binding<ItemView1Binding>().run {
-                        textView.setTextColor(0xffffff00.toInt())
-                        textView.text = t?.name
                     }
-                })
-            } else if (it.type == "type4") {
-                help.adapter.addAdapter(SectionSingAdapter(this, it.datas,
-                    layoutStyle = LayoutStyle(spanCount = 3),
-                    apply = {
+                "type2" ->
+                    SingAdapter(this, it.datas,
+                        layoutStyle = LayoutStyle(spanCount = 3),
+                        binding = ItemView1Binding::class.java,
                         onItemClick = {
-                            Toast.makeText(context, it.name, Toast.LENGTH_LONG).show()
-                        }
-                    },
-                    binding = ItemViewBinding::class.java,
-                    bndingHead = ItemHeaderBinding::class.java,
-                    convertHeader = { holder, t ->
-                        holder.binding<ItemHeaderBinding>().run {
-                            tvHeader.text = t?.name
+                            Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
+                        }) { holder, t ->
+                        holder.binding<ItemView1Binding>().run {
+                            textView.setTextColor(0xff0fff00.toInt())
+                            textView.text = t?.name
                         }
                     }
-                ) { holder, t ->
-                    holder.binding<ItemViewBinding>().run {
-                        textView.text = t?.name
-                    }
-                })
-            } else {
-                help.adapter.addAdapter(SingAdapter(this, it.datas,
-                    layoutStyle = LayoutStyle(),
-                    binding = ItemViewBinding::class.java,
-                    apply = {
+                "type4" ->
+                    SectionSingAdapter(this, it.datas,
+                        layoutStyle = LayoutStyle(spanCount = 3),
                         onItemClick = {
-                            Toast.makeText(context, it.name, Toast.LENGTH_LONG).show()
+                            Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
+                        },
+                        binding = ItemViewBinding::class.java,
+                        bndingHead = ItemHeaderBinding::class.java,
+                        convertHeader = { holder, t ->
+                            holder.binding<ItemHeaderBinding>().run {
+                                tvHeader.text = t?.name
+                            }
                         }
-                    }) { holder, t ->
-                    holder.binding<ItemViewBinding>().run {
-                        textView.text = t?.name
+                    ) { holder, t ->
+                        holder.binding<ItemViewBinding>().run {
+                            textView.text = t?.name
+                        }
                     }
-                })
+                else ->
+                    SingAdapter(this, it.datas,
+                        binding = ItemViewBinding::class.java,
+                        onItemClick = {
+                            Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
+                        }) { holder, t ->
+                        holder.binding<ItemViewBinding>().run {
+                            textView.text = t?.name
+                        }
+                    }
             }
-        }
+        })
+
 //        addHeard()
     }
 

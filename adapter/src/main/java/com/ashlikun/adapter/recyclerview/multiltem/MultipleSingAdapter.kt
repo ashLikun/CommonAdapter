@@ -1,12 +1,10 @@
 package com.ashlikun.adapter.recyclerview.multiltem
 
 import android.content.Context
-import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter
 import androidx.annotation.LayoutRes
 import androidx.viewbinding.ViewBinding
-import com.alibaba.android.vlayout.LayoutHelper
-import com.alibaba.android.vlayout.layout.LinearLayoutHelper
-import com.ashlikun.adapter.recyclerview.AdapterConvert
+import com.ashlikun.adapter.recyclerview.*
+import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.LayoutStyle
 
@@ -25,12 +23,23 @@ open class MultipleSingAdapter<T>(
     initDatas: List<T>? = null,
     //事件
     override var bus: AdapterBus? = null,
-    //data对应的type
-    open var itemType: ((position: Int, data: T) -> Int)? = null,
     //布局，优先
-    layoutStyle: LayoutStyle? = null,
+    layoutStyle: LayoutStyle = LayoutStyle(),
     //ViewType
     override var viewType: Any? = null,
+    //data对应的type
+    open var itemType2: ((position: Int, data: T) -> Int)? = null,
+    open var itemType: ((data: T) -> Int)? = null,
+    //ItemType对应的binding 多个
+    open var bindings: MutableMap<Int, Class<out ViewBinding>> = mutableMapOf(),
+    //ItemType对应的LayoutId
+    open var layouts: MutableMap<Int, Int> = mutableMapOf(),
+    //点击事件
+    override var onItemClick: OnItemClick<T>? = null,
+    override var onItemClickX: OnItemClickX<T>? = null,
+    //长按事件
+    override var onItemLongClick: OnItemLongClick<T>? = null,
+    override var onItemLongClickX: OnItemLongClickX<T>? = null,
     //初始化的apply 便于执行其他代码
     apply: (MultipleSingAdapter<T>.() -> Unit)? = null,
     //转换
@@ -40,11 +49,7 @@ open class MultipleSingAdapter<T>(
     initDatas = initDatas,
     layoutStyle = layoutStyle
 ) {
-    //ItemType对应的binding 多个
-    open var bindings: MutableMap<Int, Class<out ViewBinding>> = mutableMapOf()
 
-    //ItemType对应的LayoutId
-    open var layouts: MutableMap<Int, Int> = mutableMapOf()
 
     init {
         apply?.invoke(this)
@@ -101,7 +106,8 @@ open class MultipleSingAdapter<T>(
     }
 
     open fun getItemViewType(position: Int, data: T) =
-        itemType?.invoke(position, data) ?: throw RuntimeException("必须提供itemtype")
+        itemType2?.invoke(position, data) ?: itemType?.invoke(data)
+        ?: throw RuntimeException("必须提供itemtype")
 
     companion object {
         const val TYPE_NOT_FOUND = -404

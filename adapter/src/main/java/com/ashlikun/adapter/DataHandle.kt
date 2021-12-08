@@ -1,8 +1,6 @@
 package com.ashlikun.adapter
 
 import com.ashlikun.adapter.recyclerview.BaseAdapter
-import kotlin.jvm.JvmOverloads
-import java.util.ArrayList
 
 /**
  * @author　　: 李坤

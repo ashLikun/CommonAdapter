@@ -1,18 +1,19 @@
 package com.ashlikun.adapter.simple
 
-import androidx.appcompat.app.AppCompatActivity
-import com.ashlikun.adapter.simple.data.NeibuData
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ashlikun.adapter.recyclerview.multiltem.MultiItemCommonAdapter
 import com.ashlikun.adapter.simple.data.MultiItemData
+import com.ashlikun.adapter.simple.data.NeibuData
 import com.ashlikun.adapter.simple.databinding.ActivityCommentBinding
 import com.ashlikun.adapter.simple.databinding.ItemView1Binding
 import com.ashlikun.adapter.simple.databinding.ItemViewBinding
+import java.util.ArrayList
 
 /**
  * 作者　　: 李坤
@@ -28,14 +29,14 @@ class MultiItemActivity : AppCompatActivity() {
     }
     val adapter by lazy {
         MultiItemCommonAdapter<MultiItemData>(this,
-                apply = {
-                    bindings["type1".hashCode()] = ItemViewBinding::class.java
-                    bindings["type2".hashCode()] = ItemView1Binding::class.java
-                    onItemClick = {
-                        Toast.makeText(context, it?.type + "  " + it?.data?.name, Toast.LENGTH_LONG).show()
-                    }
-                },
-                itemType = { data -> data.type.hashCode() }) { holder, t ->
+            onItemClick = {
+                Toast.makeText(this, it?.type + "  " + it?.data?.name, Toast.LENGTH_LONG).show()
+            },
+            bindings = hashMapOf(
+                "type1".hashCode() to ItemViewBinding::class.java,
+                "type2".hashCode() to ItemView1Binding::class.java
+            ),
+            itemType = { data -> data.type.hashCode() }) { holder, t ->
             when (holder.itemViewType) {
                 "type2".hashCode() -> holder.binding<ItemView1Binding>().run {
                     textView.text = t?.type + "  " + t?.data?.name

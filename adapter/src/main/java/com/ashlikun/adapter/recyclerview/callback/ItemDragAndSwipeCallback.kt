@@ -2,7 +2,6 @@ package com.ashlikun.adapter.recyclerview.callback
 
 import android.graphics.Canvas
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.ashlikun.adapter.recyclerview.callback.ItemTouchHelperAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.ashlikun.adapter.R
 

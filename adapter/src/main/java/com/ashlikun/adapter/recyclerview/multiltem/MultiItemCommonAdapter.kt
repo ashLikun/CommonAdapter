@@ -1,11 +1,9 @@
 package com.ashlikun.adapter.recyclerview.multiltem
 
 import android.content.Context
-import android.view.View
-import com.ashlikun.adapter.recyclerview.CommonAdapter
 import androidx.annotation.LayoutRes
 import androidx.viewbinding.ViewBinding
-import com.ashlikun.adapter.recyclerview.AdapterConvert
+import com.ashlikun.adapter.recyclerview.*
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 
 /**
@@ -26,6 +24,16 @@ open class MultiItemCommonAdapter<T>(
     //data对应的type
     open var itemType2: ((position: Int, data: T) -> Int)? = null,
     open var itemType: ((data: T) -> Int)? = null,
+    //ItemType对应的binding 多个
+    open var bindings: MutableMap<Int, Class<out ViewBinding>> = mutableMapOf(),
+    //ItemType对应的LayoutId
+    open var layouts: MutableMap<Int, Int> = mutableMapOf(),
+    //点击事件
+    override var onItemClick: OnItemClick<T>? = null,
+    override var onItemClickX: OnItemClickX<T>? = null,
+    //长按事件
+    override var onItemLongClick: OnItemLongClick<T>? = null,
+    override var onItemLongClickX: OnItemLongClickX<T>? = null,
     //初始化的apply 便于执行其他代码
     apply: (MultiItemCommonAdapter<T>.() -> Unit)? = null,
     //转换
@@ -34,11 +42,7 @@ open class MultiItemCommonAdapter<T>(
     context = context,
     initDatas = initDatas
 ) {
-    //ItemType对应的binding 多个
-    open var bindings: MutableMap<Int, Class<out ViewBinding>> = mutableMapOf()
 
-    //ItemType对应的LayoutId
-    open var layouts: MutableMap<Int, Int> = mutableMapOf()
 
     init {
         apply?.invoke(this)
@@ -49,50 +53,13 @@ open class MultiItemCommonAdapter<T>(
         return getItemViewType(position, data)
     }
 
-    /**
-     * 关联 viewType与layoutResId
-     *
-     * @param viewType
-     * @param layoutResId
-     */
-    fun addItemType(viewType: Int, @LayoutRes layoutResId: Int) {
-        layouts[viewType] = layoutResId
-    }
-
-    /**
-     * 关联 viewType与ViewBinding
-     *
-     * @param viewType
-     * @param layoutResId
-     */
-    fun addItemType(viewType: Int, viewBindClass: Class<out ViewBinding>) {
-        bindings[viewType] = viewBindClass
-    }
 
     override fun getLayoutId(viewType: Int): Int? {
         return layouts[viewType]
     }
 
     override fun getBindClass(viewType: Int): Class<out ViewBinding>? {
-        return bindings[viewType]
-    }
-
-    /**
-     * 添加默认的view
-     *
-     * @param layoutResId
-     */
-    protected fun setDefaultViewTypeLayout(@LayoutRes layoutResId: Int) {
-        addItemType(DEFAULT_VIEW_TYPE, layoutResId)
-    }
-
-    /**
-     * 添加默认的view
-     *
-     * @param layoutResId
-     */
-    protected fun setDefaultViewTypeLayout(viewBindClass: Class<out ViewBinding>) {
-        addItemType(DEFAULT_VIEW_TYPE, viewBindClass)
+        return bindings[viewType] as Class<out ViewBinding>?
     }
 
     open fun getItemViewType(position: Int, data: T) =

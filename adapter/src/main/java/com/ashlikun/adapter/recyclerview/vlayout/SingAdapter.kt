@@ -6,8 +6,7 @@ import androidx.viewbinding.ViewBinding
 import com.alibaba.android.vlayout.LayoutHelper
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper
 import com.alibaba.android.vlayout.layout.MarginLayoutHelper
-import com.ashlikun.adapter.recyclerview.AdapterConvert
-import com.ashlikun.adapter.recyclerview.CommonAdapter
+import com.ashlikun.adapter.recyclerview.*
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.LayoutStyle
 import kotlin.math.abs
@@ -30,9 +29,15 @@ open class SingAdapter<T>(
     //事件
     override var bus: AdapterBus? = null,
     //布局，优先
-    var layoutStyle: LayoutStyle? = null,
+    var layoutStyle: LayoutStyle = LayoutStyle(),
     //ViewType
     open var viewType: Any? = null,
+    //点击事件
+    override var onItemClick: OnItemClick<T>? = null,
+    override var onItemClickX: OnItemClickX<T>? = null,
+    //长按事件
+    override var onItemLongClick: OnItemLongClick<T>? = null,
+    override var onItemLongClickX: OnItemLongClickX<T>? = null,
     //初始化的apply 便于执行其他代码
     apply: (SingAdapter<T>.() -> Unit)? = null,
     //转换
@@ -41,16 +46,14 @@ open class SingAdapter<T>(
     context = context,
     initDatas = initDatas
 ) {
-    var layoutHelper: LayoutHelper = LinearLayoutHelper()
+    var layoutHelper: LayoutHelper
 
     init {
         apply?.invoke(this)
-        layoutStyle?.run {
-            layoutHelper = createHelper()
-        }
+        layoutHelper = layoutStyle.createHelper()
         //赋值MarginLayoutHelper
         if (layoutHelper is MarginLayoutHelper) {
-            style?.bindHelperUI(layoutHelper!!)
+            style?.bindHelperUI(layoutHelper)
         }
     }
 

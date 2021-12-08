@@ -1,8 +1,6 @@
 package com.ashlikun.adapter.recyclerview.vlayout
 
-import androidx.lifecycle.LifecycleObserver
 import androidx.recyclerview.widget.RecyclerView
-import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter
 
 /**
  * 作者　　: 李坤

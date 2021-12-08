@@ -3,7 +3,6 @@ package com.ashlikun.adapter
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.view.ContextThemeWrapper

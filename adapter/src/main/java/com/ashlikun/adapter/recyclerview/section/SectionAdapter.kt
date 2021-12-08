@@ -4,10 +4,8 @@ import android.content.Context
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.ashlikun.adapter.recyclerview.CommonAdapter
 import com.ashlikun.adapter.ViewHolder
-import com.ashlikun.adapter.recyclerview.AdapterConvert
-import com.ashlikun.adapter.recyclerview.SpanSizeLookupGroup
+import com.ashlikun.adapter.recyclerview.*
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import kotlin.math.abs
 
@@ -34,6 +32,12 @@ open class SectionAdapter<T : SectionEntity>(
     open var headLayoutId: Int? = null,
     //转换头
     open var convertHeader: AdapterConvert<T>? = null,
+    //点击事件
+    override var onItemClick: OnItemClick<T>? = null,
+    override var onItemClickX: OnItemClickX<T>? = null,
+    //长按事件
+    override var onItemLongClick: OnItemLongClick<T>? = null,
+    override var onItemLongClickX: OnItemLongClickX<T>? = null,
     //初始化的apply 便于执行其他代码
     apply: (SectionAdapter<T>.() -> Unit)? = null,
     //转换

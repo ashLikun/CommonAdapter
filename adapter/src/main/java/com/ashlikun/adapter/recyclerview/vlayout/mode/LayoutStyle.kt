@@ -1,6 +1,5 @@
 package com.ashlikun.adapter.recyclerview.vlayout.mode
 
-import android.content.Context
 import com.alibaba.android.vlayout.LayoutHelper
 import com.alibaba.android.vlayout.layout.*
 import java.io.Serializable

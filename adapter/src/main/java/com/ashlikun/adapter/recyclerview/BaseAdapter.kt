@@ -1,22 +1,19 @@
 package com.ashlikun.adapter.recyclerview
 
-import com.ashlikun.adapter.ForegroundEffects.setForeground
-import androidx.recyclerview.widget.RecyclerView
 import android.content.Context
-import androidx.lifecycle.LifecycleObserver
-import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition
-import com.ashlikun.adapter.animation.AdapterAnimHelp
-import java.lang.Class
-import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.view.View
-import com.ashlikun.adapter.recyclerview.click.SingleClickListener
-import com.ashlikun.adapter.animation.BaseAnimation
+import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.*
-import kotlin.reflect.KClass
+import com.ashlikun.adapter.ForegroundEffects.setForeground
+import com.ashlikun.adapter.animation.AdapterAnimHelp
+import com.ashlikun.adapter.animation.BaseAnimation
+import com.ashlikun.adapter.recyclerview.click.SingleClickListener
+import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition
 
 /**
  * 作者　　: 李坤

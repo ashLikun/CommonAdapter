@@ -23,19 +23,17 @@
  */
 package com.ashlikun.adapter.recyclerview.vlayout
 
-import android.util.Log
 import android.util.Pair
-import com.alibaba.android.vlayout.VirtualLayoutManager
-import com.alibaba.android.vlayout.VirtualLayoutAdapter
-import androidx.recyclerview.widget.RecyclerView
 import android.util.SparseArray
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.vlayout.Cantor
 import com.alibaba.android.vlayout.LayoutHelper
+import com.alibaba.android.vlayout.VirtualLayoutAdapter
+import com.alibaba.android.vlayout.VirtualLayoutManager
 import com.ashlikun.adapter.AdapterUtils
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.IHeaderAndFooter
-import java.lang.UnsupportedOperationException
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.max

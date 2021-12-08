@@ -1,13 +1,14 @@
 package com.ashlikun.adapter.recyclerview.section
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import com.alibaba.android.vlayout.layout.GridLayoutHelper
 import com.ashlikun.adapter.ViewHolder
-import com.ashlikun.adapter.recyclerview.AdapterConvert
-import com.ashlikun.adapter.recyclerview.SpanSizeLookupGroup
+import com.ashlikun.adapter.recyclerview.*
 import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.LayoutStyle
@@ -35,11 +36,17 @@ open class SectionSingAdapter<T : SectionEntity>(
     //头布局id
     open var headLayoutId: Int = View.NO_ID,
     //布局，优先
-    layoutStyle: LayoutStyle? = null,
+    layoutStyle: LayoutStyle = LayoutStyle(),
     //ViewType
     override var viewType: Any? = null,
     //转换头
     open var convertHeader: AdapterConvert<T>? = null,
+    //点击事件
+    override var onItemClick: OnItemClick<T>? = null,
+    override var onItemClickX: OnItemClickX<T>? = null,
+    //长按事件
+    override var onItemLongClick: OnItemLongClick<T>? = null,
+    override var onItemLongClickX: OnItemLongClickX<T>? = null,
     //初始化的apply 便于执行其他代码
     apply: (SectionSingAdapter<T>.() -> Unit)? = null,
     //转换
@@ -89,7 +96,16 @@ open class SectionSingAdapter<T : SectionEntity>(
         if (recyclerView.layoutManager is GridLayoutManager) {
             val gridLayoutManager = recyclerView.layoutManager as GridLayoutManager
             gridLayoutManager.spanSizeLookup = SpanSizeLookupGroup(gridLayoutManager) {
-                isPositionHeader(it)
+                //这里得减去这个Adapter、开始的位置
+                isPositionHeader(it - getStartPosition())
+            }
+        }
+        if (layoutHelper is GridLayoutHelper) {
+            (layoutHelper as GridLayoutHelper).run {
+                setSpanSizeLookup(SpanSizeLookupGroupLayoutHelper(this) {
+                    //这里得减去这个Adapter、开始的位置
+                    isPositionHeader(it - getStartPosition())
+                })
             }
         }
     }

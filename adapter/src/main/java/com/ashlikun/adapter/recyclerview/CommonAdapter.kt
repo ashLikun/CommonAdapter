@@ -1,7 +1,6 @@
 package com.ashlikun.adapter.recyclerview
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.NonNull
@@ -9,7 +8,6 @@ import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
-import kotlin.reflect.KClass
 
 /**
  * 作者　　: 李坤
@@ -43,6 +41,14 @@ open class CommonAdapter<T>(
     override val layoutId: Int? = null,
     //1:创建Adapter回调的其他参数，一般用于改变UI , 2:事件的回调
     open var bus: AdapterBus? = null,
+
+    //点击事件
+    override var onItemClick: OnItemClick<T>? = null,
+    override var onItemClickX: OnItemClickX<T>? = null,
+    //长按事件
+    override var onItemLongClick: OnItemLongClick<T>? = null,
+    override var onItemLongClickX: OnItemLongClickX<T>? = null,
+
     //初始化的apply 便于执行其他代码,子类一定需要自己实现
     apply: (CommonAdapter<T>.() -> Unit)? = null,
     //转换
@@ -59,6 +65,7 @@ open class CommonAdapter<T>(
 
     init {
         apply?.invoke(this)
+
     }
 
 

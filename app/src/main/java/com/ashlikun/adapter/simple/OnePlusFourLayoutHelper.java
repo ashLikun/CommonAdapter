@@ -24,12 +24,15 @@
 
 package com.ashlikun.adapter.simple;
 
+import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
+
 import android.graphics.Rect;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.android.vlayout.LayoutManagerHelper;
 import com.alibaba.android.vlayout.OrientationHelperEx;
@@ -39,8 +42,6 @@ import com.alibaba.android.vlayout.layout.AbstractFullFillLayoutHelper;
 import com.alibaba.android.vlayout.layout.LayoutChunkResult;
 
 import java.util.Arrays;
-
-import static com.alibaba.android.vlayout.VirtualLayoutManager.VERTICAL;
 
 /**
  * @author　　: 李坤

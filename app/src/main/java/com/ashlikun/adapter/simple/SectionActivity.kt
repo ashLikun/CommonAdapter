@@ -1,22 +1,21 @@
 package com.ashlikun.adapter.simple
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
-import com.ashlikun.adapter.simple.data.NeibuData
-import java.util.ArrayList
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.CommonAdapter
 import com.ashlikun.adapter.recyclerview.section.SectionAdapter
+import com.ashlikun.adapter.simple.data.NeibuData
 import com.ashlikun.adapter.simple.databinding.ActivityCommentBinding
 import com.ashlikun.adapter.simple.databinding.ItemHeaderBinding
 import com.ashlikun.adapter.simple.databinding.ItemViewBinding
+import java.util.*
 
 /**
  * 作者　　: 李坤
