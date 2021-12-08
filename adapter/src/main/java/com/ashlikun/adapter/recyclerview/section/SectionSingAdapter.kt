@@ -32,7 +32,7 @@ open class SectionSingAdapter<T : SectionEntity>(
     //布局文件
     override val layoutId: Int? = null,
     //事件
-    override var bus: AdapterBus? = null,
+    override var bus: AdapterBus = AdapterBus(),
     //头布局id
     open var headLayoutId: Int = View.NO_ID,
     //布局，优先
@@ -50,7 +50,8 @@ open class SectionSingAdapter<T : SectionEntity>(
     //初始化的apply 便于执行其他代码
     apply: (SectionSingAdapter<T>.() -> Unit)? = null,
     //转换
-    override var convert: AdapterConvert<T>? = null
+    override val convertP: AdapterPayloadsConvert<T>? = null,
+    override val convert: AdapterConvert<T>? = null
 ) : SingAdapter<T>(
     context = context,
     initDatas = initDatas,

@@ -22,7 +22,7 @@ open class MultipleSingAdapter<T>(
     context: Context,
     initDatas: List<T>? = null,
     //事件
-    override var bus: AdapterBus? = null,
+    override var bus: AdapterBus = AdapterBus(),
     //布局，优先
     layoutStyle: LayoutStyle = LayoutStyle(),
     //ViewType
@@ -43,7 +43,8 @@ open class MultipleSingAdapter<T>(
     //初始化的apply 便于执行其他代码
     apply: (MultipleSingAdapter<T>.() -> Unit)? = null,
     //转换
-    override var convert: AdapterConvert<T>? = null
+    override val convertP: AdapterPayloadsConvert<T>? = null,
+    override val convert: AdapterConvert<T>? = null
 ) : SingAdapter<T>(
     context = context,
     initDatas = initDatas,

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.*
+import com.ashlikun.adapter.recyclerview.common.CommonBaseAdapter
 import java.util.*
 
 /**
@@ -37,7 +38,7 @@ open class ItemDraggableAdapter<T>(
     open var isViewCreateByAdapter: Boolean = false,
     //转换
     override var convert: AdapterConvert<T>? = null
-) : CommonAdapter<T>(
+) : CommonBaseAdapter<T>(
     context = context,
     initDatas = initDatas
 ), ItemTouchHelperAdapter {

@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.alibaba.android.vlayout.LayoutHelper
-import com.alibaba.android.vlayout.layout.LinearLayoutHelper
 import com.alibaba.android.vlayout.layout.MarginLayoutHelper
 import com.ashlikun.adapter.recyclerview.*
+import com.ashlikun.adapter.recyclerview.common.CommonBaseAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.LayoutStyle
 import kotlin.math.abs
@@ -27,7 +27,7 @@ open class SingAdapter<T>(
     //布局文件
     override val layoutId: Int? = null,
     //事件
-    override var bus: AdapterBus? = null,
+    override var bus: AdapterBus = AdapterBus(),
     //布局，优先
     var layoutStyle: LayoutStyle = LayoutStyle(),
     //ViewType
@@ -41,8 +41,9 @@ open class SingAdapter<T>(
     //初始化的apply 便于执行其他代码
     apply: (SingAdapter<T>.() -> Unit)? = null,
     //转换
-    override var convert: AdapterConvert<T>? = null
-) : CommonAdapter<T>(
+    override val convertP: AdapterPayloadsConvert<T>? = null,
+    override val convert: AdapterConvert<T>? = null
+) : CommonBaseAdapter<T>(
     context = context,
     initDatas = initDatas
 ) {

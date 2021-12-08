@@ -43,6 +43,9 @@ typealias OnItemLongClickX<T> = (viewType: Int, parent: ViewGroup, view: View, d
 typealias OnItemClick<T> = (data: T) -> Unit
 typealias OnItemLongClick<T> = (data: T) -> Boolean
 typealias AdapterConvert<T> = (holder: ViewHolder, t: T?) -> Unit
+typealias AdapterPayloadsConvert<T> = (holder: ViewHolder, t: T?, payloads: MutableList<Any>) -> Boolean
+typealias AdapterBindingConvert<T, VB> = (holder: ViewHolder, binding: VB, t: T?) -> Unit
+typealias AdapterBindingPayloadsConvert<T, VB> = (holder: ViewHolder, binding: VB, t: T?, payloads: MutableList<Any>) -> Boolean
 
 /**
  * 设计一个基类时，应该避免在构造函数、属性初始化器以及 init 块中使用 open 成员。
@@ -50,7 +53,6 @@ typealias AdapterConvert<T> = (holder: ViewHolder, t: T?) -> Unit
 abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     context: Context,
     initDatas: List<T>? = null,
-    //创建ViewBinding的Class,与layoutId 二选一
     open val binding: Class<out ViewBinding>? = null,
     //布局文件
     open val layoutId: Int? = null
@@ -117,7 +119,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * @param payloads 一定不为null
      * @return true：代表处理完毕，不走另一个刷新的方法，false表示没有处理，继续走另一个
      */
-    fun convert(holder: V, t: T?, payloads: List<Any?>?): Boolean {
+    open fun convert(holder: V, t: T?, payloads: MutableList<Any>): Boolean {
         return false
     }
 

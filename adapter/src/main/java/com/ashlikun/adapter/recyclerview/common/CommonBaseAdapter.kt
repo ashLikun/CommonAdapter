@@ -1,4 +1,4 @@
-package com.ashlikun.adapter.recyclerview
+package com.ashlikun.adapter.recyclerview.common
 
 import android.content.Context
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.ViewHolder
+import com.ashlikun.adapter.recyclerview.*
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
 
@@ -32,26 +33,24 @@ import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
  *      }
  *  }
  */
-open class CommonAdapter<T>(
+open class CommonBaseAdapter<T>(
     context: Context,
     initDatas: List<T>? = null,
-    //创建ViewBinding的Class,与layoutId 二选一
     override val binding: Class<out ViewBinding>? = null,
     //布局文件
     override val layoutId: Int? = null,
     //1:创建Adapter回调的其他参数，一般用于改变UI , 2:事件的回调
-    open var bus: AdapterBus? = null,
-
+    open var bus: AdapterBus = AdapterBus(),
     //点击事件
     override var onItemClick: OnItemClick<T>? = null,
     override var onItemClickX: OnItemClickX<T>? = null,
     //长按事件
     override var onItemLongClick: OnItemLongClick<T>? = null,
     override var onItemLongClickX: OnItemLongClickX<T>? = null,
-
     //初始化的apply 便于执行其他代码,子类一定需要自己实现
-    apply: (CommonAdapter<T>.() -> Unit)? = null,
+    apply: (CommonBaseAdapter<T>.() -> Unit)? = null,
     //转换
+    open val convertP: AdapterPayloadsConvert<T>? = null,
     open val convert: AdapterConvert<T>? = null
 ) : BaseAdapter<T, ViewHolder>(
     context = context,
@@ -61,16 +60,18 @@ open class CommonAdapter<T>(
      * 获取AdapterBus.STYLE
      */
     open val style
-        get() = bus?.style
+        get() = bus.style
 
     init {
         apply?.invoke(this)
-
     }
-
 
     override fun convert(holder: ViewHolder, t: T?) {
         convert?.invoke(holder, t)
+    }
+
+    override fun convert(holder: ViewHolder, t: T?, payloads: MutableList<Any>): Boolean {
+        return convertP?.invoke(holder, t, payloads) ?: super.convert(holder, t, payloads)
     }
 
     override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): ViewHolder {
@@ -122,11 +123,8 @@ open class CommonAdapter<T>(
      * @param action 事件的类型
      * @param eve 这个事件对应回调
      */
-    open fun putEvent(action: String, eve: OnAdapterEvent): CommonAdapter<T> {
-        if (bus == null) {
-            bus = AdapterBus()
-        }
-        bus?.putEvent(action, eve)
+    open fun putEvent(action: String, eve: OnAdapterEvent): CommonBaseAdapter<T> {
+        bus.putEvent(action, eve)
         return this
     }
 
@@ -135,22 +133,19 @@ open class CommonAdapter<T>(
      * @param key 参数类型
      * @param eve 这个数对应的参数
      */
-    open fun putParam(key: String, eve: Any): CommonAdapter<T> {
-        if (bus == null) {
-            bus = AdapterBus()
-        }
-        bus?.putParam(key, eve)
+    open fun putParam(key: String, eve: Any): CommonBaseAdapter<T> {
+        bus.putParam(key, eve)
         return this
     }
 
     /**
      * 获取Bus里面的key
      */
-    open fun <T : OnAdapterEvent> event(key: String): T? = bus?.event(key)
+    open fun <T : OnAdapterEvent> event(key: String): T? = bus.event(key)
 
 
     /**
      * 获取AdapterBus.STYLE
      */
-    open fun params(key: String) = bus?.get<Any>(key)
+    open fun params(key: String) = bus.get<Any>(key)
 }

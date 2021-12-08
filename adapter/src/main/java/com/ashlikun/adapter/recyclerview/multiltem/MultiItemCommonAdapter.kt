@@ -1,9 +1,9 @@
 package com.ashlikun.adapter.recyclerview.multiltem
 
 import android.content.Context
-import androidx.annotation.LayoutRes
 import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.recyclerview.*
+import com.ashlikun.adapter.recyclerview.common.CommonBaseAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 
 /**
@@ -20,7 +20,7 @@ open class MultiItemCommonAdapter<T>(
     context: Context,
     initDatas: List<T>? = null,
     //事件
-    override var bus: AdapterBus? = null,
+    override var bus: AdapterBus = AdapterBus(),
     //data对应的type
     open var itemType2: ((position: Int, data: T) -> Int)? = null,
     open var itemType: ((data: T) -> Int)? = null,
@@ -37,8 +37,9 @@ open class MultiItemCommonAdapter<T>(
     //初始化的apply 便于执行其他代码
     apply: (MultiItemCommonAdapter<T>.() -> Unit)? = null,
     //转换
-    override var convert: AdapterConvert<T>? = null
-) : CommonAdapter<T>(
+    override val convertP: AdapterPayloadsConvert<T>? = null,
+    override val convert: AdapterConvert<T>? = null
+) : CommonBaseAdapter<T>(
     context = context,
     initDatas = initDatas
 ) {

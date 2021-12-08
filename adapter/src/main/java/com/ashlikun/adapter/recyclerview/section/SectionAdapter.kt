@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.*
+import com.ashlikun.adapter.recyclerview.common.CommonBaseAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import kotlin.math.abs
 
@@ -27,7 +28,7 @@ open class SectionAdapter<T : SectionEntity>(
     //布局文件
     override var layoutId: Int? = null,
     //事件
-    override var bus: AdapterBus? = null,
+    override var bus: AdapterBus = AdapterBus(),
     //头布局id
     open var headLayoutId: Int? = null,
     //转换头
@@ -41,8 +42,9 @@ open class SectionAdapter<T : SectionEntity>(
     //初始化的apply 便于执行其他代码
     apply: (SectionAdapter<T>.() -> Unit)? = null,
     //转换
-    override var convert: AdapterConvert<T>? = null
-) : CommonAdapter<T>(
+    override val convertP: AdapterPayloadsConvert<T>? = null,
+    override val convert: AdapterConvert<T>? = null
+) : CommonBaseAdapter<T>(
     context = context,
     initDatas = initDatas
 ) {
