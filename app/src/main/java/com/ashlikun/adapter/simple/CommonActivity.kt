@@ -33,7 +33,7 @@ class CommonActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         for (i in 0..99) {
-            neibuData.add(NeibuData("我是第一种$i"))CoroutineScope
+            neibuData.add(NeibuData("我是第一种$i"))
         }
         initView()
     }
