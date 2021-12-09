@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ashlikun.adapter.ViewHolder
-import com.ashlikun.adapter.recyclerview.common.CommonBaseAdapter
+import com.ashlikun.adapter.recyclerview.common.CommonAdapter
 import com.ashlikun.adapter.recyclerview.section.SectionAdapter
 import com.ashlikun.adapter.simple.data.NeibuData
 import com.ashlikun.adapter.simple.databinding.ActivityCommentBinding
@@ -44,14 +44,13 @@ class SectionActivity : AppCompatActivity() {
     private fun initView() {
         binding.recyclerView.layoutManager = GridLayoutManager(this, 2)
         binding.recyclerView.adapter = SectionAdapter(
-            this, neibuData,
+            this, neibuData, ItemViewBinding::class.java,
+            bndingHead = ItemHeaderBinding::class.java,
             apply = {
                 onItemClick = {
                     Toast.makeText(context, it.name, Toast.LENGTH_LONG).show()
                 }
             },
-            binding = ItemViewBinding::class.java,
-            bndingHead = ItemHeaderBinding::class.java,
             convertHeader = { holder, t ->
                 holder.binding<ItemHeaderBinding>().run {
                     tvHeader.text = t?.name
@@ -74,7 +73,7 @@ class SectionActivity : AppCompatActivity() {
     }
 }
 
-class MySectionAdapter(context: Context) : CommonBaseAdapter<NeibuData>(context) {
+class MySectionAdapter(context: Context) : CommonAdapter<NeibuData>(context) {
     override fun convert(holder: ViewHolder, t: NeibuData?) {
     }
 }

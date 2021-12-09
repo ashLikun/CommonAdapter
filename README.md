@@ -40,16 +40,109 @@ dependencies {
 
             //普通padater
            binding.recyclerView.adapter = CommonAdapter(
-                       this, neibuData,
+                       this, neibuData, ItemViewBinding::class.java,
                        onItemClick = {
                            Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
                        },
-                       binding = ItemViewBinding::class.java
                    ) { holder, t ->
                        holder.binding<ItemViewBinding>().apply {
                            textView.text = t?.name
                        }
                    }
+           //多种样式
+            MultiItemCommonAdapter<MultiItemData>(this,
+                       bindings = hashMapOf(
+                           "type1".hashCode() to ItemViewBinding::class.java,
+                           "type2".hashCode() to ItemView1Binding::class.java
+                       ),
+                       onItemClick = {
+                           Toast.makeText(this, it?.type + "  " + it?.data?.name, Toast.LENGTH_LONG).show()
+                       },
+                       itemType = { data -> data.type.hashCode() }) { holder, t ->
+                       when (holder.itemViewType) {
+                           "type2".hashCode() -> holder.binding<ItemView1Binding>().run {
+                               textView.text = t?.type + "  " + t?.data?.name
+                           }
+                           else -> holder.binding<ItemViewBinding>().run {
+                               textView.text = t?.type + "  " + t?.data?.name
+                           }
+                       }
+                   }
+            //分段
+             binding.recyclerView.adapter = SectionAdapter(
+                        this, neibuData, ItemViewBinding::class.java,
+                        bndingHead = ItemHeaderBinding::class.java,
+                        apply = {
+                            onItemClick = {
+                                Toast.makeText(context, it.name, Toast.LENGTH_LONG).show()
+                            }
+                        },
+                        convertHeader = { holder, t ->
+                            holder.binding<ItemHeaderBinding>().run {
+                                tvHeader.text = t?.name
+                            }
+                        }
+                    ) { holder, t ->
+                        holder.binding<ItemViewBinding>().run {
+                            textView.text = t?.name
+                        }
+                    }
+            //VLayout
+             val help by lazy {
+                    MultipleAdapterHelp(binding.recyclerView)
+                }
+            help.adapter.addAdapters(data.map {
+                        when (it.type) {
+                            "type1" ->
+                                CommonAdapter(this, it.datas, ItemView1Binding::class.java,
+                                    layoutStyle = LayoutStyle(single = true),
+                                    onItemClick = {
+                                        Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
+                                    }) { holder, t ->
+                                    holder.binding<ItemView1Binding>().run {
+                                        textView.setTextColor(0xffff3300.toInt())
+                                        textView.text = t?.name
+                                    }
+                                }
+                            "type2" ->
+                                CommonAdapter(this, it.datas, ItemView1Binding::class.java,
+                                    layoutStyle = LayoutStyle(spanCount = 3),
+                                    onItemClick = {
+                                        Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
+                                    }) { holder, t ->
+                                    holder.binding<ItemView1Binding>().run {
+                                        textView.setTextColor(0xff0fff00.toInt())
+                                        textView.text = t?.name
+                                    }
+                                }
+                            "type4" ->
+                                SectionAdapter(this, it.datas, ItemViewBinding::class.java,
+                                    layoutStyle = LayoutStyle(spanCount = 3),
+                                    onItemClick = {
+                                        Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
+                                    },
+                                    bndingHead = ItemHeaderBinding::class.java,
+                                    convertHeader = { holder, t ->
+                                        holder.binding<ItemHeaderBinding>().run {
+                                            tvHeader.text = t?.name
+                                        }
+                                    }
+                                ) { holder, t ->
+                                    holder.binding<ItemViewBinding>().run {
+                                        textView.text = t?.name
+                                    }
+                                }
+                            else ->
+                                CommonAdapter(this, it.datas, ItemViewBinding::class.java,
+                                    onItemClick = {
+                                        Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
+                                    }) { holder, t ->
+                                    holder.binding<ItemViewBinding>().run {
+                                        textView.text = t?.name
+                                    }
+                                }
+                        }
+                    })
 
 ### 混肴
 

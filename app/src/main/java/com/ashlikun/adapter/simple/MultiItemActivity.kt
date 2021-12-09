@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ashlikun.adapter.recyclerview.multiltem.MultiItemCommonAdapter
@@ -13,7 +14,6 @@ import com.ashlikun.adapter.simple.data.NeibuData
 import com.ashlikun.adapter.simple.databinding.ActivityCommentBinding
 import com.ashlikun.adapter.simple.databinding.ItemView1Binding
 import com.ashlikun.adapter.simple.databinding.ItemViewBinding
-import java.util.ArrayList
 
 /**
  * 作者　　: 李坤
@@ -29,13 +29,13 @@ class MultiItemActivity : AppCompatActivity() {
     }
     val adapter by lazy {
         MultiItemCommonAdapter<MultiItemData>(this,
-            onItemClick = {
-                Toast.makeText(this, it?.type + "  " + it?.data?.name, Toast.LENGTH_LONG).show()
-            },
             bindings = hashMapOf(
                 "type1".hashCode() to ItemViewBinding::class.java,
                 "type2".hashCode() to ItemView1Binding::class.java
             ),
+            onItemClick = {
+                Toast.makeText(this, it?.type + "  " + it?.data?.name, Toast.LENGTH_LONG).show()
+            },
             itemType = { data -> data.type.hashCode() }) { holder, t ->
             when (holder.itemViewType) {
                 "type2".hashCode() -> holder.binding<ItemView1Binding>().run {
@@ -52,14 +52,14 @@ class MultiItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         for (i in 1..100) {
-            val type = if (i > 10) "type1" else "type2"
+            val type = if (i > 10) "type2" else "type1"
             adapter.dataHandle.addDatas(MultiItemData(type, NeibuData("我是第$i")))
         }
         initView()
     }
 
     private fun initView() {
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.layoutManager = GridLayoutManager(this, 3)
         binding.recyclerView.adapter = adapter
         addHeard()
     }

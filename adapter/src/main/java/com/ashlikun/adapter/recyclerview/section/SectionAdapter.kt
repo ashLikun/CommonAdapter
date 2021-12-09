@@ -4,10 +4,12 @@ import android.content.Context
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+import com.alibaba.android.vlayout.layout.GridLayoutHelper
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.*
-import com.ashlikun.adapter.recyclerview.common.CommonBaseAdapter
+import com.ashlikun.adapter.recyclerview.common.CommonAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
+import com.ashlikun.adapter.recyclerview.vlayout.mode.LayoutStyle
 import kotlin.math.abs
 
 /**
@@ -27,10 +29,14 @@ open class SectionAdapter<T : SectionEntity>(
     open var bndingHead: Class<out ViewBinding>? = null,
     //布局文件
     override var layoutId: Int? = null,
-    //事件
-    override var bus: AdapterBus = AdapterBus(),
     //头布局id
     open var headLayoutId: Int? = null,
+    //事件
+    bus: AdapterBus = AdapterBus(),
+    //布局，优先
+    layoutStyle: LayoutStyle = LayoutStyle(),
+    //ViewType
+    override var viewType: Any? = null,
     //转换头
     open var convertHeader: AdapterConvert<T>? = null,
     //点击事件
@@ -44,9 +50,11 @@ open class SectionAdapter<T : SectionEntity>(
     //转换
     override val convertP: AdapterPayloadsConvert<T>? = null,
     override val convert: AdapterConvert<T>? = null
-) : CommonBaseAdapter<T>(
+) : CommonAdapter<T>(
     context = context,
-    initDatas = initDatas
+    initDatas = initDatas,
+    layoutStyle = layoutStyle,
+    bus = bus
 ) {
 
 
@@ -84,7 +92,22 @@ open class SectionAdapter<T : SectionEntity>(
         if (recyclerView.layoutManager is GridLayoutManager) {
             val gridLayoutManager = recyclerView.layoutManager as GridLayoutManager
             gridLayoutManager.spanSizeLookup = SpanSizeLookupGroup(gridLayoutManager) {
-                isPositionHeader(it)
+                if (vLayoutObserver != null) {
+                    //这里得减去这个Adapter、开始的位置
+                    isPositionHeader(it - getStartPosition())
+                } else {
+                    //这里得减去这个Adapter、开始的位置
+                    isPositionHeader(it)
+                }
+
+            }
+        }
+        if (vLayoutObserver != null && layoutHelper is GridLayoutHelper) {
+            (layoutHelper as GridLayoutHelper).run {
+                setSpanSizeLookup(SpanSizeLookupGroupLayoutHelper(this) {
+                    //这里得减去这个Adapter、开始的位置
+                    isPositionHeader(it - getStartPosition())
+                })
             }
         }
     }

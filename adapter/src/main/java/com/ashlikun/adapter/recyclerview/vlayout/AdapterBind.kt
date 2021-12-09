@@ -2,6 +2,7 @@ package com.ashlikun.adapter.recyclerview.vlayout
 
 import android.content.Context
 import android.util.Log
+import com.ashlikun.adapter.recyclerview.common.CommonAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.IAdapterBindData
 import kotlin.reflect.KClass
@@ -16,7 +17,7 @@ import kotlin.reflect.KClass
 /**
  * 创建Adapter的回调
  */
-typealias OnAdapterCreate = (OnAdapterCreateParams) -> SingAdapter<Any>
+typealias OnAdapterCreate = (OnAdapterCreateParams) -> CommonAdapter<Any>
 
 
 /**
@@ -45,8 +46,8 @@ data class OnAdapterCreateParams(
  * @param cls 构造函数必须是 (Context) 或者（Context,Data）或者（Context,AdapterBus），或者（Context,OnAdapterCreateParams）
  *
  */
-class OnAdapterCreateClass(private val cls: KClass<out SingAdapter<Any>>) : OnAdapterCreate {
-    override fun invoke(param: OnAdapterCreateParams): SingAdapter<Any> {
+class OnAdapterCreateClass(private val cls: KClass<out CommonAdapter<Any>>) : OnAdapterCreate {
+    override fun invoke(param: OnAdapterCreateParams): CommonAdapter<Any> {
 //        cls.constructors.new
 //        cls.constructors.forEach {
 //            val parameterTypes = it.typeParameters
@@ -85,11 +86,11 @@ object AdapterBind {
         adapterCreates.putAll(creates)
     }
 
-    fun addCreateClass(type: String, create: KClass<out SingAdapter<Any>>) {
+    fun addCreateClass(type: String, create: KClass<out CommonAdapter<Any>>) {
         adapterCreates[type] = OnAdapterCreateClass(create)
     }
 
-    fun addCreatesClass(creates: Map<String, KClass<SingAdapter<Any>>>) {
+    fun addCreatesClass(creates: Map<String, KClass<CommonAdapter<Any>>>) {
         creates.forEach {
             addCreateClass(it.key, it.value)
         }
@@ -142,7 +143,9 @@ object AdapterBind {
                 //赋值Type
                 ada.viewType = it.type
                 //设置事件管理
-                ada.bus = adaBus
+                if (adaBus != null) {
+                    ada.bus = adaBus
+                }
                 //添加之前
                 ada.beforeAdd(adapter, params)
                 //添加

@@ -6,9 +6,9 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.ashlikun.adapter.recyclerview.section.SectionSingAdapter
+import com.ashlikun.adapter.recyclerview.common.CommonAdapter
+import com.ashlikun.adapter.recyclerview.section.SectionAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.MultipleAdapterHelp
-import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.mode.LayoutStyle
 import com.ashlikun.adapter.simple.data.Data
 import com.ashlikun.adapter.simple.data.NeibuData
@@ -40,24 +40,40 @@ class VLayoutActivity : AppCompatActivity() {
         for (i in 1..10) {
             val type = "type${i}"
             val neibu = mutableListOf<NeibuData>()
-            if (type == "type4") {
-                for (j in 0..30) {
-                    val isHeader = j % 10 == 0
-                    val headerPosi = j / 10
-                    neibu.add(
-                        NeibuData(
-                            if (isHeader) "我是头,我是${type}：${headerPosi}" else "我是${type},数据是$j",
-                            isHeader
+            when (type) {
+                "type1" -> {
+                    for (j in 0..10) {
+                        neibu.add(NeibuData("我是${type},数据是$j"))
+                    }
+                }
+                "type4" -> {
+                    for (j in 0..30) {
+                        val isHeader = j % 10 == 0
+                        val headerPosi = j / 10
+                        neibu.add(
+                            NeibuData(
+                                if (isHeader) "我是头,我是${type}：${headerPosi}" else "我是${type},数据是$j",
+                                isHeader
+                            )
                         )
-                    )
+                    }
                 }
-            } else if (type == "type1") {
-                for (j in 0..10) {
-                    neibu.add(NeibuData("我是${type},数据是$j"))
+                "type6" -> {
+                    for (j in 0..30) {
+                        val isHeader = j % 10 == 0
+                        val headerPosi = j / 10
+                        neibu.add(
+                            NeibuData(
+                                if (isHeader) "我是头,我是${type}：${headerPosi}" else "我是${type},数据是$j",
+                                isHeader
+                            )
+                        )
+                    }
                 }
-            } else {
-                for (j in 0..10) {
-                    neibu.add(NeibuData("我是${type},数据是$j"))
+                else -> {
+                    for (j in 0..10) {
+                        neibu.add(NeibuData("我是${type},数据是$j"))
+                    }
                 }
             }
             data.add(Data(type, neibu))
@@ -69,9 +85,8 @@ class VLayoutActivity : AppCompatActivity() {
         help.adapter.addAdapters(data.map {
             when (it.type) {
                 "type1" ->
-                    SingAdapter(this, it.datas,
+                    CommonAdapter(this, it.datas, ItemView1Binding::class.java,
                         layoutStyle = LayoutStyle(single = true),
-                        binding = ItemView1Binding::class.java,
                         onItemClick = {
                             Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
                         }) { holder, t ->
@@ -81,9 +96,8 @@ class VLayoutActivity : AppCompatActivity() {
                         }
                     }
                 "type2" ->
-                    SingAdapter(this, it.datas,
+                    CommonAdapter(this, it.datas, ItemView1Binding::class.java,
                         layoutStyle = LayoutStyle(spanCount = 3),
-                        binding = ItemView1Binding::class.java,
                         onItemClick = {
                             Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
                         }) { holder, t ->
@@ -93,12 +107,11 @@ class VLayoutActivity : AppCompatActivity() {
                         }
                     }
                 "type4" ->
-                    SectionSingAdapter(this, it.datas,
+                    SectionAdapter(this, it.datas, ItemViewBinding::class.java,
                         layoutStyle = LayoutStyle(spanCount = 3),
                         onItemClick = {
                             Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
                         },
-                        binding = ItemViewBinding::class.java,
                         bndingHead = ItemHeaderBinding::class.java,
                         convertHeader = { holder, t ->
                             holder.binding<ItemHeaderBinding>().run {
@@ -111,8 +124,7 @@ class VLayoutActivity : AppCompatActivity() {
                         }
                     }
                 else ->
-                    SingAdapter(this, it.datas,
-                        binding = ItemViewBinding::class.java,
+                    CommonAdapter(this, it.datas, ItemViewBinding::class.java,
                         onItemClick = {
                             Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
                         }) { holder, t ->

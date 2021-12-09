@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.*
-import com.ashlikun.adapter.recyclerview.common.CommonBaseAdapter
+import com.ashlikun.adapter.recyclerview.common.CommonAdapter
+import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import java.util.*
 
 /**
@@ -23,6 +24,8 @@ open class ItemDraggableAdapter<T>(
     //创建ViewBinding的Class,与layoutId 二选一
     override var binding: Class<out ViewBinding>? = null,
     override var layoutId: Int? = null,
+    //事件
+    bus: AdapterBus = AdapterBus(),
     //点击事件
     override var onItemClick: OnItemClick<T>? = null,
     override var onItemClickX: OnItemClickX<T>? = null,
@@ -38,9 +41,10 @@ open class ItemDraggableAdapter<T>(
     open var isViewCreateByAdapter: Boolean = false,
     //转换
     override var convert: AdapterConvert<T>? = null
-) : CommonBaseAdapter<T>(
+) : CommonAdapter<T>(
     context = context,
-    initDatas = initDatas
+    initDatas = initDatas,
+    bus = bus
 ), ItemTouchHelperAdapter {
 
     var onItemDragListener: OnItemDragListener? = null

@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.common.CommonAdapter
-import com.ashlikun.adapter.recyclerview.common.CommonBaseAdapter
 import com.ashlikun.adapter.simple.data.NeibuData
 import com.ashlikun.adapter.simple.databinding.ActivityCommentBinding
 import com.ashlikun.adapter.simple.databinding.ItemViewBinding
@@ -40,13 +39,13 @@ class CommonActivity : AppCompatActivity() {
 
     private fun initView() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = CommonAdapter<NeibuData, ItemViewBinding>(
-            this, neibuData,
+        binding.recyclerView.adapter = CommonAdapter(
+            this, neibuData, ItemViewBinding::class.java,
             onItemClick = {
                 Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
             },
-        ) { holder, binding, t ->
-            binding.apply {
+        ) { holder, t ->
+            holder.binding<ItemViewBinding>().apply {
                 textView.text = t?.name
             }
         }
@@ -62,8 +61,9 @@ class CommonActivity : AppCompatActivity() {
     }
 }
 
-class MyCommonAdapter(context: Context) : CommonAdapter<NeibuData, ItemViewBinding>(context) {
-    override fun convert(holder: ViewHolder, binding: ItemViewBinding, t: NeibuData?) {
-        super.convert(holder, binding, t)
+class MyCommonAdapter(context: Context) :
+    CommonAdapter<NeibuData>(context) {
+    override fun convert(holder: ViewHolder, t: NeibuData?) {
+        super.convert(holder, t)
     }
 }

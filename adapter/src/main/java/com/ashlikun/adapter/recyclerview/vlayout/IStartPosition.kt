@@ -6,7 +6,7 @@ package com.ashlikun.adapter.recyclerview.vlayout
  * 邮箱　　：496546144@qq.com
  *
  *
- * 功能介绍：
+ * 功能介绍：获取开始的位置
  */
 interface IStartPosition {
     fun getStartPosition(): Int

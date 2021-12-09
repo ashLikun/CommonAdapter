@@ -44,6 +44,8 @@ typealias OnItemClick<T> = (data: T) -> Unit
 typealias OnItemLongClick<T> = (data: T) -> Boolean
 typealias AdapterConvert<T> = (holder: ViewHolder, t: T?) -> Unit
 typealias AdapterPayloadsConvert<T> = (holder: ViewHolder, t: T?, payloads: MutableList<Any>) -> Boolean
+
+//这里想封装泛型Binding的，由于kotlin泛型类不是匿名内部内的话不能获取泛型类型，name一直是T
 typealias AdapterBindingConvert<T, VB> = (holder: ViewHolder, binding: VB, t: T?) -> Unit
 typealias AdapterBindingPayloadsConvert<T, VB> = (holder: ViewHolder, binding: VB, t: T?, payloads: MutableList<Any>) -> Boolean
 

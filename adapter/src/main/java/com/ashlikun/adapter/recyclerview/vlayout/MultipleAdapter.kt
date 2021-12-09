@@ -34,6 +34,7 @@ import com.alibaba.android.vlayout.VirtualLayoutManager
 import com.ashlikun.adapter.AdapterUtils
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.IHeaderAndFooter
+import com.ashlikun.adapter.recyclerview.common.CommonAdapter
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.max
@@ -64,10 +65,10 @@ open class MultipleAdapter(
     private var mIndexGen: AtomicInteger? = null
     private var mIndex = 0
     private val mHasConsistItemType: Boolean
-    private val mItemTypeAry = SparseArray<SingAdapter<*>>()
-    private val mAdapters = mutableListOf<Pair<AdapterDataObserver, SingAdapter<*>>>()
+    private val mItemTypeAry = SparseArray<CommonAdapter<*>>()
+    private val mAdapters = mutableListOf<Pair<AdapterDataObserver, CommonAdapter<*>>>()
     private var mTotal = 0
-    private val mIndexAry = SparseArray<Pair<AdapterDataObserver, SingAdapter<*>>>()
+    private val mIndexAry = SparseArray<Pair<AdapterDataObserver, CommonAdapter<*>>>()
 
     /**
      * 防止Cantor(康托)算法溢出int和long最大值
@@ -109,12 +110,6 @@ open class MultipleAdapter(
             position - pair.first.startPosition,
             payloads
         )
-        pair.second?.onBindViewHolderWithOffset(
-            holder,
-            position - pair.first.startPosition,
-            position,
-            payloads
-        )
     }
 
     override fun getItemCount() = mTotal
@@ -143,7 +138,7 @@ open class MultipleAdapter(
      * 获取adapter转换成对应真实的ViewType
      * 需要在addadapter后才能调用
      */
-    fun getAdapterItemViewType(adapter: SingAdapter<*>?): Int {
+    fun getAdapterItemViewType(adapter: CommonAdapter<*>?): Int {
         if (adapter == null) {
             return RecyclerView.INVALID_TYPE
         }
@@ -155,7 +150,7 @@ open class MultipleAdapter(
         if (mHasConsistItemType) {
             return subItemType
         }
-        val index = adapter.index
+        val index = adapter.vLayoutIndex
         //防止Cantor(康托)算法溢出int和long最大值
         subItemType = getCantorToViewType(subItemType.toLong())
         return Cantor.getCantor(subItemType.toLong(), index.toLong()).toInt()
@@ -237,12 +232,12 @@ open class MultipleAdapter(
         throw UnsupportedOperationException("DelegateAdapter doesn't support setLayoutHelpers directly")
     }
 
-    fun setAdapters(adapters: List<SingAdapter<*>>) {
+    fun setAdapters(adapters: List<CommonAdapter<*>>) {
         clear()
         val helpers = mutableListOf<LayoutHelper>()
         var hasStableIds = true
         mTotal = 0
-        var pair: Pair<AdapterDataObserver, SingAdapter<*>>
+        var pair: Pair<AdapterDataObserver, CommonAdapter<*>>
         for (adapter in adapters) {
             // every adapter has an unique index id
             val observer = AdapterDataObserver(mTotal, mIndexGen?.incrementAndGet() ?: mIndex++)
@@ -267,12 +262,12 @@ open class MultipleAdapter(
         super.setLayoutHelpers(helpers)
     }
 
-    fun addAdapters(adapters: List<SingAdapter<*>>, position: Int = mAdapters.size) {
+    fun addAdapters(adapters: List<CommonAdapter<*>>, position: Int = mAdapters.size) {
         if (adapters.isEmpty()) {
             return
         }
         var position = min(max(position, 0), mAdapters.size)
-        val newAdapter: MutableList<SingAdapter<*>> = ArrayList()
+        val newAdapter: MutableList<CommonAdapter<*>> = ArrayList()
         mAdapters.forEach {
             newAdapter.add(it.second)
         }
@@ -284,7 +279,7 @@ open class MultipleAdapter(
     }
 
 
-    fun addAdapter(adapter: SingAdapter<*>, position: Int = mAdapters.size) {
+    fun addAdapter(adapter: CommonAdapter<*>, position: Int = mAdapters.size) {
         addAdapters(listOf(adapter), position)
     }
 
@@ -294,19 +289,19 @@ open class MultipleAdapter(
 
     fun removeAdapter(adapterIndex: Int) = removeAdapter(mAdapters.getOrNull(adapterIndex)?.second)
 
-    fun removeAdapter(targetAdapter: SingAdapter<*>?) {
+    fun removeAdapter(targetAdapter: CommonAdapter<*>?) {
         if (targetAdapter == null) {
             return
         }
         removeAdapters(listOf(targetAdapter))
     }
 
-    fun removeAdapters(targetAdapters: List<SingAdapter<*>>) {
+    fun removeAdapters(targetAdapters: List<CommonAdapter<*>>) {
         if (targetAdapters.isEmpty()) {
             return
         }
         val helpers = LinkedList(super.getLayoutHelpers())
-        val newAdapter = mutableListOf<Pair<AdapterDataObserver, SingAdapter<*>>>()
+        val newAdapter = mutableListOf<Pair<AdapterDataObserver, CommonAdapter<*>>>()
         mAdapters.filterTo(newAdapter) { pair ->
             val theOther = pair.second
             val contains = targetAdapters.contains(theOther)
@@ -351,7 +346,7 @@ open class MultipleAdapter(
         return absoultePosition - p.first.startPosition
     }
 
-    private fun findAdapter(position: Int): Pair<AdapterDataObserver, SingAdapter<*>>? {
+    private fun findAdapter(position: Int): Pair<AdapterDataObserver, CommonAdapter<*>>? {
         val count = mAdapters.size
         if (count == 0) {
             return null
@@ -359,7 +354,7 @@ open class MultipleAdapter(
         var s = 0
         var e = count - 1
         var m: Int
-        var rs: Pair<AdapterDataObserver, SingAdapter<*>>? = null
+        var rs: Pair<AdapterDataObserver, CommonAdapter<*>>? = null
 
         // binary search range
         while (s <= e) {
@@ -383,7 +378,7 @@ open class MultipleAdapter(
         return if (rs == null) -1 else mAdapters.indexOf(rs)
     }
 
-    fun findAdapterByIndex(index: Int): SingAdapter<*>? {
+    fun findAdapterByIndex(index: Int): CommonAdapter<*>? {
         return mIndexAry[index]?.second
     }
 
@@ -421,7 +416,7 @@ open class MultipleAdapter(
      * @param position
      * @return
      */
-    fun findAdapterByPosition(position: Int): SingAdapter<*>? {
+    fun findAdapterByPosition(position: Int): CommonAdapter<*>? {
         val a = findAdapter(position)
         return a?.second
     }
@@ -429,7 +424,7 @@ open class MultipleAdapter(
     /**
      * 获取这种类型的adapter
      */
-    fun findAdapterByViewType(viewType: Any?): SingAdapter<*>? {
+    fun findAdapterByViewType(viewType: Any?): CommonAdapter<*>? {
         if (viewType == null) {
             return null
         }
