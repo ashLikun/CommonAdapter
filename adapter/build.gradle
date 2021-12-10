@@ -27,7 +27,7 @@ android {
     //java8
     compileOptions {
         //定义生成的META-INF/library_release文件名 More than one file was found with OS independent path 'META-INF/library_release.kotlin_module'
-        kotlinOptions.freeCompilerArgs += ['-module-name', 'com.ashlikun.core.mvvm']
+        kotlinOptions.freeCompilerArgs += ['-module-name', 'com.ashlikun.adapter']
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
