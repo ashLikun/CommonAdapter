@@ -54,6 +54,7 @@ typealias AdapterBindingPayloadsConvert<T, VB> = (holder: ViewHolder, binding: V
  */
 abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     context: Context,
+    //如果是MutableList可变的就直接引用
     initDatas: List<T>? = null,
     open val binding: Class<out ViewBinding>? = null,
     //布局文件
@@ -69,7 +70,11 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     open var clickDelay = 500
 
     //数据处理
-    open var dataHandle = DataHandle(initDatas?.toMutableList() ?: mutableListOf(), this)
+    open var dataHandle = DataHandle(
+        //如果是MutableList可变的就直接引用
+        (if (initDatas is MutableList?) initDatas else initDatas as MutableList) ?: mutableListOf(),
+        this
+    )
 
     //点击事件
     open var onItemClick: OnItemClick<T>? = null

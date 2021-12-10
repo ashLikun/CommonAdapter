@@ -11,7 +11,7 @@ import com.ashlikun.adapter.recyclerview.BaseAdapter
  */
 
 class DataHandle<T>(
-        var data: MutableList<T>, var adapter: BaseAdapter<*, *>
+    var data: MutableList<T>, var adapter: BaseAdapter<*, *>
 ) {
     val itemCount: Int
         get() = data.size
@@ -28,8 +28,9 @@ class DataHandle<T>(
      *
      * @param isNotify 是否通知适配器刷新
      */
-    fun setDatas(datas: MutableList<T>?, isNotify: Boolean = false) {
-        data = datas ?: mutableListOf()
+    fun setDatas(datas: List<T>?, isNotify: Boolean = false) {
+        val datas = datas ?: mutableListOf()
+        data = if (datas is MutableList) datas else datas as MutableList
         if (isNotify) {
             adapter.notifyDataSetChanged()
         }

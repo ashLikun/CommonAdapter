@@ -68,7 +68,7 @@ open class MultipleAdapter(
     private val mItemTypeAry = SparseArray<CommonAdapter<*>>()
     private val mAdapters = mutableListOf<Pair<AdapterDataObserver, CommonAdapter<*>>>()
     private var mTotal = 0
-    private val mIndexAry = SparseArray<Pair<AdapterDataObserver, CommonAdapter<*>>>()
+    private val mIndexAry = mutableListOf<Pair<AdapterDataObserver, CommonAdapter<*>>>()
 
     /**
      * 防止Cantor(康托)算法溢出int和long最大值
@@ -248,7 +248,7 @@ open class MultipleAdapter(
             mTotal += adapter.layoutHelper.itemCount
             helpers.add(adapter.layoutHelper)
             pair = Pair.create(observer, adapter)
-            mIndexAry.put(observer.index, pair)
+            mIndexAry[observer.index] = pair
             //设置附属到recyclerView
             if (recyclerView != null && adapter.recyclerView == null) {
                 adapter.onAttachedToRecyclerView(recyclerView!!)
@@ -374,8 +374,7 @@ open class MultipleAdapter(
     }
 
     fun findAdapterPositionByIndex(index: Int): Int {
-        val rs = mIndexAry[index]
-        return if (rs == null) -1 else mAdapters.indexOf(rs)
+        return if (mIndexAry[index] == null) -1 else mAdapters.indexOf(rs)
     }
 
     fun findAdapterByIndex(index: Int): CommonAdapter<*>? {
@@ -384,80 +383,37 @@ open class MultipleAdapter(
 
     /**
      * 查找对应的adapter的开始position
-     *
-     * @param index
-     * @return
      */
-    fun findAdapterByIndexStartPosition(index: Int): Int {
+    fun findByIndexStartPosition(index: Int): Int {
         return mIndexAry[index]?.first?.startPosition ?: -1
     }
 
     /**
      * 获取这种类型的adapter对于的开始position
      */
-    fun findAdapterByViewTypeStartPosition(viewType: Any?): Int {
-        if (viewType == null) {
-            return -1
-        }
-        for (adapter in mAdapters) {
-            if (adapter.second != null && adapter.second?.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(
-                    viewType
-                )
-            ) {
-                return adapter.first.startPosition
-            }
-        }
-        return -1
-    }
+    fun findByViewTypeStartPosition(viewType: Any) =
+        findByViewType(viewType)?.first?.startPosition ?: -1
 
     /**
      * 查找对应position的adapter
-     *
-     * @param position
-     * @return
      */
-    fun findAdapterByPosition(position: Int): CommonAdapter<*>? {
-        val a = findAdapter(position)
-        return a?.second
-    }
+    fun findByPosition(position: Int) = findAdapter(position)?.second
 
     /**
      * 获取这种类型的adapter
      */
-    fun findAdapterByViewType(viewType: Any?): CommonAdapter<*>? {
-        if (viewType == null) {
-            return null
-        }
-        for (adapter in mAdapters) {
-            if (adapter.second != null && adapter.second?.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(
-                    viewType
-                )
-            ) {
-                return adapter.second
-            }
-        }
-        return null
-    }
+    fun findByViewType(viewType: Any) =
+        mAdapters.find { it.second?.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(viewType) }
 
     /**
      * 是否有这种类型的adapter
      */
-    fun haveAdapterByViewType(viewType: Any?): Boolean {
-        if (viewType == null) {
-            return false
-        }
-        for (adapter in mAdapters) {
-            if (adapter.second != null && adapter.second?.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(
-                    viewType
-                )
-            ) {
-                return true
-            }
-        }
-        return false
-    }
+    fun haveByViewType(viewType: Any) =
+        mAdapters.find { it.second?.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(viewType) } != null
 
-    //更新全部数据
+    /**
+     * 更新全部数据
+     */
     fun notifyChanged() {
         mAdapters?.forEach {
             it?.second?.notifyDataSetChanged()
