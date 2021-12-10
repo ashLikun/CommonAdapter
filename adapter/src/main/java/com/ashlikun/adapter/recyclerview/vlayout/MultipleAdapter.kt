@@ -68,7 +68,7 @@ open class MultipleAdapter(
     private val mItemTypeAry = SparseArray<CommonAdapter<*>>()
     private val mAdapters = mutableListOf<Pair<AdapterDataObserver, CommonAdapter<*>>>()
     private var mTotal = 0
-    private val mIndexAry = mutableListOf<Pair<AdapterDataObserver, CommonAdapter<*>>>()
+    private val mIndexAry = SparseArray<Pair<AdapterDataObserver, CommonAdapter<*>>>()
 
     /**
      * 防止Cantor(康托)算法溢出int和long最大值
@@ -91,7 +91,7 @@ open class MultipleAdapter(
         Cantor.reverseCantor(viewType.toLong(), cantorReverse)
         val index = cantorReverse[1].toInt()
         val subItemType = cantorReverse[0].toInt()
-        return findAdapterByIndex(index)!!.onCreateViewHolder(parent, subItemType)
+        return findByIndex(index)!!.onCreateViewHolder(parent, subItemType)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -248,7 +248,7 @@ open class MultipleAdapter(
             mTotal += adapter.layoutHelper.itemCount
             helpers.add(adapter.layoutHelper)
             pair = Pair.create(observer, adapter)
-            mIndexAry[observer.index] = pair
+            mIndexAry.put(observer.index, pair)
             //设置附属到recyclerView
             if (recyclerView != null && adapter.recyclerView == null) {
                 adapter.onAttachedToRecyclerView(recyclerView!!)
@@ -307,7 +307,7 @@ open class MultipleAdapter(
             val contains = targetAdapters.contains(theOther)
             if (contains) {
                 theOther.unregisterAdapterDataObserver(pair.first)
-                val position = findAdapterPositionByIndex(pair.first.index)
+                val position = findPositionByIndex(pair.first.index)
                 if (position >= 0 && position < helpers.size) {
                     helpers.removeAt(position)
                 }
@@ -337,14 +337,6 @@ open class MultipleAdapter(
     val adaptersCount: Int
         get() = mAdapters.size
 
-    /**
-     * @param absoultePosition
-     * @return the relative position in sub adapter by the absoulte position in DelegaterAdapter. Return -1 if no sub adapter founded.
-     */
-    fun findOffsetPosition(absoultePosition: Int): Int {
-        val p = findAdapter(absoultePosition) ?: return -1
-        return absoultePosition - p.first.startPosition
-    }
 
     private fun findAdapter(position: Int): Pair<AdapterDataObserver, CommonAdapter<*>>? {
         val count = mAdapters.size
@@ -373,11 +365,20 @@ open class MultipleAdapter(
         return rs
     }
 
-    fun findAdapterPositionByIndex(index: Int): Int {
-        return if (mIndexAry[index] == null) -1 else mAdapters.indexOf(rs)
+    /**
+     * 通过在DelegaterAdapter中的绝对位置来确定子适配器中的相对位置。 如果没有子适配器，返回-1。
+     */
+    fun findOffsetPosition(absoultePosition: Int): Int {
+        val p = findAdapter(absoultePosition) ?: return -1
+        return absoultePosition - p.first.startPosition
     }
 
-    fun findAdapterByIndex(index: Int): CommonAdapter<*>? {
+    fun findPositionByIndex(index: Int): Int {
+        val rs = mIndexAry[index]
+        return if (rs == null) -1 else mAdapters.indexOf(rs)
+    }
+
+    fun findByIndex(index: Int): CommonAdapter<*>? {
         return mIndexAry[index]?.second
     }
 
@@ -437,7 +438,7 @@ open class MultipleAdapter(
             if (index < 0) {
                 return false
             }
-            val idx = findAdapterPositionByIndex(index)
+            val idx = findPositionByIndex(index)
             if (idx < 0) {
                 return false
             }
