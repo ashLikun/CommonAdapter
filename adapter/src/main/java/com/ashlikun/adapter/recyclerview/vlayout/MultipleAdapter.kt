@@ -91,7 +91,7 @@ open class MultipleAdapter(
         Cantor.reverseCantor(viewType.toLong(), cantorReverse)
         val index = cantorReverse[1].toInt()
         val subItemType = cantorReverse[0].toInt()
-        return findByIndex(index)!!.onCreateViewHolder(parent, subItemType)
+        return findByIndex<Any>(index)!!.onCreateViewHolder(parent, subItemType)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -378,7 +378,13 @@ open class MultipleAdapter(
         return if (rs == null) -1 else mAdapters.indexOf(rs)
     }
 
-    fun findByIndex(index: Int) = mIndexAry[index]?.second
+    fun <DATA> findByIndex(index: Int): CommonAdapter<DATA>? = findByIndexX(index)
+
+    /**
+     * 查找对应position的adapter
+     */
+    fun <T : CommonAdapter<*>> findByIndexX(index: Int): T? =
+        mIndexAry[index]?.second as T?
 
     /**
      * 查找对应的adapter的开始position
@@ -395,13 +401,25 @@ open class MultipleAdapter(
     /**
      * 查找对应position的adapter
      */
-    fun findByPosition(position: Int) = findAdapter(position)?.second
+    fun <DATA> findByPosition(position: Int): CommonAdapter<DATA>? = findByPositionX(position)
+
+
+    /**
+     * 查找对应position的adapter
+     */
+    fun <T : CommonAdapter<*>> findByPositionX(position: Int): T? =
+        findAdapter(position)?.second as T?
 
     /**
      * 获取这种类型的adapter
      */
-    fun findByViewType(viewType: Any) =
-        mAdapters.find { it.second?.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(viewType) }?.second
+    fun <DATA> findByViewType(viewType: Any): CommonAdapter<DATA>? = findByViewTypeX(viewType)
+
+    /**
+     * 获取这种类型的adapter
+     */
+    fun <T> findByViewTypeX(viewType: Any): T? =
+        mAdapters.find { it.second?.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(viewType) }?.second as T?
 
     /**
      * 是否有这种类型的adapter
