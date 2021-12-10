@@ -38,18 +38,18 @@ data class AdapterBus(
     /**
      * 获取AdapterBus.STYLE
      */
-    open val style
+    val style
         get() = get<LayoutStyle>(STYLE)
 
     /**
      * 获取AdapterBus.STYLE
      */
-    open fun params(key: String) = get<Any>(key)
+    fun params(key: String) = get<Any>(key)
 
     /**
      * 添加事件
      */
-    open fun putEvent(key: String, eve: OnAdapterEvent) {
+    fun putEvent(key: String, eve: OnAdapterEvent) {
         if (event == null) {
             event = hashMapOf()
         }
@@ -59,7 +59,7 @@ data class AdapterBus(
     /**
      * 添加事件
      */
-    open fun putParam(key: String, par: Any) {
+    fun putParam(key: String, par: Any) {
         if (params == null) {
             params = hashMapOf()
         }
@@ -69,7 +69,7 @@ data class AdapterBus(
     /**
      * 获取Bus里面的Event
      */
-    open fun <T : OnAdapterEvent> event(key: String) = get<OnAdapterEvent>(key) as T?
+    fun <T : OnAdapterEvent> event(key: String) = get<OnAdapterEvent>(key) as T?
 
     /**
      * 处理adapter发出的事件,在创建adapter的时候会赋值
