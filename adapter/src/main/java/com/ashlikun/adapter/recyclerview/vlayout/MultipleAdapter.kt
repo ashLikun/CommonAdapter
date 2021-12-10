@@ -378,22 +378,19 @@ open class MultipleAdapter(
         return if (rs == null) -1 else mAdapters.indexOf(rs)
     }
 
-    fun findByIndex(index: Int): CommonAdapter<*>? {
-        return mIndexAry[index]?.second
-    }
+    fun findByIndex(index: Int) = mIndexAry[index]?.second
 
     /**
      * 查找对应的adapter的开始position
      */
-    fun findByIndexStartPosition(index: Int): Int {
-        return mIndexAry[index]?.first?.startPosition ?: -1
-    }
+    fun findByIndexStartPosition(index: Int) = mIndexAry[index]?.first?.startPosition ?: -1
 
     /**
      * 获取这种类型的adapter对于的开始position
      */
     fun findByViewTypeStartPosition(viewType: Any) =
-        findByViewType(viewType)?.first?.startPosition ?: -1
+        mAdapters.find { it.second?.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(viewType) }?.first?.startPosition
+            ?: -1
 
     /**
      * 查找对应position的adapter
@@ -404,7 +401,7 @@ open class MultipleAdapter(
      * 获取这种类型的adapter
      */
     fun findByViewType(viewType: Any) =
-        mAdapters.find { it.second?.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(viewType) }
+        mAdapters.find { it.second?.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(viewType) }?.second
 
     /**
      * 是否有这种类型的adapter
