@@ -14,6 +14,10 @@ android {
         versionName rootProject.ext.versionName
         multiDexEnabled = true
     }
+    buildFeatures {
+        buildConfig = false
+    }
+
     buildTypes {
         release {
             minifyEnabled false
