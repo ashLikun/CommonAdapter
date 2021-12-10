@@ -43,8 +43,12 @@ object ForegroundEffects {
             val colorDrawable: Drawable
             if (background is GradientDrawable) {
                 background.mutate()
-                colorDrawable = background.getConstantState().newDrawable()
-                (colorDrawable as GradientDrawable).setColor(color)
+                if (background.getConstantState() != null) {
+                    colorDrawable = background.getConstantState()!!.newDrawable()
+                    (colorDrawable as GradientDrawable).setColor(color)
+                } else {
+                    colorDrawable = ColorDrawable(color)
+                }
             } else {
                 colorDrawable = ColorDrawable(color)
             }
