@@ -16,9 +16,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    viewBinding {
-        enabled = true
-    }
+//    buildFeatures {
+//        viewBinding = true
+//    }
     //java8
     compileOptions {
         //定义生成的META-INF/library_release文件名 More than one file was found with OS independent path 'META-INF/library_release.kotlin_module'
@@ -39,7 +39,7 @@ dependencies {
     compileOnly('com.alibaba.android:vlayout:1.2.18@aar') {
         transitive = true
     }
-//    compileOnly 'androidx.databinding:viewbinding:+'
+    compileOnly 'androidx.databinding:viewbinding:+'
 }
 
 apply from: '../maven.gradle'
