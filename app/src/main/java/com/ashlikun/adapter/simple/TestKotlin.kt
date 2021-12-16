@@ -68,5 +68,8 @@ class BCls(
         if (aaad is ACls) {
             println("aaad")
         }
+        val add = mutableListOf<Int>()
+        add.add(10)
+        println(add.toTypedArray().toString())
     }
 }
