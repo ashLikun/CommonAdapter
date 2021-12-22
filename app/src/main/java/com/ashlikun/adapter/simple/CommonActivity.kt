@@ -63,7 +63,7 @@ class CommonActivity : AppCompatActivity() {
 
 class MyCommonAdapter(context: Context) :
     CommonAdapter<NeibuData>(context) {
-    override fun convert(holder: ViewHolder, t: NeibuData?) {
+    override fun convert(holder: ViewHolder, t: NeibuData) {
         super.convert(holder, t)
     }
 }

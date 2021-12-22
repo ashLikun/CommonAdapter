@@ -87,11 +87,11 @@ open class CommonAdapter<T>(
         }
     }
 
-    override fun convert(holder: ViewHolder, t: T?) {
+    override fun convert(holder: ViewHolder, t: T) {
         convert?.invoke(holder, t)
     }
 
-    override fun convert(holder: ViewHolder, t: T?, payloads: MutableList<Any>): Boolean {
+    override fun convert(holder: ViewHolder, t: T, payloads: MutableList<Any>): Boolean {
         return convertP?.invoke(holder, t, payloads) ?: super.convert(holder, t, payloads)
     }
 
@@ -103,12 +103,16 @@ open class CommonAdapter<T>(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         setListener(holder, holder.itemViewType)
-        convert(holder, getItemData(position))
+        val data = getItemData(position)
+        if (data != null) {
+            convert(holder, data!!)
+        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
         if (payloads != null && payloads.isNotEmpty()) {
-            if (!convert(holder, getItemData(position), payloads)) {
+            val data = getItemData(position)
+            if (data != null && !convert(holder, data, payloads)) {
                 super.onBindViewHolder(holder, position, payloads)
             }
         } else {

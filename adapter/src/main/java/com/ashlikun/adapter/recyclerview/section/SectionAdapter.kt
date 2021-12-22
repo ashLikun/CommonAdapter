@@ -115,7 +115,10 @@ open class SectionAdapter<T : SectionEntity>(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (holder.itemViewType == TYPE_SECTION) {
             setListener(holder, holder.itemViewType)
-            convertHeader?.invoke(holder, getItemData(position))
+            val data = getItemData(position)
+            if (data != null) {
+                convertHeader?.invoke(holder, data)
+            }
             return
         }
         super.onBindViewHolder(holder, position)

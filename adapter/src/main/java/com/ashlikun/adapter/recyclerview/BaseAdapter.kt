@@ -42,8 +42,8 @@ typealias OnItemClickX<T> = (viewType: Int, parent: ViewGroup, view: View, data:
 typealias OnItemLongClickX<T> = (viewType: Int, parent: ViewGroup, view: View, data: T, position: Int) -> Boolean
 typealias OnItemClick<T> = (data: T) -> Unit
 typealias OnItemLongClick<T> = (data: T) -> Boolean
-typealias AdapterConvert<T> = (holder: ViewHolder, t: T?) -> Unit
-typealias AdapterPayloadsConvert<T> = (holder: ViewHolder, t: T?, payloads: MutableList<Any>) -> Boolean
+typealias AdapterConvert<T> = (holder: ViewHolder, t: T) -> Unit
+typealias AdapterPayloadsConvert<T> = (holder: ViewHolder, t: T, payloads: MutableList<Any>) -> Boolean
 
 //这里想封装泛型Binding的，由于kotlin泛型类不是匿名内部内的话不能获取泛型类型，name一直是T
 typealias AdapterBindingConvert<T, VB> = (holder: ViewHolder, binding: VB, t: T?) -> Unit
@@ -118,7 +118,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     /**
      * 绑定数据
      */
-    abstract fun convert(holder: V, t: T?)
+    abstract fun convert(holder: V, t: T)
 
     /**
      * recycleView的局部刷新
@@ -126,7 +126,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * @param payloads 一定不为null
      * @return true：代表处理完毕，不走另一个刷新的方法，false表示没有处理，继续走另一个
      */
-    open fun convert(holder: V, t: T?, payloads: MutableList<Any>): Boolean {
+    open fun convert(holder: V, t: T, payloads: MutableList<Any>): Boolean {
         return false
     }
 

@@ -74,6 +74,6 @@ class SectionActivity : AppCompatActivity() {
 }
 
 class MySectionAdapter(context: Context) : CommonAdapter<NeibuData>(context) {
-    override fun convert(holder: ViewHolder, t: NeibuData?) {
+    override fun convert(holder: ViewHolder, t: NeibuData) {
     }
 }
