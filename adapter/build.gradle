@@ -44,6 +44,7 @@ dependencies {
         transitive = true
     }
     compileOnly 'androidx.databinding:viewbinding:+'
+    compileOnly 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
 }
 
 apply from: '../maven.gradle'

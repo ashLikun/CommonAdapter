@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.recyclerview.widget.RecyclerView
@@ -60,7 +61,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     //布局文件
     open val layoutId: Int? = null
 
-) : RecyclerView.Adapter<V>(), IHeaderAndFooter, LifecycleObserver, IStartPosition {
+) : RecyclerView.Adapter<V>(), IHeaderAndFooter, SimpleLifecycleObserver, IStartPosition {
     var context: Context = context
 
     override var footerSize = 0
