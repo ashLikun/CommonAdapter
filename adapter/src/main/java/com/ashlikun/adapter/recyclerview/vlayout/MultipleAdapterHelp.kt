@@ -7,6 +7,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.vlayout.VirtualLayoutManager
 import com.ashlikun.adapter.AdapterUtils
+import com.ashlikun.adapter.recyclerview.SimpleLifecycleObserver
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.IAdapterBindData
 
@@ -26,7 +27,7 @@ open class MultipleAdapterHelp(
     var hasConsistItemType: Boolean = true,
     //监听事件和ui参数的总线
     bus: List<AdapterBus>? = null
-) : LifecycleObserver {
+) : SimpleLifecycleObserver {
     //event 处理adapter发出的事件,在创建adapter的时候会赋值  key:数据层的type，value：这个type对应的事件（key/value）
     //params 创建Adapter回调的其他参数，一般用于改变UI,   key:数据层的type，value：这个type对应的参数（key/value）
     var busMap: MutableMap<String, AdapterBus>? = null
