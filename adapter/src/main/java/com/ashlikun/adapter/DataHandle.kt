@@ -30,7 +30,7 @@ class DataHandle<T>(
      */
     fun setDatas(datas: List<T>?, isNotify: Boolean = false) {
         val datas = datas ?: mutableListOf()
-        data = if (datas is MutableList) datas else datas as MutableList
+        data = if (datas is MutableList) datas else datas.toMutableList()
         if (isNotify) {
             adapter.notifyDataSetChanged()
         }

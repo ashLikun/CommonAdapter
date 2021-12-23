@@ -73,7 +73,8 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     //数据处理
     open var dataHandle = DataHandle(
         //如果是MutableList可变的就直接引用
-        (if (initDatas is MutableList?) initDatas else initDatas as MutableList) ?: mutableListOf(),
+        (if (initDatas is MutableList?) initDatas else initDatas?.toMutableList())
+            ?: mutableListOf(),
         this
     )
 
@@ -108,7 +109,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     /**
      * 设置新的数据源
      */
-    var datas: MutableList<T>
+    var datas: List<T>
         get() = dataHandle.data
         set(value) {
             dataHandle.setDatas(value)
@@ -222,7 +223,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * 设置新的数据源
      * @param isNotify 是否通知适配器刷新
      */
-    fun setDatas(datas: MutableList<T>?, isNotify: Boolean = false) {
+    fun setDatas(datas: List<T>?, isNotify: Boolean = false) {
         dataHandle.setDatas(datas, isNotify)
     }
 
