@@ -109,12 +109,12 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     /**
      * 设置新的数据源
      */
-    var datas: List<T>
+    open var datas: List<T>
         get() = dataHandle.data
         set(value) {
             dataHandle.setDatas(value)
         }
-    val isEmpty: Boolean
+    open val isEmpty: Boolean
         get() = dataHandle.isEmpty
 
     /**
@@ -215,7 +215,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     /**
      * 是否可以点击
      */
-    protected fun isEnabled(viewType: Int): Boolean {
+    open protected fun isEnabled(viewType: Int): Boolean {
         return true
     }
 
@@ -223,7 +223,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * 设置新的数据源
      * @param isNotify 是否通知适配器刷新
      */
-    fun setDatas(datas: List<T>?, isNotify: Boolean = false) {
+    open fun setDatas(datas: List<T>?, isNotify: Boolean = false) {
         dataHandle.setDatas(datas, isNotify)
     }
 
@@ -231,7 +231,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * 添加数据
      * @param isNotify 是否通知适配器刷新
      */
-    fun addDatas(datas: List<T>?, isNotify: Boolean = false) {
+    open fun addDatas(datas: List<T>?, isNotify: Boolean = false) {
         dataHandle.addDatas(datas, isNotify)
     }
 
@@ -239,7 +239,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * 清空全部数据
      * @param isNotify 是否通知适配器刷新
      */
-    fun clearData(isNotify: Boolean = false) {
+    open fun clearData(isNotify: Boolean = false) {
         dataHandle.clearData(isNotify)
     }
 
@@ -248,7 +248,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      */
     open fun getItemData(position: Int) = dataHandle.getItemData(position)
 
-    protected fun setListener(viewHolder: ViewHolder, viewType: Int) {
+    open protected fun setListener(viewHolder: ViewHolder, viewType: Int) {
         //更新监听
         viewHolder.iStartPosition = this
         if (!isEnabled(viewType)
@@ -274,7 +274,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     /**
      * 分发点击事件
      */
-    protected open fun dispatchClick(
+    open protected fun dispatchClick(
         v: View, viewHolder: ViewHolder, viewType: Int
     ) {
         val position = viewHolder.positionInside
@@ -295,7 +295,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * @param viewHolder
      * @param viewType
      */
-    protected open fun dispatchLongClick(
+    open protected fun dispatchLongClick(
         v: View, viewHolder: ViewHolder, viewType: Int
     ): Boolean {
         val position = viewHolder.positionInside
@@ -318,7 +318,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * @param viewType   因为这个方法是在设置事件里面调用的，此时ViewHolder还没有viewType
      * @return
      */
-    protected fun getForegroundView(viewHolder: ViewHolder, viewType: Int): View {
+    open protected fun getForegroundView(viewHolder: ViewHolder, viewType: Int): View {
         return viewHolder.itemView
     }
 
@@ -339,7 +339,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      *
      * @param holder
      */
-    fun onViewAttachedToWindowAnim(holder: V) {}
+    open fun onViewAttachedToWindowAnim(holder: V) {}
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         this.recyclerView = recyclerView
@@ -357,7 +357,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     /**
      * 屏幕中的最后一个Item位置
      */
-    val lastPosition: Int
+    open val lastPosition: Int
         get() = if (recyclerView?.layoutManager == null) RecyclerView.NO_POSITION else AdapterUtils.findLastVisiblePosition(
             recyclerView?.layoutManager!!
         )
@@ -365,7 +365,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     /**
      * 屏幕中的第一个Item位置
      */
-    val firstPosition: Int
+    open val firstPosition: Int
         get() = if (recyclerView?.layoutManager == null) RecyclerView.NO_POSITION else AdapterUtils.findFirstVisibleItemPosition(
             recyclerView!!.layoutManager
         )
@@ -373,7 +373,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     /**
      * 设置生命周期监听
      */
-    fun addLifecycle(lifecycle: Lifecycle) {
+    open fun addLifecycle(lifecycle: Lifecycle) {
         lifecycle.addObserver(this)
     }
 
