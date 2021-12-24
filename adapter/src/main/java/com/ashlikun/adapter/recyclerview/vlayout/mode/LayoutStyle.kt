@@ -104,27 +104,26 @@ data class LayoutStyle(
     var corners: List<Int>? = null
 
 ) : Serializable {
-
     /**
      * 自动创建对应的类型
+     * 在赋值给VLayout(setAdapters or addAdapters )的时候会自动调用,之后修改需要手动调用
      */
-    fun createHelper(): LayoutHelper {
-        return when {
-            spanCount != null -> bindHelperUI(GridLayoutHelper(spanCount!!))
-            weights != null -> bindHelperUI(ColumnLayoutHelper())
-            fixX != null || fixY != null -> bindHelperUI(
-                if (float == true) FloatLayoutHelper() else FixLayoutHelper(
-                    fixX
-                        ?: 0, fixY ?: 0
-                )
-            )
-            sticky != null -> bindHelperUI(StickyLayoutHelper(sticky!!))
-            single == true -> bindHelperUI(SingleLayoutHelper())
-            else -> bindHelperUI(LinearLayoutHelper())
-        }
+    internal var helper: LayoutHelper = when {
+        spanCount != null -> GridLayoutHelper(spanCount!!)
+        weights != null -> ColumnLayoutHelper()
+        fixX != null || fixY != null ->
+            if (float == true) FloatLayoutHelper()
+            else FixLayoutHelper(fixX ?: 0, fixY ?: 0)
+        sticky != null -> StickyLayoutHelper(sticky!!)
+        single == true -> SingleLayoutHelper()
+        else -> LinearLayoutHelper()
     }
 
-    fun bindHelperUI(helper: LayoutHelper): LayoutHelper {
+    /**
+     * 在赋值给VLayout(setAdapters or addAdapters )的时候会自动调用,之后修改需要手动调用
+     */
+    fun bindUI(): LayoutStyle {
+        val helper = helper
         //基础的
         if (helper is BaseLayoutHelper) {
             if (aspectRatio != null) helper.aspectRatio = aspectRatio!!
@@ -171,6 +170,6 @@ data class LayoutStyle(
             if (fixY != null) helper.setY(fixY)
             if (alignType != null) helper.setAlignType(alignType)
         }
-        return helper
+        return this
     }
 }

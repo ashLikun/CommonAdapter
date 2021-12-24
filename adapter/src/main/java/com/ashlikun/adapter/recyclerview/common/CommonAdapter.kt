@@ -6,8 +6,6 @@ import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.alibaba.android.vlayout.LayoutHelper
-import com.alibaba.android.vlayout.layout.MarginLayoutHelper
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.*
 import com.ashlikun.adapter.recyclerview.vlayout.MultipleAdapter
@@ -65,7 +63,6 @@ open class CommonAdapter<T>(
     context = context,
     initDatas = initDatas
 ) {
-    var layoutHelper: LayoutHelper
 
     //VLayout的,可以用于区分是否是用于MultipleAdapter的
     var vLayoutObserver: MultipleAdapter.AdapterDataObserver? = null
@@ -78,13 +75,6 @@ open class CommonAdapter<T>(
 
     init {
         apply?.invoke(this)
-
-        //VLayout相关
-        layoutHelper = layoutStyle.createHelper()
-        //赋值MarginLayoutHelper
-        if (layoutHelper is MarginLayoutHelper) {
-            style?.bindHelperUI(layoutHelper)
-        }
     }
 
     override fun convert(holder: ViewHolder, t: T) {
@@ -197,10 +187,9 @@ open class CommonAdapter<T>(
         else abs(viewType.hashCode())
     }
 
-
     override fun getItemCount(): Int {
-        return if (layoutHelper.itemCount > 0) {
-            layoutHelper.itemCount
+        return if (layoutStyle.helper.itemCount > 0) {
+            layoutStyle.helper.itemCount
         } else {
             super.getItemCount()
         }

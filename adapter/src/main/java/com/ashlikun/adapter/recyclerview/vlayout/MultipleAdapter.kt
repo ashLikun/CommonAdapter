@@ -244,10 +244,12 @@ open class MultipleAdapter(
             val observer = AdapterDataObserver(mTotal, mIndexGen?.incrementAndGet() ?: mIndex++)
             adapter.registerAdapterDataObserver(observer)
             hasStableIds = hasStableIds && adapter.hasStableIds()
-            adapter.layoutHelper.itemCount = adapter.itemCount
+            adapter.layoutStyle.helper.itemCount = adapter.itemCount
             //这里一定得获取layouHelper的
-            mTotal += adapter.layoutHelper.itemCount
-            helpers.add(adapter.layoutHelper)
+            mTotal += adapter.layoutStyle.helper.itemCount
+            //添加的时候构建一下
+            adapter.layoutStyle.bindUI()
+            helpers.add(adapter.layoutStyle.helper)
             pair = Pair.create(observer, adapter)
             mIndexAry.put(observer.index, pair)
             //设置附属到recyclerView
