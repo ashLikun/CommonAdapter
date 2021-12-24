@@ -1,5 +1,6 @@
 package com.ashlikun.adapter.recyclerview.vlayout.mode
 
+import androidx.annotation.ColorInt
 import com.alibaba.android.vlayout.LayoutHelper
 import com.alibaba.android.vlayout.layout.*
 import java.io.Serializable
@@ -9,13 +10,23 @@ import java.io.Serializable
  * 创建时间: 2021/6/12　23:39
  * 邮箱　　：496546144@qq.com
  *
- * 功能介绍：
+ * 功能介绍：创建LayoutHelp
+ *
+ * 默认LinearLayoutHelper
+ * spanCount  ->  GridLayoutHelper
+ * weights  ->  ColumnLayoutHelper
+ * fixX fixY  float -> : FloatLayoutHelper
+ * fixX fixY  -> : FixLayoutHelper
+ * sticky  -> : StickyLayoutHelper
+ * single  -> : SingleLayoutHelper
  */
 /**
  * 样式
  */
 data class LayoutStyle(
     /////////////////////LayoutHelp开始/////////////////////
+    @ColorInt var bgColor: Int? = null,
+
     //单位 px
     var padding: Int? = null,
     var paddingLeft: Int? = null,
@@ -114,26 +125,12 @@ data class LayoutStyle(
     }
 
     fun bindHelperUI(helper: LayoutHelper): LayoutHelper {
+        //基础的
         if (helper is BaseLayoutHelper) {
             if (aspectRatio != null) helper.aspectRatio = aspectRatio!!
+            if (bgColor != null) helper.bgColor = bgColor!!
         }
-        if (helper is ColumnLayoutHelper) {
-            if (weights != null) helper.setWeights(weights)
-        }
-        if (helper is StickyLayoutHelper) {
-            if (sticky != null) helper.setStickyStart(sticky)
-            if (offset != null) helper.setOffset(offset)
-        }
-        if (helper is FixLayoutHelper) {
-            if (fixX != null) helper.setX(fixX)
-            if (fixY != null) helper.setY(fixY)
-            if (alignType != null) helper.setAlignType(alignType)
-        }
-        if (helper is FloatLayoutHelper) {
-            if (fixX != null) helper.setX(fixX)
-            if (fixY != null) helper.setY(fixY)
-            if (alignType != null) helper.setAlignType(alignType)
-        }
+
         if (helper is MarginLayoutHelper) {
             if (marginLeft != null) helper.marginLeft = marginLeft!!
             if (marginTop != null) helper.marginTop = marginTop!!
@@ -156,7 +153,23 @@ data class LayoutStyle(
             if (hGap != null) helper.hGap = hGap!!
             if (gap != null) helper.setGap(gap!!)
             if (autoExpand != null) helper.setAutoExpand(autoExpand!!)
-
+        }
+        if (helper is ColumnLayoutHelper) {
+            if (weights != null) helper.setWeights(weights)
+        }
+        if (helper is StickyLayoutHelper) {
+            if (sticky != null) helper.setStickyStart(sticky)
+            if (offset != null) helper.setOffset(offset)
+        }
+        if (helper is FixLayoutHelper) {
+            if (fixX != null) helper.setX(fixX)
+            if (fixY != null) helper.setY(fixY)
+            if (alignType != null) helper.setAlignType(alignType)
+        }
+        if (helper is FloatLayoutHelper) {
+            if (fixX != null) helper.setX(fixX)
+            if (fixY != null) helper.setY(fixY)
+            if (alignType != null) helper.setAlignType(alignType)
         }
         return helper
     }
