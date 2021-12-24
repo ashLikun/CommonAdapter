@@ -29,8 +29,7 @@ class DataHandle<T>(
      * @param isNotify 是否通知适配器刷新
      */
     fun setDatas(datas: List<T>?, isNotify: Boolean = false) {
-        val datas = datas ?: mutableListOf()
-        data = if (datas is MutableList) datas else datas.toMutableList()
+        data = datas?.toAutoMutableList() ?: mutableListOf()
         if (isNotify) {
             adapter.notifyDataSetChanged()
         }

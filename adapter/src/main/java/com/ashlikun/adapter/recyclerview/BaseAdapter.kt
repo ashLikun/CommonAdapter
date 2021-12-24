@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.*
@@ -71,8 +72,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     //数据处理
     open var dataHandle = DataHandle(
         //如果是MutableList可变的就直接引用
-        (if (initDatas is MutableList?) initDatas else initDatas?.toMutableList())
-            ?: mutableListOf(),
+        initDatas?.toAutoMutableList() ?: mutableListOf(),
         this
     )
 
@@ -87,7 +87,6 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     //获取动画帮助类
     open var adapterAnimHelp = AdapterAnimHelp(this)
 
-
     //item点击颜色
     private var itemClickColor: Int? = null
 
@@ -98,20 +97,23 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     open var recyclerView: RecyclerView? = null
         protected set
 
-
     init {
         setHasStableIds(true)
     }
 
-
     /**
      * 设置新的数据源
+     * 设置的时候可以用  setData方法
      */
-    open var datas: List<T>
+    open var datas: MutableList<T>?
         get() = dataHandle.data
         set(value) {
             dataHandle.setDatas(value)
         }
+
+    /**
+     * 是否空的
+     */
     open val isEmpty: Boolean
         get() = dataHandle.isEmpty
 
@@ -219,6 +221,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
 
     /**
      * 设置新的数据源
+     * @param datas 如果是MutableList 就是同一个对象，否则会转换成MutableList 就是个新对象
      * @param isNotify 是否通知适配器刷新
      */
     open fun setDatas(datas: List<T>?, isNotify: Boolean = false) {

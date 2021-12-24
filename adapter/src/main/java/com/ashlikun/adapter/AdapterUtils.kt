@@ -25,6 +25,13 @@ import java.lang.reflect.Modifier
  *
  * 功能介绍：适配器的一些工具
  */
+/**
+ * 如果是MutableList 就是同一个对象，否则会转换成MutableList 就是个新对象
+ */
+inline fun <T> Collection<T>.toAutoMutableList(): MutableList<T> {
+    return if (this is MutableList) this else this.toMutableList()
+}
+
 object AdapterUtils {
     private var viewBindingGetMap = mutableMapOf<Class<*>, AccessibleObject>()
 
@@ -211,7 +218,12 @@ object AdapterUtils {
      * 获取3个参数的静态方法
      * @return ViewBinding
      */
-    fun getViewBindingToClass(cls: Class<*>?, layoutInflater: LayoutInflater?, parent: ViewGroup?, attachToParent: Boolean): Any? {
+    fun getViewBindingToClass(
+        cls: Class<*>?,
+        layoutInflater: LayoutInflater?,
+        parent: ViewGroup?,
+        attachToParent: Boolean
+    ): Any? {
         if (cls == null || layoutInflater == null) {
             return null
         }
@@ -224,7 +236,12 @@ object AdapterUtils {
             }
             if (inflate == null) {
                 //直接取方法
-                inflate = cls.getDeclaredMethod("inflate", LayoutInflater::class.java, ViewGroup::class.java, Boolean::class.javaPrimitiveType)
+                inflate = cls.getDeclaredMethod(
+                    "inflate",
+                    LayoutInflater::class.java,
+                    ViewGroup::class.java,
+                    Boolean::class.javaPrimitiveType
+                )
                 //这里循环全部方法是为了混淆的时候无影响
                 if (inflate == null) {
                     val declaredMethods = cls.declaredMethods
@@ -234,8 +251,11 @@ object AdapterUtils {
                             val parameterTypes = declaredMethod.parameterTypes
                             if (parameterTypes != null && parameterTypes.size == 3) {
                                 if (LayoutInflater::class.java.isAssignableFrom(parameterTypes[0]) &&
-                                        ViewGroup::class.java.isAssignableFrom(parameterTypes[1]) &&
-                                        Boolean::class.javaPrimitiveType!!.isAssignableFrom(parameterTypes[2])) {
+                                    ViewGroup::class.java.isAssignableFrom(parameterTypes[1]) &&
+                                    Boolean::class.javaPrimitiveType!!.isAssignableFrom(
+                                        parameterTypes[2]
+                                    )
+                                ) {
                                     inflate = declaredMethod
                                     break
                                 }

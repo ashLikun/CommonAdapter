@@ -225,14 +225,15 @@ open class MultipleAdapter(
     }
 
     /**
-     * You can not set layoutHelpers to delegate adapter
+     * 您不能将layoutHelpers设置为委托适配器
      */
     @Deprecated("")
     override fun setLayoutHelpers(helpers: List<LayoutHelper>) {
         throw UnsupportedOperationException("DelegateAdapter doesn't support setLayoutHelpers directly")
     }
 
-    fun setAdapters(adapters: List<CommonAdapter<*>>) {
+    fun setAdapters(adapters: List<CommonAdapter<*>>?) {
+        if (adapters.isNullOrEmpty()) return
         clear()
         val helpers = mutableListOf<LayoutHelper>()
         var hasStableIds = true
@@ -262,10 +263,8 @@ open class MultipleAdapter(
         super.setLayoutHelpers(helpers)
     }
 
-    fun addAdapters(adapters: List<CommonAdapter<*>>, position: Int = mAdapters.size) {
-        if (adapters.isEmpty()) {
-            return
-        }
+    fun addAdapters(adapters: List<CommonAdapter<*>>?, position: Int = mAdapters.size) {
+        if (adapters.isNullOrEmpty()) return
         var position = min(max(position, 0), mAdapters.size)
         val newAdapter: MutableList<CommonAdapter<*>> = ArrayList()
         mAdapters.forEach {
@@ -279,7 +278,8 @@ open class MultipleAdapter(
     }
 
 
-    fun addAdapter(adapter: CommonAdapter<*>, position: Int = mAdapters.size) {
+    fun addAdapter(adapter: CommonAdapter<*>?, position: Int = mAdapters.size) {
+        if (adapter == null) return
         addAdapters(listOf(adapter), position)
     }
 
@@ -290,16 +290,12 @@ open class MultipleAdapter(
     fun removeAdapter(adapterIndex: Int) = removeAdapter(mAdapters.getOrNull(adapterIndex)?.second)
 
     fun removeAdapter(targetAdapter: CommonAdapter<*>?) {
-        if (targetAdapter == null) {
-            return
-        }
+        if (targetAdapter == null) return
         removeAdapters(listOf(targetAdapter))
     }
 
-    fun removeAdapters(targetAdapters: List<CommonAdapter<*>>) {
-        if (targetAdapters.isEmpty()) {
-            return
-        }
+    fun removeAdapters(targetAdapters: List<CommonAdapter<*>>?) {
+        if (targetAdapters.isNullOrEmpty()) return
         val helpers = LinkedList(super.getLayoutHelpers())
         val newAdapter = mutableListOf<Pair<AdapterDataObserver, CommonAdapter<*>>>()
         mAdapters.filterTo(newAdapter) { pair ->
