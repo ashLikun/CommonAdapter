@@ -182,8 +182,8 @@ open class CommonAdapter<T>(
      *
      * @return
      */
-    override fun getStartPosition() =
-        vLayoutObserver?.startPositionInside ?: super.getStartPosition()
+    override val startPosition: Int
+        get() = vLayoutObserver?.startPositionInside ?: super.startPosition
 
     override fun getItemViewType(position: Int): Int {
         return if (viewType == null)

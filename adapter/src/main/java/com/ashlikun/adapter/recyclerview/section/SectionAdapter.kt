@@ -94,7 +94,7 @@ open class SectionAdapter<T : SectionEntity>(
             gridLayoutManager.spanSizeLookup = SpanSizeLookupGroup(gridLayoutManager) {
                 if (vLayoutObserver != null) {
                     //这里得减去这个Adapter、开始的位置
-                    isPositionHeader(it - getStartPosition())
+                    isPositionHeader(it - startPosition)
                 } else {
                     //这里得减去这个Adapter、开始的位置
                     isPositionHeader(it)
@@ -106,7 +106,7 @@ open class SectionAdapter<T : SectionEntity>(
             (layoutHelper as GridLayoutHelper).run {
                 setSpanSizeLookup(SpanSizeLookupGroupLayoutHelper(this) {
                     //这里得减去这个Adapter、开始的位置
-                    isPositionHeader(it - getStartPosition())
+                    isPositionHeader(it - startPosition)
                 })
             }
         }

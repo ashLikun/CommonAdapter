@@ -310,7 +310,7 @@ open class ViewHolder(
     val positionInside: Int
         get() = layoutPosition - startPosition
     val startPosition: Int
-        get() = iStartPosition.getStartPosition()
+        get() = iStartPosition.startPosition
 
     /**
      * 是否是瀑布流

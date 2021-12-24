@@ -254,7 +254,6 @@ open class MultipleAdapter(
             if (recyclerView != null && adapter.recyclerView == null) {
                 adapter.onAttachedToRecyclerView(recyclerView!!)
             }
-            adapter.getStartPosition()
             mAdapters.add(pair)
         }
         if (!hasObservers()) {

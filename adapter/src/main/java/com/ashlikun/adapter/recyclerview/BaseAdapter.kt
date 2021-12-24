@@ -148,12 +148,9 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * 获取开始的position
      * 可能有头
      * 或者Vlayout内部是多个adapter
-     *
-     * @return
      */
-    override fun getStartPosition(): Int {
-        return headerSize
-    }
+    override val startPosition: Int
+        get() = headerSize
 
 
     /**
@@ -204,7 +201,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
 
     override fun getItemId(position: Int): Long {
         val d = getItemData(position)
-        return d?.hashCode()?.toLong() ?: (getStartPosition() + position).toLong()
+        return d?.hashCode()?.toLong() ?: (startPosition + position).toLong()
     }
 
     override fun getItemCount(): Int {
