@@ -89,8 +89,8 @@ class VLayoutActivity : AppCompatActivity() {
                         layoutStyle = LayoutStyle(single = true),
                         onItemClick = {
                             Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
-                        }) { holder, t ->
-                        holder.binding<ItemView1Binding>().run {
+                        }) { t ->
+                        binding<ItemView1Binding>().run {
                             textView.setTextColor(0xffff3300.toInt())
                             textView.text = t?.name
                         }
@@ -100,8 +100,8 @@ class VLayoutActivity : AppCompatActivity() {
                         layoutStyle = LayoutStyle(spanCount = 3),
                         onItemClick = {
                             Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
-                        }) { holder, t ->
-                        holder.binding<ItemView1Binding>().run {
+                        }) { t ->
+                        binding<ItemView1Binding>().run {
                             textView.setTextColor(0xff0fff00.toInt())
                             textView.text = t?.name
                         }
@@ -113,13 +113,13 @@ class VLayoutActivity : AppCompatActivity() {
                             Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
                         },
                         bndingHead = ItemHeaderBinding::class.java,
-                        convertHeader = { holder, t ->
-                            holder.binding<ItemHeaderBinding>().run {
+                        convertHeader = { t ->
+                            binding<ItemHeaderBinding>().run {
                                 tvHeader.text = t?.name
                             }
                         }
-                    ) { holder, t ->
-                        holder.binding<ItemViewBinding>().run {
+                    ) { t ->
+                        binding<ItemViewBinding>().run {
                             textView.text = t?.name
                         }
                     }
@@ -127,8 +127,8 @@ class VLayoutActivity : AppCompatActivity() {
                     CommonAdapter(this, it.datas, ItemViewBinding::class.java,
                         onItemClick = {
                             Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
-                        }) { holder, t ->
-                        holder.binding<ItemViewBinding>().run {
+                        }) { t ->
+                        binding<ItemViewBinding>().run {
                             textView.text = t?.name
                         }
                     }

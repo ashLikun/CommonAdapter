@@ -7,6 +7,7 @@ import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.*
 import com.ashlikun.adapter.recyclerview.common.CommonAdapter
+import com.ashlikun.adapter.recyclerview.multiltem.MultiItemCommonAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import java.util.*
 
@@ -32,8 +33,8 @@ open class ItemDraggableAdapter<T>(
     //长按事件
     override var onItemLongClick: OnItemLongClick<T>? = null,
     override var onItemLongClickX: OnItemLongClickX<T>? = null,
-    //初始化的apply 便于执行其他代码
-    apply: (ItemDraggableAdapter<T>.() -> Unit)? = null,
+    //初始化的apply 便于执行其他代码,子类一定需要自己实现,切换this 到Adapter
+    apply: NoParamsThis<ItemDraggableAdapter<T>>? = null,
     /**
      * 这个holder是不是内部自己创建的，
      * @return true 没有任何触摸事件

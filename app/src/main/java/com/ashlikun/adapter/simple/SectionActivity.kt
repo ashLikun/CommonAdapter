@@ -51,13 +51,13 @@ class SectionActivity : AppCompatActivity() {
                     Toast.makeText(context, it.name, Toast.LENGTH_LONG).show()
                 }
             },
-            convertHeader = { holder, t ->
-                holder.binding<ItemHeaderBinding>().run {
+            convertHeader = {  t ->
+                binding<ItemHeaderBinding>().run {
                     tvHeader.text = t?.name
                 }
             }
-        ) { holder, t ->
-            holder.binding<ItemViewBinding>().run {
+        ) {  t ->
+            binding<ItemViewBinding>().run {
                 textView.text = t?.name
             }
         }

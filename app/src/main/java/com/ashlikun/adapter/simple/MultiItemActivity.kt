@@ -35,12 +35,12 @@ class MultiItemActivity : AppCompatActivity() {
             onItemClick = {
                 Toast.makeText(this, it?.type + "  " + it?.data?.name, Toast.LENGTH_LONG).show()
             },
-            itemType = { data -> data.type.hashCode() }) { holder, t ->
-            when (holder.itemViewType) {
-                "type2".hashCode() -> holder.binding<ItemView1Binding>().run {
+            itemType = { data -> data.type.hashCode() }) {  t ->
+            when (itemViewType) {
+                "type2".hashCode() -> binding<ItemView1Binding>().run {
                     textView.text = t?.type + "  " + t?.data?.name
                 }
-                else -> holder.binding<ItemViewBinding>().run {
+                else -> binding<ItemViewBinding>().run {
                     textView.text = t?.type + "  " + t?.data?.name
                 }
             }

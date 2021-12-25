@@ -38,17 +38,21 @@ class CommonActivity : AppCompatActivity() {
     }
 
     private fun initView() {
+        apply { }
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = CommonAdapter(
             this, neibuData, ItemViewBinding::class.java,
             onItemClick = {
                 Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
             },
-        ) { holder, t ->
-            holder.binding<ItemViewBinding>().apply {
-                textView.text = t?.name
+            apply = {
+                convert = { t ->
+                    binding<ItemViewBinding>().apply {
+                        textView.text = t?.name
+                    }
+                }
             }
-        }
+        )
         addHeard()
     }
 

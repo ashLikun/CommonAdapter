@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.recyclerview.*
 import com.ashlikun.adapter.recyclerview.common.CommonAdapter
+import com.ashlikun.adapter.recyclerview.section.SectionAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.LayoutStyle
 
@@ -40,11 +41,11 @@ open class MultiItemCommonAdapter<T>(
     //长按事件
     override var onItemLongClick: OnItemLongClick<T>? = null,
     override var onItemLongClickX: OnItemLongClickX<T>? = null,
-    //初始化的apply 便于执行其他代码
-    apply: (MultiItemCommonAdapter<T>.() -> Unit)? = null,
+    //初始化的apply 便于执行其他代码,子类一定需要自己实现,切换this 到Adapter
+    apply: NoParamsThis<MultiItemCommonAdapter<T>>? = null,
     //转换
-    override val convertP: AdapterPayloadsConvert<T>? = null,
-    override val convert: AdapterConvert<T>? = null
+    override var convertP: AdapterPayloadsConvert<T>? = null,
+    override var convert: AdapterConvert<T>? = null
 ) : CommonAdapter<T>(
     context = context,
     initDatas = initDatas,

@@ -42,8 +42,11 @@ typealias OnItemClickX<T> = (viewType: Int, parent: ViewGroup, view: View, data:
 typealias OnItemLongClickX<T> = (viewType: Int, parent: ViewGroup, view: View, data: T, position: Int) -> Boolean
 typealias OnItemClick<T> = (data: T) -> Unit
 typealias OnItemLongClick<T> = (data: T) -> Boolean
-typealias AdapterConvert<T> = (holder: ViewHolder, t: T) -> Unit
-typealias AdapterPayloadsConvert<T> = (holder: ViewHolder, t: T, payloads: MutableList<Any>) -> Boolean
+typealias AdapterConvert<T> = ViewHolder.(t: T) -> Unit
+typealias AdapterPayloadsConvert<T> = ViewHolder.(t: T, payloads: MutableList<Any>) -> Boolean
+
+//无参数的this回调
+typealias NoParamsThis<Th> = Th.() -> Unit
 
 //这里想封装泛型Binding的，由于kotlin泛型类不是匿名内部内的话不能获取泛型类型，name一直是T
 typealias AdapterBindingConvert<T, VB> = (holder: ViewHolder, binding: VB, t: T?) -> Unit

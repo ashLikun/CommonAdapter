@@ -44,8 +44,8 @@ dependencies {
                        onItemClick = {
                            Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
                        },
-                   ) { holder, t ->
-                       holder.binding<ItemViewBinding>().apply {
+                   ) {  t ->
+                       binding<ItemViewBinding>().apply {
                            textView.text = t?.name
                        }
                    }
@@ -58,12 +58,12 @@ dependencies {
                        onItemClick = {
                            Toast.makeText(this, it?.type + "  " + it?.data?.name, Toast.LENGTH_LONG).show()
                        },
-                       itemType = { data -> data.type.hashCode() }) { holder, t ->
-                       when (holder.itemViewType) {
-                           "type2".hashCode() -> holder.binding<ItemView1Binding>().run {
+                       itemType = { data -> data.type.hashCode() }) {  t ->
+                       when (itemViewType) {
+                           "type2".hashCode() -> binding<ItemView1Binding>().run {
                                textView.text = t?.type + "  " + t?.data?.name
                            }
-                           else -> holder.binding<ItemViewBinding>().run {
+                           else -> binding<ItemViewBinding>().run {
                                textView.text = t?.type + "  " + t?.data?.name
                            }
                        }
@@ -77,13 +77,13 @@ dependencies {
                                 Toast.makeText(context, it.name, Toast.LENGTH_LONG).show()
                             }
                         },
-                        convertHeader = { holder, t ->
-                            holder.binding<ItemHeaderBinding>().run {
+                        convertHeader = {  t ->
+                            binding<ItemHeaderBinding>().run {
                                 tvHeader.text = t?.name
                             }
                         }
-                    ) { holder, t ->
-                        holder.binding<ItemViewBinding>().run {
+                    ) {  t ->
+                        binding<ItemViewBinding>().run {
                             textView.text = t?.name
                         }
                     }
@@ -98,8 +98,8 @@ dependencies {
                                     layoutStyle = LayoutStyle(single = true),
                                     onItemClick = {
                                         Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
-                                    }) { holder, t ->
-                                    holder.binding<ItemView1Binding>().run {
+                                    }) {  t ->
+                                    binding<ItemView1Binding>().run {
                                         textView.setTextColor(0xffff3300.toInt())
                                         textView.text = t?.name
                                     }
@@ -109,8 +109,8 @@ dependencies {
                                     layoutStyle = LayoutStyle(spanCount = 3),
                                     onItemClick = {
                                         Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
-                                    }) { holder, t ->
-                                    holder.binding<ItemView1Binding>().run {
+                                    }) {  t ->
+                                    binding<ItemView1Binding>().run {
                                         textView.setTextColor(0xff0fff00.toInt())
                                         textView.text = t?.name
                                     }
@@ -122,13 +122,13 @@ dependencies {
                                         Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
                                     },
                                     bndingHead = ItemHeaderBinding::class.java,
-                                    convertHeader = { holder, t ->
-                                        holder.binding<ItemHeaderBinding>().run {
+                                    convertHeader = {  t ->
+                                        binding<ItemHeaderBinding>().run {
                                             tvHeader.text = t?.name
                                         }
                                     }
-                                ) { holder, t ->
-                                    holder.binding<ItemViewBinding>().run {
+                                ) {  t ->
+                                    binding<ItemViewBinding>().run {
                                         textView.text = t?.name
                                     }
                                 }
@@ -136,8 +136,8 @@ dependencies {
                                 CommonAdapter(this, it.datas, ItemViewBinding::class.java,
                                     onItemClick = {
                                         Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
-                                    }) { holder, t ->
-                                    holder.binding<ItemViewBinding>().run {
+                                    }) {  t ->
+                                    binding<ItemViewBinding>().run {
                                         textView.text = t?.name
                                     }
                                 }
