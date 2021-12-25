@@ -108,7 +108,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * 设置新的数据源
      * 设置的时候可以用  setData方法
      */
-    open var datas: MutableList<T>?
+    open var datas: MutableList<T>
         get() = dataHandle.data
         set(value) {
             dataHandle.setDatas(value)
