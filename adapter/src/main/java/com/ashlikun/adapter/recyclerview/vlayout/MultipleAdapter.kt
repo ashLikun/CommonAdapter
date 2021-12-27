@@ -309,7 +309,7 @@ open class MultipleAdapter(
                     helpers.removeAt(position)
                 }
             }
-            contains
+            !contains
         }
         mAdapters.clear()
         mAdapters += newAdapter
