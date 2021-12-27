@@ -180,9 +180,12 @@ open class CommonAdapter<T>(
             if (vLayoutObserver == null) {
                 super.getItemViewType(position);
             } else {
-                abs(binding?.hashCode() ?: 0) + abs(
-                    layoutId?.hashCode() ?: 0
-                ) + abs(this::class.hashCode())
+                //vLayoput的itemViewType必须是正数
+                abs(
+                    abs(binding?.hashCode() ?: 0) +
+                            abs(layoutId?.hashCode() ?: 0) +
+                            abs(this::class.hashCode())
+                )
             }
         else abs(viewType.hashCode())
     }
