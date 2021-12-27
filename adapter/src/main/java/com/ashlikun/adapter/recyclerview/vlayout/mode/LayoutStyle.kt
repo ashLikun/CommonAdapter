@@ -104,20 +104,30 @@ data class LayoutStyle(
     var corners: List<Int>? = null
 
 ) : Serializable {
+    private var myHelper: LayoutHelper? = null
+    private fun initHelper(): LayoutHelper {
+        myHelper = when {
+            spanCount != null -> GridLayoutHelper(spanCount!!)
+            weights != null -> ColumnLayoutHelper()
+            fixX != null || fixY != null ->
+                if (float == true) FloatLayoutHelper()
+                else FixLayoutHelper(fixX ?: 0, fixY ?: 0)
+            sticky != null -> StickyLayoutHelper(sticky!!)
+            single == true -> SingleLayoutHelper()
+            else -> LinearLayoutHelper()
+        }
+        return myHelper!!
+    }
+
     /**
      * 自动创建对应的类型
      * 在赋值给VLayout(setAdapters or addAdapters )的时候会自动调用,之后修改需要手动调用
      */
-    internal var helper: LayoutHelper = when {
-        spanCount != null -> GridLayoutHelper(spanCount!!)
-        weights != null -> ColumnLayoutHelper()
-        fixX != null || fixY != null ->
-            if (float == true) FloatLayoutHelper()
-            else FixLayoutHelper(fixX ?: 0, fixY ?: 0)
-        sticky != null -> StickyLayoutHelper(sticky!!)
-        single == true -> SingleLayoutHelper()
-        else -> LinearLayoutHelper()
-    }
+    internal var helper: LayoutHelper
+        get() = myHelper ?: initHelper()
+        set(value) {
+            myHelper = value
+        }
 
     /**
      * 在赋值给VLayout(setAdapters or addAdapters )的时候会自动调用,之后修改需要手动调用
