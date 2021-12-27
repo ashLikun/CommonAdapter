@@ -42,6 +42,8 @@ open class CommonAdapter<T>(
     override val binding: Class<out ViewBinding>? = null,
     //布局文件
     override val layoutId: Int? = null,
+    //布局
+    override val layouView: View? = null,
     //1:创建Adapter回调的其他参数，一般用于改变UI , 2:事件的回调,不能被覆盖
     var bus: AdapterBus = AdapterBus(),
     //VLayout布局，优先

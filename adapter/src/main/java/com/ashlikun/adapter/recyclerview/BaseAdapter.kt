@@ -61,8 +61,9 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     initDatas: List<T>? = null,
     open val binding: Class<out ViewBinding>? = null,
     //布局文件
-    open val layoutId: Int? = null
-
+    open val layoutId: Int? = null,
+    //布局
+    open val layouView: View? = null
 ) : RecyclerView.Adapter<V>(), IHeaderAndFooter, SimpleLifecycleObserver, IStartPosition {
     var context: Context = context
 
@@ -183,7 +184,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     open fun createLayout(parent: ViewGroup, layoutId: Int, viewType: Int): View? {
         return if (layoutId != View.NO_ID) {
             LayoutInflater.from(context).inflate(layoutId, parent, false)
-        } else null
+        } else layouView
     }
 
     /**
@@ -192,8 +193,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      * 不可从写
      */
     fun createRoot(parent: ViewGroup, viewType: Int): CreateView {
-        val vId = getLayoutId(viewType)
-        val view = if (vId != null) createLayout(parent, vId, viewType) else null
+        val view = createLayout(parent, getLayoutId(viewType) ?: View.NO_ID, viewType)
         var viewBinding: Any? = null
         if (view == null) {
             //调用创建ViewBinding

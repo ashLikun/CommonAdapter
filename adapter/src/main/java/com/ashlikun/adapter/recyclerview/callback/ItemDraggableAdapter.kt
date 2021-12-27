@@ -2,6 +2,7 @@ package com.ashlikun.adapter.recyclerview.callback
 
 import android.content.Context
 import android.graphics.Canvas
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.ashlikun.adapter.ViewHolder
@@ -25,6 +26,8 @@ open class ItemDraggableAdapter<T>(
     //创建ViewBinding的Class,与layoutId 二选一
     override var binding: Class<out ViewBinding>? = null,
     override var layoutId: Int? = null,
+    //布局
+    override val layouView: View? = null,
     //事件
     bus: AdapterBus = AdapterBus(),
     //点击事件

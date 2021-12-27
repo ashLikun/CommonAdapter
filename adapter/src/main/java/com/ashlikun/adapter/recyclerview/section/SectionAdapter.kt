@@ -1,6 +1,7 @@
 package com.ashlikun.adapter.recyclerview.section
 
 import android.content.Context
+import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
@@ -29,6 +30,8 @@ open class SectionAdapter<T : SectionEntity>(
     open var bndingHead: Class<out ViewBinding>? = null,
     //布局文件
     override var layoutId: Int? = null,
+    //布局
+    override val layouView: View? = null,
     //头布局id
     open var headLayoutId: Int? = null,
     //事件
