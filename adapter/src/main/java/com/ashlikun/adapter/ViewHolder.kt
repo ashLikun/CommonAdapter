@@ -97,9 +97,18 @@ open class ViewHolder(
         return view as T?
     }
 
+    /**
+     * 强制获取
+     */
+    fun <T : View> requireView(viewId: Int): T {
+        return getView(viewId) ?: throw RuntimeException("ViewHolder 没有发现 viewId")
+    }
 
-    fun getImageView(viewId: Int): ImageView? {
-        return getView(viewId)
+    /**
+     * 强制获取
+     */
+    fun getImageView(viewId: Int): ImageView {
+        return getView(viewId) ?: throw RuntimeException("ViewHolder 没有发现 viewId")
     }
 
     /**
