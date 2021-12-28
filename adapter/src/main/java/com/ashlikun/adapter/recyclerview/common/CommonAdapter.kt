@@ -193,11 +193,8 @@ open class CommonAdapter<T>(
     }
 
     override fun getItemCount(): Int {
-        return if (layoutStyle.helper.itemCount > 0) {
-            layoutStyle.helper.itemCount
-        } else {
-            super.getItemCount()
-        }
+        return if (layoutStyle.helper.itemCount > 0) layoutStyle.helper.itemCount
+        else super.getItemCount()
     }
 
     /**

@@ -447,27 +447,22 @@ open class MultipleAdapter(
         }
 
         private fun updateLayoutHelper(): Boolean {
-            if (index < 0) {
-                return false
-            }
+            if (index < 0) return false
             val idx = findPositionByIndex(index)
-            if (idx < 0) {
-                return false
-            }
+            if (idx < 0) return false
             val p = mAdapters[idx]
             val helpers: List<LayoutHelper> = LinkedList(layoutHelpers)
             val helper = helpers[idx]
-            if (helper.itemCount != p.second?.itemCount) {
+            if (helper.itemCount != p.second.itemCount) {
                 // if itemCount changed;
-                helper.itemCount = p.second?.itemCount ?: 0
-                mTotal = startPosition + (p.second?.itemCount ?: 0)
+                helper.itemCount = p.second.itemCount
+                mTotal = startPosition + (p.second.itemCount)
                 for (i in idx + 1 until mAdapters.size) {
                     val pair = mAdapters[i]
                     // update startPosition for adapters in following
                     pair.first.startPosition = mTotal
-                    mTotal += pair.second?.itemCount ?: 0
+                    mTotal += pair.second.itemCount
                 }
-
                 // set helpers to refresh range
                 super@MultipleAdapter.setLayoutHelpers(helpers)
             }
