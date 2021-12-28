@@ -120,6 +120,11 @@ data class LayoutStyle(
     }
 
     /**
+     * 只有一个item布局  对应initHelper
+     */
+    fun isSingleLayout() = single == true || sticky != null || fixX != null || fixY != null
+
+    /**
      * 自动创建对应的类型
      * 在赋值给VLayout(setAdapters or addAdapters )的时候会自动调用,之后修改需要手动调用
      */
@@ -182,4 +187,5 @@ data class LayoutStyle(
         }
         return this
     }
+
 }
