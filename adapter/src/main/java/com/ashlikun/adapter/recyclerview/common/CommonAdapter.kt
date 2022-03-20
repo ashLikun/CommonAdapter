@@ -88,7 +88,7 @@ open class CommonAdapter<T>(
     }
 
     override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): ViewHolder {
-        val holder = ViewHolder(context, createRoot(parent, viewType), this)
+        val holder = ViewHolder(createRoot(parent, viewType), this)
         setListener(holder, viewType)
         return holder
     }

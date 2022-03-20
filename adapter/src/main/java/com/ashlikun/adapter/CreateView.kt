@@ -14,7 +14,7 @@ import androidx.viewbinding.ViewBinding
 class CreateView(var view: View, var viewBinding: ViewBinding?) {
 
     companion object {
-        fun create(view: View?, viewBinding: Any?): CreateView {
+        fun create(view: View? = null, viewBinding: Any? = null): CreateView {
             if (viewBinding != null) {
                 try {
                     if (viewBinding is ViewBinding) {

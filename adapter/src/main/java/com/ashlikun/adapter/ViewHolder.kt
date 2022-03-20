@@ -33,11 +33,12 @@ import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition
  */
 
 open class ViewHolder(
-    var mContext: Context,
     var createView: CreateView,
-    var iStartPosition: IStartPosition
+    var iStartPosition: IStartPosition? = null
 ) : RecyclerView.ViewHolder(createView.view) {
     protected var mViews = SparseArray<View>()
+    protected val context: Context
+        get() = createView.view.context
 
     //实例是ViewBinding
     var binding: Any? = null
@@ -175,7 +176,7 @@ open class ViewHolder(
 
     fun setTextColorRes(viewId: Int, textColorRes: Int): ViewHolder {
         val view = getView<TextView>(viewId)
-        view?.setTextColor(mContext.resources.getColor(textColorRes))
+        view?.setTextColor(context.resources.getColor(textColorRes))
         return this
     }
 
@@ -321,7 +322,7 @@ open class ViewHolder(
     val positionInside: Int
         get() = layoutPosition - startPosition
     val startPosition: Int
-        get() = iStartPosition.startPosition
+        get() = iStartPosition?.startPosition ?: 0
 
     /**
      * 是否是瀑布流
