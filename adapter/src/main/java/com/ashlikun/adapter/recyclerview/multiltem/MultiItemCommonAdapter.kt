@@ -65,11 +65,11 @@ open class MultiItemCommonAdapter<T>(
 
 
     override fun getLayoutId(viewType: Int): Int? {
-        return layouts.getOrDefault(viewType, null)
+        return layouts[viewType]
     }
 
     override fun getBindClass(viewType: Int): Class<out ViewBinding>? {
-        return bindings.getOrDefault(viewType, null)
+        return bindings[viewType]
     }
 
     open fun getItemViewType(position: Int, data: T) =
