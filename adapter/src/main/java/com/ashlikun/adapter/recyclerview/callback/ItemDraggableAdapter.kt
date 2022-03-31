@@ -82,8 +82,12 @@ open class ItemDraggableAdapter<T>(
         source: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
+
         val from = getViewHolderPosition(source)
         val to = getViewHolderPosition(target)
+        if (isItemDraggable && onItemDragListener != null) {
+            return onItemDragListener?.onItemDragMoving(source, from, target, to) ?: true
+        }
         if (inRange(from) && inRange(to)) {
             if (from < to) {
                 for (i in from until to) {
@@ -95,9 +99,6 @@ open class ItemDraggableAdapter<T>(
                 }
             }
             notifyItemMoved(source.adapterPosition, target.adapterPosition)
-        }
-        if (isItemDraggable) {
-            return onItemDragListener?.onItemDragMoving(source, from, target, to) ?: true
         }
         return true
     }
