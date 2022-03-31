@@ -85,8 +85,8 @@ open class ItemDraggableAdapter<T>(
 
         val from = getViewHolderPosition(source)
         val to = getViewHolderPosition(target)
-        if (isItemDraggable && onItemDragListener != null) {
-            return onItemDragListener?.onItemDragMoving(source, from, target, to) ?: true
+        if (isItemDraggable && onItemDragListener?.onItemDragMoving(source, from, target, to) == false) {
+            return false
         }
         if (inRange(from) && inRange(to)) {
             if (from < to) {
