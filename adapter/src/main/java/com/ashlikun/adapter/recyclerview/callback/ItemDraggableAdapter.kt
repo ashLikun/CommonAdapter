@@ -97,7 +97,7 @@ open class ItemDraggableAdapter<T>(
             notifyItemMoved(source.adapterPosition, target.adapterPosition)
         }
         if (isItemDraggable) {
-            onItemDragListener?.onItemDragMoving(source, from, target, to)
+            return onItemDragListener?.onItemDragMoving(source, from, target, to) ?: true
         }
         return true
     }
