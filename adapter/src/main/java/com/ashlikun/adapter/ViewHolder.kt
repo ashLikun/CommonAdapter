@@ -34,8 +34,8 @@ import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition
 
 open class ViewHolder(
     var createView: CreateView,
-    var adapter: BaseAdapter<*, *>,
-    var iStartPosition: IStartPosition? = null
+    var iStartPosition: IStartPosition? = null,
+    var adapter: BaseAdapter<*, *>? = null,
 ) : RecyclerView.ViewHolder(createView.view) {
     protected var mViews = SparseArray<View>()
     protected val context: Context
@@ -340,7 +340,7 @@ open class ViewHolder(
      * 是否是最后一个
      */
     val isLostPosition
-        get() = positionInside == adapter.itemCount - 1
+        get() = positionInside == (adapter?.itemCount ?: 0) - 1
 
     /**
      * 是否是第一个
