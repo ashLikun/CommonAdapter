@@ -44,13 +44,14 @@ class CommonActivity : AppCompatActivity() {
             this, neibuData, ItemViewBinding::class.java,
             onItemClick = {
                 Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
+            }, convert = { t ->
+                binding<ItemViewBinding>().apply {
+                    textView.text = t?.name
+                    isLostPosition
+                }
             },
             apply = {
-                convert = { t ->
-                    binding<ItemViewBinding>().apply {
-                        textView.text = t?.name
-                    }
-                }
+
             }
         )
         addHeard()
