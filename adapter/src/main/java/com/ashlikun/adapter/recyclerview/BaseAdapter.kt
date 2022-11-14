@@ -41,6 +41,7 @@ import com.ashlikun.adapter.recyclerview.vlayout.IStartPosition
 typealias OnItemClickX<T> = (viewType: Int, parent: ViewGroup, view: View, data: T, position: Int) -> Unit
 typealias OnItemLongClickX<T> = (viewType: Int, parent: ViewGroup, view: View, data: T, position: Int) -> Boolean
 typealias OnItemClick<T> = (data: T) -> Unit
+typealias OnGetItemId<T> = (data: T) -> Any
 typealias OnItemLongClick<T> = (data: T) -> Boolean
 typealias AdapterConvert<T> = ViewHolder.(t: T) -> Unit
 typealias AdapterPayloadsConvert<T> = ViewHolder.(t: T, payloads: MutableList<Any>) -> Boolean
@@ -80,6 +81,10 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
         this
     )
 
+    //获取id
+    open var itemId: OnGetItemId<T>? = null
+    open var itemIdIsPosition: Boolean? = null
+
     //点击事件
     open var onItemClick: OnItemClick<T>? = null
     open var onItemClickX: OnItemClickX<T>? = null
@@ -102,6 +107,13 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
         protected set
 
     init {
+        /**
+         * 方法的名称意思是设置是否有稳定的id，设置了该值为true后，ViewHolder中的mHasStableIds就为true。
+         * StableId有三种模式：NO_STABLE_IDS、ISOLATED_STABLE_IDS、SHARED_STABLE_IDS
+         * RecyclerView在进行Item的Remove，Insert，Change的时候会调用到。
+         * 如果设置了这个属性，那么需要在Adapter中重写getItemId(int position)方法。
+         * 这样子在进行列表的更新时候，Adapter会根据getItemId方法返回的long类型的id进行判断，决定当前的item是否需要刷新。因此取代以往的全部刷新的情况，从而提高效率。
+         */
         setHasStableIds(true)
     }
 
@@ -202,9 +214,14 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
         return CreateView.create(view, viewBinding)
     }
 
+
+    /**
+     * Adapter会根据getItemId方法返回的long类型的id进行判断，决定当前的item是否需要刷新。因此取代以往的全部刷新的情况，从而提高效率。
+     */
     override fun getItemId(position: Int): Long {
-        val d = getItemData(position)
-        return d?.hashCode()?.toLong() ?: (startPosition + position).toLong()
+        if (itemIdIsPosition == true) return (startPosition + position).toLong()
+        return getItemData(position)?.let { itemId?.invoke(it)?.toString()?.toLongOrNull() ?: hashCode().toLong() }
+            ?: (startPosition + position).toLong()
     }
 
     override fun getItemCount(): Int {

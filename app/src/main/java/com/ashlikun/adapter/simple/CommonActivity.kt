@@ -34,6 +34,11 @@ class CommonActivity : AppCompatActivity() {
         for (i in 0..99) {
             neibuData.add(NeibuData("我是第一种$i"))
         }
+        neibuData.sortBy { it.name }
+        val dd = NeibuData("aaaaaa")
+
+        val aa = dd::name
+        aa.get()
         initView()
     }
 
@@ -42,6 +47,7 @@ class CommonActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = CommonAdapter(
             this, neibuData, ItemViewBinding::class.java,
+            itemId = { it.name },
             onItemClick = {
                 Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
             }, convert = { t ->

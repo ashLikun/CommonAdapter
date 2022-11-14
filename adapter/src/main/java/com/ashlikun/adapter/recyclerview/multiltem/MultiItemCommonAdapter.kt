@@ -35,6 +35,9 @@ open class MultiItemCommonAdapter<T>(
     //ViewType
     override var viewType: Any? = null,
 
+    //获取id
+    override var itemId: OnGetItemId<T>? = null,
+    override var itemIdIsPosition: Boolean? = null,
     //点击事件
     override var onItemClick: OnItemClick<T>? = null,
     override var onItemClickX: OnItemClickX<T>? = null,

@@ -38,6 +38,9 @@ open class SectionAdapter<T : SectionEntity>(
     bus: AdapterBus = AdapterBus(),
     //布局，优先
     layoutStyle: LayoutStyle = LayoutStyle(),
+    //获取id
+    override var itemId: OnGetItemId<T>? = null,
+    override var itemIdIsPosition: Boolean? = null,
     //ViewType
     override var viewType: Any? = null,
     //转换头

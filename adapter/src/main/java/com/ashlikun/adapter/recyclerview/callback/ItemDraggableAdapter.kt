@@ -30,6 +30,10 @@ open class ItemDraggableAdapter<T>(
     override val layouView: View? = null,
     //事件
     bus: AdapterBus = AdapterBus(),
+
+    //获取id
+    override var itemId: OnGetItemId<T>? = null,
+    override var itemIdIsPosition: Boolean? = null,
     //点击事件
     override var onItemClick: OnItemClick<T>? = null,
     override var onItemClickX: OnItemClickX<T>? = null,
