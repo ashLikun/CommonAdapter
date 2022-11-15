@@ -220,7 +220,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      */
     override fun getItemId(position: Int): Long {
         if (itemIdIsPosition == true) return (startPosition + position).toLong()
-        return getItemData(position)?.let { itemId?.invoke(it)?.toString()?.toLongOrNull() ?: hashCode().toLong() }
+        return getItemData(position)?.let { itemId?.invoke(it)?.toString()?.toLongOrNull() ?: it.hashCode().toLong() }
             ?: (startPosition + position).toLong()
     }
 
