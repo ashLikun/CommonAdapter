@@ -266,7 +266,10 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      */
     open fun getItemData(position: Int) = dataHandle.getItemData(position)
 
-    open protected fun setListener(viewHolder: ViewHolder, viewType: Int) {
+    protected open fun setListener(viewHolder: ViewHolder, viewType: Int) {
+        //更新Holder 持有的数据
+        viewHolder.adapter = this
+        viewHolder.iStartPosition = this
         //更新监听
         viewHolder.iStartPosition = this
         if (!isEnabled(viewType)

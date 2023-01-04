@@ -98,8 +98,9 @@ open class CommonAdapter<T>(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         setListener(holder, holder.itemViewType)
+
         val data = getItemData(position)
-        if (data != null) {
+        if (data != null || (vLayoutObserver != null && layoutStyle.isSingleLayout())) {
             convert(holder, data!!)
         }
     }
