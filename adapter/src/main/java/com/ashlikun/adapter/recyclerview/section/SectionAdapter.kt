@@ -5,7 +5,7 @@ import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.alibaba.android.vlayout.layout.GridLayoutHelper
+import com.ashlikun.vlayout.layout.GridLayoutHelper
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.*
 import com.ashlikun.adapter.recyclerview.common.CommonAdapter

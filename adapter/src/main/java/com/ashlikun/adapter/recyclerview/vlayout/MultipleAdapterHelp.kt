@@ -5,7 +5,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
-import com.alibaba.android.vlayout.VirtualLayoutManager
+import com.ashlikun.vlayout.VirtualLayoutManager
 import com.ashlikun.adapter.AdapterUtils
 import com.ashlikun.adapter.recyclerview.SimpleLifecycleObserver
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus

@@ -2,9 +2,11 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
 }
+apply plugin: 'com.github.dcendents.android-maven'
+// GitHub账户名
+group = 'com.github.ashLikun'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-//    buildToolsVersion rootProject.ext.buildToolsVersion
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -26,19 +28,19 @@ android {
     compileOptions {
         //定义生成的META-INF/library_release文件名 More than one file was found with OS independent path 'META-INF/library_release.kotlin_module'
         kotlinOptions.freeCompilerArgs += ['-module-name', 'com.ashlikun.adapter']
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly rootProject.ext.designVersion
-    compileOnly('com.alibaba.android:vlayout:1.2.18@aar') {
-        transitive = true
-    }
+    compileOnly 'com.github.ashLikun:vLayout:1.0.3'
     compileOnly 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
 }
+
+apply from: '../maven.gradle'

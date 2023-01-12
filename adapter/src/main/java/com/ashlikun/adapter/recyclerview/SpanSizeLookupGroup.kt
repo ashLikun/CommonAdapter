@@ -2,7 +2,7 @@ package com.ashlikun.adapter.recyclerview
 
 import android.util.Log
 import androidx.recyclerview.widget.GridLayoutManager
-import com.alibaba.android.vlayout.layout.GridLayoutHelper
+import com.ashlikun.vlayout.layout.GridLayoutHelper
 
 /**
  * @author　　: 李坤

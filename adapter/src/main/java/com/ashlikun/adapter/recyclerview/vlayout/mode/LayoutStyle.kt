@@ -1,9 +1,10 @@
 package com.ashlikun.adapter.recyclerview.vlayout.mode
 
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import androidx.annotation.ColorInt
-import com.alibaba.android.vlayout.LayoutHelper
-import com.alibaba.android.vlayout.layout.*
+import com.ashlikun.vlayout.*
+import com.ashlikun.vlayout.layout.*
 import java.io.Serializable
 
 /**
@@ -144,7 +145,8 @@ data class LayoutStyle(
         //基础的
         if (helper is BaseLayoutHelper) {
             if (aspectRatio != null) helper.aspectRatio = aspectRatio!!
-            if (bgColor != null) helper.bgColor = bgColor!!
+            if (bgColor != null) helper.background = ColorDrawable(bgColor!!)
+            if (bgDrawable != null) helper.background = bgDrawable
         }
 
         if (helper is MarginLayoutHelper) {

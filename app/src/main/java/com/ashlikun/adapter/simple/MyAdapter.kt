@@ -2,9 +2,9 @@
 //
 //import android.content.Context
 //import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter
-//import com.alibaba.android.vlayout.LayoutHelper
-//import com.alibaba.android.vlayout.layout.GridLayoutHelper
-//import com.alibaba.android.vlayout.layout.LinearLayoutHelper
+//import com.ashlikun.vlayout.LayoutHelper
+//import com.ashlikun.vlayout.GridLayoutHelper
+//import com.ashlikun.vlayout.LinearLayoutHelper
 //import android.view.ViewGroup
 //import android.view.View
 //import android.util.Log

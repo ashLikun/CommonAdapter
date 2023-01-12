@@ -2,7 +2,7 @@ package com.ashlikun.adapter.recyclerview.vlayout
 
 import android.content.Context
 import android.view.View
-import com.alibaba.android.vlayout.VirtualLayoutManager
+import com.ashlikun.vlayout.VirtualLayoutManager
 
 /**
  * 作者　　: 李坤

@@ -26,10 +26,10 @@ package com.ashlikun.adapter.recyclerview.vlayout
 import android.util.SparseArray
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.alibaba.android.vlayout.Cantor
-import com.alibaba.android.vlayout.LayoutHelper
-import com.alibaba.android.vlayout.VirtualLayoutAdapter
-import com.alibaba.android.vlayout.VirtualLayoutManager
+import com.ashlikun.vlayout.Cantor
+import com.ashlikun.vlayout.LayoutHelper
+import com.ashlikun.vlayout.VirtualLayoutAdapter
+import com.ashlikun.vlayout.VirtualLayoutManager
 import com.ashlikun.adapter.AdapterUtils
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.IHeaderAndFooter
@@ -122,7 +122,9 @@ open class MultipleAdapter(
             return subItemType
         }
         if (hasConsistItemType) {
-            mItemTypeAry.put(subItemType, adapter)
+            if (mAdapters.contains(adapter)) {
+                mItemTypeAry.put(subItemType, adapter)
+            }
             return subItemType
         }
         val index = adapter.vLayoutIndex
