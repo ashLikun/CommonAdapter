@@ -122,6 +122,7 @@ open class MultipleAdapter(
             return subItemType
         }
         if (hasConsistItemType) {
+            mItemTypeAry.put(subItemType, adapter)
             return subItemType
         }
         val index = adapter.vLayoutIndex
