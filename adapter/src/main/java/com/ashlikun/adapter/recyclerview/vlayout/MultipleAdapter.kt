@@ -377,6 +377,17 @@ open class MultipleAdapter(
         mAdapters.find { it.getItemViewType(0) == AdapterUtils.viewTypeToVLayout(viewType) } as? T
 
     /**
+     * 获取这种Id的adapter
+     */
+    fun <DATA> findById(viewType: Any): CommonAdapter<DATA>? = findByIdX(viewType)
+
+    /**
+     * 获取这种id的adapter
+     */
+    fun <T> findByIdX(id: Any): T? =
+        mAdapters.find { it.id == id } as? T
+
+    /**
      * 是否有这种类型的adapter
      */
     fun haveByViewType(viewType: Any) =

@@ -50,6 +50,8 @@ open class CommonAdapter<T>(
     var layoutStyle: LayoutStyle = LayoutStyle(),
     //ViewType
     open var viewType: Any? = null,
+    //这个不是itemId 只是标识这个Adapter
+    override var id: Any? = null,
     //获取id
     override var itemId: OnGetItemId<T>? = null,
     override var itemIdIsPosition: Boolean? = null,
@@ -188,9 +190,7 @@ open class CommonAdapter<T>(
             } else {
                 //vLayoput的itemViewType必须是正数
                 abs(
-                    abs(binding?.hashCode() ?: 0) +
-                            abs(layoutId?.hashCode() ?: 0) +
-                            abs(this::class.hashCode())
+                    abs(binding?.hashCode() ?: 0) + abs(layoutId?.hashCode() ?: 0) + abs(this::class.hashCode())
                 )
             }
         else abs(viewType.hashCode())

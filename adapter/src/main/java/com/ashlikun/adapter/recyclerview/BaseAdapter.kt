@@ -81,6 +81,9 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
         this
     )
 
+    //这个不是itemId 只是标识这个Adapter
+    open var id: Any? = null
+
     //获取id
     open var itemId: OnGetItemId<T>? = null
     open var itemIdIsPosition: Boolean? = null
