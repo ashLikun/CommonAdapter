@@ -2,9 +2,6 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
 }
-apply plugin: 'com.github.dcendents.android-maven'
-// GitHub账户名
-group = 'com.github.ashLikun'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 //    buildToolsVersion rootProject.ext.buildToolsVersion
@@ -16,6 +13,7 @@ android {
     }
     buildFeatures {
         buildConfig = false
+        viewBinding = true
     }
 
     buildTypes {
@@ -38,14 +36,9 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    compileOnly "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compileOnly rootProject.ext.designVersion
     compileOnly('com.alibaba.android:vlayout:1.2.18@aar') {
         transitive = true
     }
-    compileOnly 'androidx.databinding:viewbinding:+'
     compileOnly 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
 }
-
-apply from: '../maven.gradle'

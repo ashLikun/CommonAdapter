@@ -1,5 +1,6 @@
 package com.ashlikun.adapter.recyclerview.vlayout.mode
 
+import android.graphics.drawable.Drawable
 import androidx.annotation.ColorInt
 import com.alibaba.android.vlayout.LayoutHelper
 import com.alibaba.android.vlayout.layout.*
@@ -26,6 +27,7 @@ import java.io.Serializable
 data class LayoutStyle(
     /////////////////////LayoutHelp开始/////////////////////
     @ColorInt var bgColor: Int? = null,
+    var bgDrawable: Drawable? = null,
 
     //单位 px
     var padding: Int? = null,
