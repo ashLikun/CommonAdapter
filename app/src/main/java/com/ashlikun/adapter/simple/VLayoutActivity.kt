@@ -1,5 +1,7 @@
 package com.ashlikun.adapter.simple
 
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -12,6 +14,7 @@ import com.ashlikun.adapter.recyclerview.vlayout.MultipleAdapterHelp
 import com.ashlikun.adapter.recyclerview.vlayout.mode.LayoutStyle
 import com.ashlikun.adapter.simple.data.Data
 import com.ashlikun.adapter.simple.data.NeibuData
+import com.ashlikun.adapter.simple.databinding.ActivityComment2Binding
 import com.ashlikun.adapter.simple.databinding.ActivityCommentBinding
 import com.ashlikun.adapter.simple.databinding.ItemHeaderBinding
 import com.ashlikun.adapter.simple.databinding.ItemView1Binding
@@ -28,7 +31,7 @@ import java.util.*
  */
 class VLayoutActivity : AppCompatActivity() {
     val binding by lazy {
-        ActivityCommentBinding.inflate(layoutInflater)
+        ActivityComment2Binding.inflate(layoutInflater)
     }
     val help by lazy {
         MultipleAdapterHelp(binding.recyclerView)
@@ -86,7 +89,7 @@ class VLayoutActivity : AppCompatActivity() {
             when (it.type) {
                 "type1" ->
                     CommonAdapter(this, it.datas, ItemView1Binding::class.java,
-                        layoutStyle = LayoutStyle(single = true),
+                        layoutStyle = LayoutStyle(single = true, bgColor = Color.RED),
                         onItemClick = {
                             Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
                         }) { t ->
@@ -97,7 +100,12 @@ class VLayoutActivity : AppCompatActivity() {
                     }
                 "type2" ->
                     CommonAdapter(this, it.datas, ItemView1Binding::class.java,
-                        layoutStyle = LayoutStyle(spanCount = 3),
+                        layoutStyle = LayoutStyle(
+                            spanCount = 3,
+                            bgDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(Color.RED, Color.GREEN)).apply {
+                                cornerRadius = 30f
+                            }
+                        ),
                         onItemClick = {
                             Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
                         }) { t ->
@@ -125,6 +133,11 @@ class VLayoutActivity : AppCompatActivity() {
                     }
                 else ->
                     CommonAdapter(this, it.datas, ItemViewBinding::class.java,
+                        layoutStyle = LayoutStyle(
+                            bgDrawable = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(Color.RED, Color.GREEN)).apply {
+                                cornerRadius = 30f
+                            }
+                        ),
                         onItemClick = {
                             Toast.makeText(this, it.name, Toast.LENGTH_LONG).show()
                         }) { t ->
@@ -143,6 +156,6 @@ class VLayoutActivity : AppCompatActivity() {
         imageView.setImageResource(R.mipmap.ic_launcher_round)
         val params = RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 600)
         imageView.layoutParams = params
-        binding.recyclerView.addHeaderView(imageView)
+//        binding.recyclerView.addHeaderView(imageView)
     }
 }

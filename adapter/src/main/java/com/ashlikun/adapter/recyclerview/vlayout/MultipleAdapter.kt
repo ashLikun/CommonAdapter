@@ -26,14 +26,14 @@ package com.ashlikun.adapter.recyclerview.vlayout
 import android.util.SparseArray
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.ashlikun.vlayout.Cantor
-import com.ashlikun.vlayout.LayoutHelper
-import com.ashlikun.vlayout.VirtualLayoutAdapter
-import com.ashlikun.vlayout.VirtualLayoutManager
 import com.ashlikun.adapter.AdapterUtils
 import com.ashlikun.adapter.ViewHolder
 import com.ashlikun.adapter.recyclerview.IHeaderAndFooter
 import com.ashlikun.adapter.recyclerview.common.CommonAdapter
+import com.ashlikun.vlayout.Cantor
+import com.ashlikun.vlayout.LayoutHelper
+import com.ashlikun.vlayout.VirtualLayoutAdapter
+import com.ashlikun.vlayout.VirtualLayoutManager
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.max
@@ -52,7 +52,7 @@ open class MultipleAdapter(
     layoutManager: VirtualLayoutManager,
     var hasConsistItemType: Boolean = false,
     threadSafe: Boolean = false
-) : VirtualLayoutAdapter<ViewHolder>(layoutManager), IHeaderAndFooter {
+) : VirtualLayoutAdapter<RecyclerView.ViewHolder>(layoutManager), IHeaderAndFooter {
     override var footerSize = 0
     override var headerSize = 0
 
@@ -90,12 +90,14 @@ open class MultipleAdapter(
         throw NullPointerException("onCreateViewHolder null")
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if(holder !is ViewHolder) return
         val adapter = findAdapter(position) ?: return
         adapter.onBindViewHolder(holder, position - adapter.startPosition)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
+        if(holder !is ViewHolder) return
         val adapter = findAdapter(position) ?: return
         adapter.onBindViewHolder(holder, position - adapter.startPosition, payloads)
     }
@@ -157,24 +159,27 @@ open class MultipleAdapter(
         // do nothing
     }
 
-    override fun onViewRecycled(holder: ViewHolder) {
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         super.onViewRecycled(holder)
+        if(holder !is ViewHolder) return
         val position = holder.layoutPosition
         if (position >= 0) {
             findAdapter(position)?.onViewRecycled(holder)
         }
     }
 
-    override fun onViewAttachedToWindow(holder: ViewHolder) {
+    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
         super.onViewAttachedToWindow(holder)
+        if(holder !is ViewHolder) return
         val position = holder.layoutPosition
         if (position >= 0) {
             findAdapter(position)?.onViewAttachedToWindow(holder)
         }
     }
 
-    override fun onViewDetachedFromWindow(holder: ViewHolder) {
+    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
         super.onViewDetachedFromWindow(holder)
+        if(holder !is ViewHolder) return
         val position = holder.layoutPosition
         if (position >= 0) {
             findAdapter(position)?.onViewDetachedFromWindow(holder)
