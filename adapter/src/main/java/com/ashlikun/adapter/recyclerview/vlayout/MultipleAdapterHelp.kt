@@ -8,8 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ashlikun.vlayout.VirtualLayoutManager
 import com.ashlikun.adapter.AdapterUtils
 import com.ashlikun.adapter.recyclerview.SimpleLifecycleObserver
+import com.ashlikun.adapter.recyclerview.common.CommonAdapter
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.IAdapterBindData
+import java.util.*
 
 /**
  * 作者　　: 李坤
@@ -26,7 +28,7 @@ open class MultipleAdapterHelp(
     var recyclerView: RecyclerView,
     var hasConsistItemType: Boolean = true,
     //监听事件和ui参数的总线
-    bus: List<AdapterBus>? = null
+    bus: List<AdapterBus>? = null,
 ) : SimpleLifecycleObserver {
     //event 处理adapter发出的事件,在创建adapter的时候会赋值  key:数据层的type，value：这个type对应的事件（key/value）
     //params 创建Adapter回调的其他参数，一般用于改变UI,   key:数据层的type，value：这个type对应的参数（key/value）
@@ -114,4 +116,13 @@ open class MultipleAdapterHelp(
             recyclerView.scrollToPosition(0)
         }
     }
+
+    fun addAdapters(adapters: List<CommonAdapter<*>>?, index: Int = adapter.adaptersCount) = adapter.addAdapters(adapters, index)
+    fun addAdapters(vararg adapters: CommonAdapter<*>, index: Int = adapter.adaptersCount) = adapter.addAdapters(adapters.toList(), index)
+    fun addAdapter(adapter: CommonAdapter<*>?, index: Int = this.adapter.adaptersCount) = this.adapter.addAdapter(adapter, index)
+    fun removeFirstAdapter() = adapter.removeFirstAdapter()
+    fun removeLastAdapter() = adapter.removeLastAdapter()
+    fun removeAdapter(index: Int) = adapter.removeAdapter(index)
+    fun removeAdapter(targetAdapter: CommonAdapter<*>?) = adapter.removeAdapter(targetAdapter)
+    fun removeAdapters(targetAdapters: List<CommonAdapter<*>>?) = adapter.removeAdapters(targetAdapters)
 }

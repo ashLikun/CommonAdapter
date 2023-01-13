@@ -237,6 +237,10 @@ open class MultipleAdapter(
         setAdapters(newAdapter)
     }
 
+    fun addAdapters(vararg adapters: CommonAdapter<*>, index: Int = mAdapters.size) {
+        addAdapters(adapters.toList(), index)
+    }
+
     fun addAdapter(adapter: CommonAdapter<*>?, index: Int = mAdapters.size) {
         if (adapter == null) return
         addAdapters(listOf(adapter), index)

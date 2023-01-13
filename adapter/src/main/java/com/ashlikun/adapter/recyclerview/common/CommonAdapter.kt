@@ -13,6 +13,7 @@ import com.ashlikun.adapter.recyclerview.vlayout.OnAdapterCreateParams
 import com.ashlikun.adapter.recyclerview.vlayout.mode.AdapterBus
 import com.ashlikun.adapter.recyclerview.vlayout.mode.LayoutStyle
 import com.ashlikun.adapter.recyclerview.vlayout.mode.OnAdapterEvent
+import kotlinx.coroutines.flow.flow
 import kotlin.math.abs
 
 /**
@@ -100,12 +101,27 @@ open class CommonAdapter<T>(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         setListener(holder, holder.itemViewType)
-
         val data = getItemData(position)
-        if (data != null || (vLayoutObserver != null && layoutStyle.isSingleLayout())) {
-            convert(holder, data!!)
+        if (data == null) {
+            //这里只处理String,Int
+            if (vLayoutObserver != null && layoutStyle.isSingleLayout()) {
+                var isSuccess = false
+                runCatching { "" as T }.onSuccess {
+                    isSuccess = true
+                    convert(holder, it)
+                }
+                if (!isSuccess) {
+                    runCatching { 0 as T }.onSuccess {
+                        isSuccess = true
+                        convert(holder, it)
+                    }
+                }
+            }
+        } else {
+            convert(holder, data)
         }
     }
+
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int, payloads: MutableList<Any>) {
         if (payloads != null && payloads.isNotEmpty()) {
