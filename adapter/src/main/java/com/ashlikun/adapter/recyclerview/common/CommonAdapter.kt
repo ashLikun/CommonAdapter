@@ -213,7 +213,8 @@ open class CommonAdapter<T>(
     }
 
     override fun getItemCount(): Int {
-        return if (vLayoutObserver != null && layoutStyle.isSingleLayout()) layoutStyle.helper.itemCount
+        return if (!isVisible) 0
+        else if (vLayoutObserver != null && layoutStyle.isSingleLayout()) layoutStyle.helper.itemCount
         else super.getItemCount()
     }
 

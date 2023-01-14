@@ -109,6 +109,9 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     open var recyclerView: RecyclerView? = null
         protected set
 
+    //是否显示，默认显示，如果为false，那么不管是否有数据，都会返回0
+    open var isVisible = true
+
     init {
         /**
          * 方法的名称意思是设置是否有稳定的id，设置了该值为true后，ViewHolder中的mHasStableIds就为true。
@@ -228,7 +231,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     }
 
     override fun getItemCount(): Int {
-        return dataHandle.itemCount
+        return if (isVisible) dataHandle.itemCount else 0
     }
 
 
