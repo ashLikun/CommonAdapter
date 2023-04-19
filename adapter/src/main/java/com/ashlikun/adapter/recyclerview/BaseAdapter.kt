@@ -96,6 +96,9 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
     open var onItemLongClick: OnItemLongClick<T>? = null
     open var onItemLongClickX: OnItemLongClickX<T>? = null
 
+    //是否可以点击
+    open var isEnabled: ((viewType: Int) -> Boolean)? = null
+
     //获取动画帮助类
     open var adapterAnimHelp = AdapterAnimHelp(this)
 
@@ -180,11 +183,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
      *
      * @return
      */
-    open fun createViewBinding(
-        parent: ViewGroup,
-        binding: Class<out ViewBinding>?,
-        viewType: Int
-    ): Any? {
+    open fun createViewBinding(parent: ViewGroup, binding: Class<out ViewBinding>?, viewType: Int): Any? {
         return if (binding != null) {
             //反射获取
             AdapterUtils.getViewBindingToClass(
@@ -236,13 +235,6 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
 
 
     /**
-     * 是否可以点击
-     */
-    open protected fun isEnabled(viewType: Int): Boolean {
-        return true
-    }
-
-    /**
      * 设置新的数据源
      * @param datas 如果是MutableList 就是同一个对象，否则会转换成MutableList 就是个新对象
      * @param isNotify 是否通知适配器刷新
@@ -278,11 +270,7 @@ abstract class BaseAdapter<T, V : RecyclerView.ViewHolder>(
         viewHolder.iStartPosition = this
         //更新监听
         viewHolder.iStartPosition = this
-        if (!isEnabled(viewType)
-            || !viewHolder.itemView.isEnabled
-        ) {
-            return
-        }
+        if (isEnabled?.invoke(viewType) == false || !viewHolder.itemView.isEnabled) return
         if (isOpenClickEffects) {
             val color = itemClickColor ?: viewHolder.itemClickColor
             if (!viewHolder.isSetEffects(color)) {
