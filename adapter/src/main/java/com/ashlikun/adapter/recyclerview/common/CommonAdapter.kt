@@ -62,6 +62,8 @@ open class CommonAdapter<T>(
     //长按事件
     override var onItemLongClick: OnItemLongClick<T>? = null,
     override var onItemLongClickX: OnItemLongClickX<T>? = null,
+    //是否可以点击
+    override var isEnabled: ((viewType: Int) -> Boolean)? = null,
     //初始化的apply 便于执行其他代码,子类一定需要自己实现,切换this 到Adapter
     apply: NoParamsThis<CommonAdapter<T>>? = null,
     //转换
